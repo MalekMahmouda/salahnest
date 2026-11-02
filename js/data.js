@@ -35,7 +35,7 @@ const THEMES = [
   // (dark flag consumed by widget isDark + Android status-bar luminance)
   { id: 'blue',     en: 'Blue',     ar: 'أزرق',     color: '#0a6aaa', preview: ['#e9f1fa', '#ffffff', '#0a6aaa', '#c0508a'], dark: false },
   { id: 'emerald',  en: 'Emerald',  ar: 'زمردي',    color: '#1d7a44', preview: ['#e9f4ec', '#ffffff', '#1d7a44', '#bb5085'], dark: false },
-  { id: 'islamic',  en: 'Islamic',  ar: 'إسلامي',   color: '#146b47', preview: ['#f7f6f0', '#fffefa', '#245d4d', '#b4517f'], dark: false },
+  { id: 'islamic',  en: 'Islamic',  ar: 'إسلامي',   color: '#0066cc', preview: ['#ffffff', '#f5f5f7', '#0066cc', '#b4517f'], dark: false },
   { id: 'ocean',    en: 'Ocean',    ar: 'محيطي',    color: '#0a4a7c', preview: ['#e6f0f7', '#ffffff', '#0a4a7c', '#bd4f8c'], dark: false },
   { id: 'sahara',   en: 'Sahara',   ar: 'صحراوي',   color: '#b45309', preview: ['#f8f1e4', '#fffaf0', '#b45309', '#a63d6e'], dark: false },
 ];
