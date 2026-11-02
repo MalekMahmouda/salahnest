@@ -42,7 +42,7 @@
   --grad:linear-gradient(140deg,#1e3a8a 0%,#0b1030 100%);
   --shadow-lg:0 18px 50px rgba(0,0,0,.55); --shadow:0 8px 26px rgba(0,0,0,.4); --shadow-sm:0 2px 10px rgba(0,0,0,.35);
   --glass:rgba(14,21,38,.72); --glass-brd:rgba(255,255,255,.08);
-  --gold:#f0cc70; --gold-ink:#f0cc70; --on-primary:#fff;
+  --gold:#f0cc70; --gold-ink:#f0cc70; --on-primary:#070b14;
   --h-fajr:#7aa5ff; --h-dhuhr:#f0cc70; --h-asr:#f59e6b; --h-maghrib:#e06a9c; --h-isha:#8fa8ff;
 }
 [data-theme="royal"]{
@@ -90,18 +90,16 @@
   --h-fajr:#5178b8; --h-dhuhr:#cf9d1d; --h-asr:#d97b3a; --h-maghrib:#bb5085; --h-isha:#4d6aa0;
 }
 [data-theme="islamic"]{
-  --bg:#f7f6f0; --surface:#fffefa; --surface2:#efefe7;
-  --primary:#245d4d; --primary-soft:rgba(36,93,77,.08);
-  --text:#243e35; --text-muted:#606d64; --border:#dedfd4;
+  --bg:#ffffff; --surface:#ffffff; --surface2:#f5f5f7;
+  --primary:#0066cc; --primary-soft:rgba(0,102,204,.08);
+  --text:#1d1d1f; --text-muted:#6e6e73; --border:#d6d6d6;
   --success:#15803d; --warning:#b45309; --danger:#b91c1c;
-  --grad:linear-gradient(115deg,#204f42,#143a31);
-  --shadow-lg:0 12px 30px rgba(29,55,43,.07); --shadow:0 6px 16px rgba(29,55,43,.05); --shadow-sm:0 2px 6px rgba(29,55,43,.025);
-  --glass:rgba(255,253,247,.8); --glass-brd:rgba(255,255,255,.7);
-  /* v1.5: --gold (#b8860b) measured 3.20:1 as 11px text on --surface — below the
-     4.5:1 AA floor. --gold now means "bright accent for on-gradient/on-brand
-     surfaces" only; --gold-ink is the legible variant for text on a light
-     surface (5.32:1 on --surface). */
-  --gold:#b8860b; --gold-ink:#8f6208; --on-primary:#fff;
+  --grad:#1d1d1f;
+  --shadow-lg:none; --shadow:none; --shadow-sm:none;
+  --glass:#ffffff; --glass-brd:#d6d6d6;
+  /* Gallery neutrals; the deeper blue keeps normal-size action labels above
+     the 4.5:1 contrast floor. Other built-in and custom palettes stay intact. */
+  --gold:#86868b; --gold-ink:#8f6208; --on-primary:#fff;
   --h-fajr:#5b7db4; --h-dhuhr:#c99a1e; --h-asr:#cf7c38; --h-maghrib:#b4517f; --h-isha:#4f6b9e;
 }
 [data-theme="ocean"]{
