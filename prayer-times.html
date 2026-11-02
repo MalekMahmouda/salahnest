@@ -345,9 +345,9 @@
            A page of its own (reached from the sidebar, #/downloads) rather than
            a block buried under Stats: the three destinations are the only
            things a first-time visitor is looking for, so they get room, a clear
-           heading, and nothing competing beside them. Every href points at the
-           unpublished v1.6.6 candidate; js/extras.js owns the version/size strings so
-           they cannot drift onto a file that does not exist. -->
+           heading, and nothing competing beside them. The Android download is
+           the verified v1.6.6 release; js/extras.js owns the version/size strings
+           so they cannot drift away from the published APK. -->
       <section class="page" id="page-downloads">
         <div class="dl-page">
           <header class="dl-head">
@@ -365,10 +365,10 @@
               </span>
               <span class="dlb-txt">
                 <span class="dlb-name" id="dlAndroidT">Android app</span>
-                <span class="dlb-meta" id="dlAndroidMeta">Version 1.6.6 · Final APK size pending · Android 7.0+</span>
+                <span class="dlb-meta" id="dlAndroidMeta">Version 1.6.6 · 54.66 MB · Android 7.0+</span>
               </span>
-              <a class="btn dlb-btn" id="dlAndroidBtn" aria-disabled="true" tabindex="-1">
-                <svg class="dl-btni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7.5 10.5 12 15l4.5-4.5"/><path d="M5 20h14"/></svg><span id="dlAndroidBtnT">Android build pending</span>
+              <a class="btn dlb-btn" id="dlAndroidBtn" href="https://github.com/MalekMahmouda/salahnest/releases/download/v1.6.6/SalahNest-1.6.6.apk" rel="noopener noreferrer" target="_blank">
+                <svg class="dl-btni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7.5 10.5 12 15l4.5-4.5"/><path d="M5 20h14"/></svg><span id="dlAndroidBtnT">Download APK for Android</span>
               </a>
             </li>
             <li class="dlb-item">
@@ -409,7 +409,7 @@
           <!-- The two questions a visitor actually has after seeing the list:
                "what happens when I tap this" and "do I even need a download?". -->
           <div class="dl-help">
-            <section class="dl-help-card" id="dlAndroidHelp" hidden>
+            <section class="dl-help-card" id="dlAndroidHelp">
               <h3 class="dl-help-t" id="dlAndT">Installing on Android</h3>
               <ol class="dl-steps">
                 <li id="dlAnd1">Tap “Download for Android” — the APK comes straight from the GitHub release.</li>

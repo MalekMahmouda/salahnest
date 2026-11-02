@@ -92,22 +92,26 @@ test('desktop, widget, Android, web-test, and media-session labels use SalahNest
   ]) assert.match(read(file), /SalahNest/, file);
 });
 
-test('pending Android candidate has localized metadata and no broken APK link', () => {
+test('published Android release has localized metadata and the verified APK link', () => {
   const extras = read('js/extras.js');
   const data = read('js/data.js');
   const html = read('prayer-times.html');
-  assert.match(extras, /available: false/);
-  assert.match(extras, /mb: ''/);
-  assert.match(extras, /elBtn\.removeAttribute\('href'\)/);
+  assert.match(extras, /version: '1\.6\.6'/);
+  assert.match(extras, /apk: 'SalahNest-1\.6\.6\.apk'/);
+  assert.match(extras, /mb: '54\.66'/);
+  assert.match(extras, /available: true/);
+  assert.match(extras, /elBtn\.href = PT_REPO \+ '\/releases\/download\/v' \+ PT_RELEASE\.version \+ '\/' \+ PT_RELEASE\.apk/);
   assert.match(extras, /androidHelp\.hidden = !PT_RELEASE\.available/);
-  assert.match(data, /androidPending: 'Android build pending'/);
-  assert.match(data, /androidPending: 'لم يكتمل بناء تطبيق أندرويد'/);
-  assert.match(data, /sizePending: 'Final APK size pending'/);
-  assert.match(data, /sizePending: 'سيُحدَّد حجم APK بعد اكتمال البناء'/);
-  assert.match(html, /id="dlAndroidMeta">Version 1\.6\.5 · Final APK size pending · Android 7\.0\+</);
-  assert.match(html, /id="dlAndroidBtn" aria-disabled="true" tabindex="-1"/);
-  assert.match(html, /id="dlAndroidHelp" hidden/);
-  assert.doesNotMatch(html, /49\.9 MB|SalahNest-1\.6\.5\.apk/);
+  assert.match(data, /androidBtn: 'Download APK for Android'/);
+  assert.match(data, /androidBtn: 'تحميل ملف APK لأندرويد'/);
+  assert.match(data, /sizePending: 'APK size unavailable'/);
+  assert.match(data, /sizePending: 'حجم ملف APK غير متاح'/);
+  assert.match(html, /id="dlAndroidMeta">Version 1\.6\.6 · 54\.66 MB · Android 7\.0\+</);
+  assert.match(html, /id="dlAndroidBtn" href="https:\/\/github\.com\/MalekMahmouda\/salahnest\/releases\/download\/v1\.6\.6\/SalahNest-1\.6\.6\.apk"/);
+  assert.match(html, /id="dlAndroidBtnT">Download APK for Android</);
+  assert.doesNotMatch(html, /id="dlAndroidBtn"[^>]*(?:aria-disabled="true"|tabindex="-1")/);
+  assert.doesNotMatch(html, /build pending|Final APK size pending/i);
+  assert.doesNotMatch(data, /Android build pending|لم يكتمل بناء تطبيق أندرويد|Final APK size pending|سيُحدَّد حجم APK بعد اكتمال البناء/);
 });
 
 test('release helper and readmes use the new product name without moving stored data', () => {
