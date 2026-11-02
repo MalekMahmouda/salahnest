@@ -11,13 +11,13 @@
 
 /* ── The release the download cards point at ──────────────────────────────
    Verified against the freshly built artifacts on 2026-10-22:
-     unpublished candidate v1.6.5 · APK size set after build · minSdk 24 = Android 7.0
+     unpublished candidate v1.6.6 · APK size set after build · minSdk 24 = Android 7.0
    WHEN SHIPPING A RELEASE bump version + apk + mb here — the version text, the
    "Latest:" chip and the APK href all read from this object, so nothing else
    needs editing and no card can drift onto a file that does not exist. */
 const PT_RELEASE = {
-  version: '1.6.5',
-  apk: 'SalahNest-1.6.5.apk',
+  version: '1.6.6',
+  apk: 'SalahNest-1.6.6.apk',
   mb: '',
   available: false,
 };
