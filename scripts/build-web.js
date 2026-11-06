@@ -28,7 +28,13 @@ const DIST = path.join(ROOT, 'dist-web');
 execSync('npm run www', { stdio: 'inherit', cwd: ROOT });
 fs.rmSync(DIST, { recursive: true, force: true });
 fs.cpSync(path.join(ROOT, 'www'), DIST, { recursive: true });
-
+for (const [src, dest] of [
+  ['js/contact.js', 'js/contact.js'],
+  ['js/contact-config.js', 'js/contact-config.js'],
+  ['styles/contact.css', 'styles/contact.css'],
+]) {
+  fs.copyFileSync(path.join(ROOT, src), path.join(DIST, dest));
+}
 // ── 2. index.html: PWA wiring ──
 let html = fs.readFileSync(path.join(DIST, 'index.html'), 'utf8');
 html = html.replace(
@@ -60,6 +66,75 @@ html = html.replace(
 );
 html = html.replace('</body>', '  <script src="sw-reg.js"></script>\n</body>');
 html = html.replace(/<title>[^<]*<\/title>/, `<title>${SITE_TITLE}</title>`);
+// ── 2b. Web-only Help & Feedback page ──
+const contactNav = '<button class="nav-item" data-page="contact"><span class="ni" data-icon="mail"></span><span class="t">Help &amp; Feedback</span></button>';
+const settingsNav = '<button class="nav-item" data-page="settings"><span class="ni" data-icon="sliders"></span><span class="t">Settings</span></button>';
+const moreContactNav = '<button class="msq" data-page="contact"><span class="msi" data-icon="mail"></span><span class="mst">Help &amp; Feedback</span></button>';
+const moreSettingsNav = '<button class="msq" data-page="settings"><span class="msi" data-icon="sliders"></span><span class="mst">Settings</span></button>';
+const contactPage = `
+      <section class="page" id="page-contact" aria-labelledby="contactTitle">
+        <div class="contact-wrap">
+          <header class="contact-head">
+            <p class="contact-eyebrow" id="contactEyebrow">HELP &amp; FEEDBACK</p>
+            <div class="contact-title-row"><span class="contact-mark" data-icon="mail"></span><h1 id="contactTitle">Help &amp; Feedback</h1></div>
+            <p class="contact-lead" id="contactLead">Questions, a problem, or an idea? Send a note to the SalahNest team.</p>
+          </header>
+          <div class="contact-grid">
+            <div class="contact-card">
+              <form id="contactForm" method="POST" novalidate>
+                <div class="contact-form-grid">
+                  <div class="contact-field">
+                    <label id="contactNameLabel" for="contactName">Your name (optional)</label>
+                    <input class="inp" id="contactName" name="name" type="text" autocomplete="name" maxlength="80">
+                  </div>
+                  <div class="contact-field">
+                    <label id="contactEmailLabel" for="contactEmail">Email address</label>
+                    <input class="inp" id="contactEmail" name="email" type="email" autocomplete="email" maxlength="254" required>
+                  </div>
+                  <div class="contact-field contact-field-wide">
+                    <label id="contactTopicLabel" for="contactTopic">What is this about?</label>
+                    <select class="inp" id="contactTopic" name="topic" required>
+                      <option value="" selected disabled>Choose a topic</option>
+                      <option value="help">App help</option>
+                      <option value="bug">Report a problem</option>
+                      <option value="feedback">Feedback</option>
+                      <option value="idea">Feature idea</option>
+                    </select>
+                  </div>
+                  <div class="contact-field contact-field-wide">
+                    <label id="contactMessageLabel" for="contactMessage">Message</label>
+                    <textarea class="inp" id="contactMessage" name="message" maxlength="4000" required></textarea>
+                    <p class="contact-char-hint" id="contactCharHint">Up to 4,000 characters</p>
+                  </div>
+                </div>
+                <div class="contact-honeypot" aria-hidden="true"><label for="contactWebsite">Leave this field empty</label><input id="contactWebsite" name="_gotcha" type="text" tabindex="-1" autocomplete="off"></div>
+                <div class="contact-form-footer">
+                  <button class="btn primary" id="contactSubmit" type="submit" disabled><span id="contactSubmitLabel">Send message</span></button>
+                  <p class="contact-status is-note" id="contactStatus" role="status" aria-live="polite"></p>
+                </div>
+                <p class="contact-privacy"><span id="contactPrivacy">Your name, email, topic, and message are sent through Formspree so the SalahNest team can reply. On Formspree Free, submissions are kept for 30 days. Please do not include sensitive personal information.</span> <a id="contactPrivacyLink" href="https://formspree.io/legal/privacy-policy/" target="_blank" rel="noopener noreferrer">Formspree privacy policy</a></p>
+              </form>
+            </div>
+            <aside class="contact-aside" aria-labelledby="contactAsideTitle">
+              <span class="contact-aside-icon" data-icon="info"></span>
+              <h2 id="contactAsideTitle">A little context helps</h2>
+              <p id="contactAsideText">For a problem report, mention what you expected and what happened. Please leave out passwords, precise location details, and other sensitive information.</p>
+              <div class="contact-aside-rule"></div>
+              <p class="contact-aside-foot" id="contactAsideFoot">Your email is used to reply to this message.</p>
+            </aside>
+          </div>
+        </div>
+      </section>`;
+const replaceOnce = (source, before, after, label) => {
+  if (source.split(before).length !== 2) throw new Error(`Could not uniquely insert ${label}`);
+  return source.replace(before, after);
+};
+html = replaceOnce(html, settingsNav, `${contactNav}\n      ${settingsNav}`, 'sidebar contact navigation');
+html = replaceOnce(html, moreSettingsNav, `${moreContactNav}\n      ${moreSettingsNav}`, 'mobile contact navigation');
+html = replaceOnce(html, '    </main>', `${contactPage}\n    </main>`, 'contact page');
+html = replaceOnce(html, '<link rel="stylesheet" href="styles/web.css">', '<link rel="stylesheet" href="styles/web.css">\n<link rel="stylesheet" href="styles/contact.css">', 'contact stylesheet');
+html = replaceOnce(html, 'https://nominatim.openstreetmap.org;', 'https://nominatim.openstreetmap.org https://formspree.io;', 'Formspree CSP permission');
+html = replaceOnce(html, '  <script src="sw-reg.js"></script>', '  <script src="js/contact-config.js"></script>\n  <script src="js/contact.js"></script>\n  <script src="sw-reg.js"></script>', 'contact form scripts');
 fs.writeFileSync(path.join(DIST, 'index.html'), html);
 
 // ── 3. web.css — polish layer on top of the app's own tokens ──
@@ -164,10 +239,10 @@ fs.writeFileSync(path.join(DIST, '404.html'), notFoundHtml);
 const CACHE = 'pt-cache-' + new Date().toISOString().replace(/\D/g, '').slice(0, 14);
 const SHELL = [
   'index.html', 'styles/app.css', 'styles/motion.css', 'styles/fonts.css',
-  'styles/companion.css', 'styles/web.css', 'js/early-locale.js',
+  'styles/companion.css', 'styles/web.css', 'styles/contact.css', 'js/early-locale.js',
   'js/web-alerts.js', 'js/app.js', 'js/motion.js', 'js/pages.js', 'js/pages3.js',
   'js/reader.js', 'js/store3.js', 'js/data.js', 'js/platform.js', 'js/adhan-bundle.js',
-  'js/pt-engine.js', 'js/compass.js', 'js/stats.js', 'js/extras.js',
+  'js/pt-engine.js', 'js/compass.js', 'js/stats.js', 'js/extras.js', 'js/contact-config.js', 'js/contact.js',
   'data/quran.json', 'manifest.webmanifest',
   'assets/salahnest-mark.png', 'assets/social-preview.png',
   ...fs.readdirSync(path.join(ROOT, 'assets', 'adhans')).filter((f) => f.endsWith('.mp3')).map((f) => `adhans/${f}`),
