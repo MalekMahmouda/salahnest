@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' https://cdn.jsdelivr.net; connect-src 'self' https://api.aladhan.com https://nominatim.openstreetmap.org; media-src 'self' https://cdn.islamic.network https://cdn.aladhan.com https://*.mp3quran.net https://edge.mixlr.com https://radio.xecod.com https://stream.radiojar.com; object-src 'none'">
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' https://cdn.jsdelivr.net; connect-src 'self' https://api.aladhan.com https://nominatim.openstreetmap.org https://formspree.io; media-src 'self' https://cdn.islamic.network https://cdn.aladhan.com https://*.mp3quran.net https://edge.mixlr.com https://radio.xecod.com https://stream.radiojar.com; object-src 'none'">
 <!-- v1.3.3: remote hosts are scheme-prefixed (https:) — schemeless hosts match
      the document's own scheme per CSP3, so on Electron's file:// page nothing
      remote ever matched: Test Adhan CDN, Quran audio AND Arabic web fonts were
@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="styles/motion.css">
 <link rel="stylesheet" href="styles/fonts.css">
 <link rel="stylesheet" href="styles/web.css">
+<link rel="stylesheet" href="styles/contact.css">
 <meta name="description" content="Free offline prayer times app: accurate Muslim prayer times with adhan notifications, Qibla compass, full Quran reader with mushaf verses, electronic tasbih (dhikr counter), Hijri calendar, and 99 Names of Allah. Works with no account — install or use right in the browser.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://malekmahmouda.github.io/salahnest/">
@@ -62,6 +63,7 @@
       <button class="nav-item" data-page="stats"><span class="ni" data-icon="chart"></span><span class="t">Stats</span></button>
       <div style="flex:1"></div>
       <button class="nav-item nav-dl" data-page="downloads"><span class="ni" data-icon="download"></span><span class="t">Download</span></button>
+      <button class="nav-item" data-page="contact"><span class="ni" data-icon="mail"></span><span class="t">Help &amp; Feedback</span></button>
       <button class="nav-item" data-page="settings"><span class="ni" data-icon="sliders"></span><span class="t">Settings</span></button>
     </nav>
     <div class="sb-foot">
@@ -601,6 +603,60 @@
         </div>
       </section>
 
+
+      <section class="page" id="page-contact" aria-labelledby="contactTitle">
+        <div class="contact-wrap">
+          <header class="contact-head">
+            <p class="contact-eyebrow" id="contactEyebrow">HELP &amp; FEEDBACK</p>
+            <div class="contact-title-row"><span class="contact-mark" data-icon="mail"></span><h1 id="contactTitle">Help &amp; Feedback</h1></div>
+            <p class="contact-lead" id="contactLead">Questions, a problem, or an idea? Send a note to the SalahNest team.</p>
+          </header>
+          <div class="contact-grid">
+            <div class="contact-card">
+              <form id="contactForm" method="POST" novalidate>
+                <div class="contact-form-grid">
+                  <div class="contact-field">
+                    <label id="contactNameLabel" for="contactName">Your name (optional)</label>
+                    <input class="inp" id="contactName" name="name" type="text" autocomplete="name" maxlength="80">
+                  </div>
+                  <div class="contact-field">
+                    <label id="contactEmailLabel" for="contactEmail">Email address</label>
+                    <input class="inp" id="contactEmail" name="email" type="email" autocomplete="email" maxlength="254" required>
+                  </div>
+                  <div class="contact-field contact-field-wide">
+                    <label id="contactTopicLabel" for="contactTopic">What is this about?</label>
+                    <select class="inp" id="contactTopic" name="topic" required>
+                      <option value="" selected disabled>Choose a topic</option>
+                      <option value="help">App help</option>
+                      <option value="bug">Report a problem</option>
+                      <option value="feedback">Feedback</option>
+                      <option value="idea">Feature idea</option>
+                    </select>
+                  </div>
+                  <div class="contact-field contact-field-wide">
+                    <label id="contactMessageLabel" for="contactMessage">Message</label>
+                    <textarea class="inp" id="contactMessage" name="message" maxlength="4000" required></textarea>
+                    <p class="contact-char-hint" id="contactCharHint">Up to 4,000 characters</p>
+                  </div>
+                </div>
+                <div class="contact-honeypot" aria-hidden="true"><label for="contactWebsite">Leave this field empty</label><input id="contactWebsite" name="_gotcha" type="text" tabindex="-1" autocomplete="off"></div>
+                <div class="contact-form-footer">
+                  <button class="btn primary" id="contactSubmit" type="submit" disabled><span id="contactSubmitLabel">Send message</span></button>
+                  <p class="contact-status is-note" id="contactStatus" role="status" aria-live="polite"></p>
+                </div>
+                <p class="contact-privacy"><span id="contactPrivacy">Your name, email, topic, and message are sent through Formspree so the SalahNest team can reply. On Formspree Free, submissions are kept for 30 days. Please do not include sensitive personal information.</span> <a id="contactPrivacyLink" href="https://formspree.io/legal/privacy-policy/" target="_blank" rel="noopener noreferrer">Formspree privacy policy</a></p>
+              </form>
+            </div>
+            <aside class="contact-aside" aria-labelledby="contactAsideTitle">
+              <span class="contact-aside-icon" data-icon="info"></span>
+              <h2 id="contactAsideTitle">A little context helps</h2>
+              <p id="contactAsideText">For a problem report, mention what you expected and what happened. Please leave out passwords, precise location details, and other sensitive information.</p>
+              <div class="contact-aside-rule"></div>
+              <p class="contact-aside-foot" id="contactAsideFoot">Your email is used to reply to this message.</p>
+            </aside>
+          </div>
+        </div>
+      </section>
     </main>
   </div>
 </div>
@@ -626,6 +682,7 @@
       <button class="msq" data-page="names"><span class="msi" data-icon="star"></span><span class="mst">Names</span></button>
       <button class="msq" data-page="stats"><span class="msi" data-icon="chart"></span><span class="mst">Stats</span></button>
       <button class="msq" data-page="downloads"><span class="msi" data-icon="download"></span><span class="mst">Download</span></button>
+      <button class="msq" data-page="contact"><span class="msi" data-icon="mail"></span><span class="mst">Help &amp; Feedback</span></button>
       <button class="msq" data-page="settings"><span class="msi" data-icon="sliders"></span><span class="mst">Settings</span></button>
     </div>
     <div class="msheet-row">
@@ -738,6 +795,8 @@
 <script src="js/extras.js"></script>
 <!-- overlay/widget pages load their own scripts: js/overlay.js, js/widget.js -->
   <script src="js/adhan-bundle.js"></script>
+  <script src="js/contact-config.js"></script>
+  <script src="js/contact.js"></script>
   <script src="sw-reg.js"></script>
 </body>
 </html>

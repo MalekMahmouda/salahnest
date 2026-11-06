@@ -561,7 +561,7 @@ function buildSwatches() {
 }
 
 /* ═══ NAVIGATION ═══ */
-const PAGE_ORDER = ['prayers', 'mhome', 'calendar', 'qibla', 'quran', 'names', 'dhikr', 'stats', 'downloads', 'settings'];
+const PAGE_ORDER = ['prayers', 'mhome', 'calendar', 'qibla', 'quran', 'names', 'dhikr', 'stats', 'downloads', 'contact', 'settings'];
 function gotoPage(name) {
   if (document.body.classList.contains('m-mode') && name === 'prayers') name = 'mhome';
   if (window.PTCompass && name !== 'qibla') window.PTCompass.stop();
@@ -1255,7 +1255,7 @@ function applyLang() {
 
   // Sidebar + bottom nav
   document.getElementById('sbTitle').textContent = t('appName');
-  document.getElementById('sbSub').textContent = t('sub');    const navMap = { prayers: 'nav.prayers', calendar: 'nav.calendar', qibla: 'nav.qibla', quran: 'nav.quran', names: 'nav.names', dhikr: 'nav.dhikr', stats: 'nav.stats', downloads: 'nav.downloads', settings: 'nav.settings' };
+  document.getElementById('sbSub').textContent = t('sub');    const navMap = { prayers: 'nav.prayers', calendar: 'nav.calendar', qibla: 'nav.qibla', quran: 'nav.quran', names: 'nav.names', dhikr: 'nav.dhikr', stats: 'nav.stats', downloads: 'nav.downloads', contact: 'nav.contact', settings: 'nav.settings' };
   document.querySelectorAll('[data-page]').forEach((b) => {
     const key = navMap[b.dataset.page];
     if (!key) return;
@@ -1420,6 +1420,7 @@ function applyLang() {
 
   // Downloads + Quran Radio labels live in js/extras.js (loaded after this file).
   if (window.applyExtrasLang) window.applyExtrasLang();
+  if (window.applyContactLanguage) window.applyContactLanguage();
 }
 
 /* ═══ APP-CHROME ICONS ═══
