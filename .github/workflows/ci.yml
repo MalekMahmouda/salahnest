@@ -31,6 +31,8 @@ jobs:
         run: node scripts/test-alerts.js
       - name: UI accessibility regression tests
         run: node scripts/test-ui-accessibility.js
+      - name: Contact form regression tests
+        run: node scripts/test-contact-form.js
       - name: Location date regression tests
         run: node scripts/test-location-date.js
       - name: npm audit (production deps only)

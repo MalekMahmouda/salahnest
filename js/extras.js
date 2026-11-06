@@ -290,7 +290,7 @@ window.applyExtrasLang = applyExtrasLang;
 
    `#downloads` (the old anchor, with or without the slash) is still honoured
    and resolves to the Download page, so links already shared keep working. */
-const PT_ROUTE_PAGES = ['prayers', 'calendar', 'qibla', 'quran', 'names', 'dhikr', 'stats', 'downloads', 'settings', 'mhome'];
+const PT_ROUTE_PAGES = ['prayers', 'calendar', 'qibla', 'quran', 'names', 'dhikr', 'stats', 'downloads', 'contact', 'settings', 'mhome'];
 let ptRouterInstalled = false;
 let ptRouterOn = false;      // hash writes stay off until the app has booted
 let ptRouterQuiet = false;   // a navigation we started ourselves from the hash
