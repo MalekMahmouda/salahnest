@@ -1,0 +1,41 @@
+/* Web-only Help & Feedback page */
+.contact-wrap{max-width:1120px;margin:0 auto;padding:clamp(10px,2.1vw,28px)}
+.contact-head{max-width:760px;margin:0 0 24px}
+.contact-eyebrow{margin:0 0 8px;color:var(--gold-ink);font-size:10px;font-weight:800;letter-spacing:1.45px;text-transform:uppercase}
+.contact-title-row{display:flex;align-items:center;gap:13px;margin-bottom:8px}
+.contact-mark{display:grid;place-items:center;flex:0 0 42px;width:42px;height:42px;border-radius:14px;color:var(--primary);background:var(--primary-soft);border:1px solid var(--border)}
+.contact-mark svg{width:21px;height:21px}
+#contactTitle{margin:0;color:var(--text);font-size:clamp(26px,3vw,36px);line-height:1.15;letter-spacing:-.04em}
+.contact-lead{margin:0;color:var(--text-muted);font-size:14px;line-height:1.7;max-width:660px}
+.contact-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(250px,.85fr);gap:18px;align-items:start}
+.contact-card,.contact-aside{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow-sm)}
+.contact-card{padding:clamp(18px,2.5vw,28px)}
+.contact-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px 14px}
+.contact-field{display:flex;flex-direction:column;gap:7px;min-width:0}
+.contact-field-wide{grid-column:1/-1}
+.contact-field label{color:var(--text);font-size:12px;font-weight:700}
+.contact-field .inp{min-height:45px}
+.contact-field textarea.inp{min-height:150px;resize:vertical;line-height:1.6}
+.contact-field input[type=email]{direction:ltr;text-align:left}
+.contact-field textarea{unicode-bidi:plaintext}
+.contact-char-hint{margin:0;color:var(--text-muted);font-size:11px}
+.contact-honeypot{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.contact-form-footer{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:18px}
+#contactSubmit{min-height:46px;justify-content:center}
+#contactSubmit[disabled]{opacity:.58;cursor:not-allowed;filter:saturate(.55);transform:none;box-shadow:none}
+.contact-status{flex:1 1 240px;margin:0;padding:10px 12px;border:1px solid var(--border);border-radius:11px;font-size:12px;line-height:1.55}
+.contact-status.is-note{color:var(--text-muted);background:var(--surface2)}
+.contact-status.is-success{color:var(--success);background:color-mix(in srgb,var(--success) 9%,var(--surface));border-color:color-mix(in srgb,var(--success) 35%,var(--border))}
+.contact-status.is-error{color:var(--danger);background:color-mix(in srgb,var(--danger) 8%,var(--surface));border-color:color-mix(in srgb,var(--danger) 35%,var(--border))}
+.contact-privacy{margin:16px 0 0;color:var(--text-muted);font-size:11px;line-height:1.7}
+.contact-privacy a{color:var(--primary);font-weight:650;text-decoration:underline;text-underline-offset:2px}
+.contact-aside{padding:22px;position:relative;overflow:hidden}
+.contact-aside::before{content:'';position:absolute;inset-block-start:0;inset-inline-start:0;width:100%;height:3px;background:linear-gradient(90deg,var(--primary),var(--gold))}
+.contact-aside-icon{display:grid;place-items:center;width:39px;height:39px;margin-bottom:15px;border-radius:13px;color:var(--gold-ink);background:var(--surface2)}
+.contact-aside-icon svg{width:20px;height:20px}
+.contact-aside h2{margin:0 0 8px;color:var(--text);font-size:15px;line-height:1.4}
+.contact-aside p{margin:0;color:var(--text-muted);font-size:12.5px;line-height:1.75}
+.contact-aside-rule{height:1px;margin:17px 0;background:var(--border)}
+.contact-aside .contact-aside-foot{font-size:11.5px}
+@media(max-width:880px){.contact-grid{grid-template-columns:1fr}.contact-aside{display:grid;grid-template-columns:42px 1fr;column-gap:12px;align-items:start}.contact-aside-icon{grid-row:1/3;margin:0}.contact-aside h2{align-self:end}.contact-aside p{grid-column:2}.contact-aside-rule{grid-column:1/-1;width:100%;margin:14px 0}.contact-aside .contact-aside-foot{grid-column:1/-1}}
+@media(max-width:560px){.contact-wrap{padding:8px 2px 24px}.contact-head{margin-bottom:18px}.contact-grid{gap:12px}.contact-card{padding:17px}.contact-form-grid{grid-template-columns:1fr;gap:14px}.contact-field-wide{grid-column:auto}.contact-field textarea.inp{min-height:132px}.contact-form-footer{align-items:stretch;flex-direction:column}.contact-form-footer #contactSubmit{width:100%}.contact-status{flex-basis:auto}.contact-aside{padding:18px}}
