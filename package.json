@@ -16,7 +16,7 @@
     "package:installer": "electron-builder --win nsis",
     "release": "node scripts/make-release.js",
     "www": "node scripts/build-www.js",
-    "test": "node scripts/test-scheduler.js && node scripts/test-contract.js && node scripts/test-motion.js && node scripts/test-alerts.js && node scripts/test-ui-accessibility.js && node scripts/test-location-date.js && node scripts/test-branding.js && node scripts/test-publish-readiness.js && node scripts/test-contact-form.js",
+    "test": "node scripts/test-scheduler.js && node scripts/test-contract.js && node scripts/test-motion.js && node scripts/test-alerts.js && node scripts/test-ui-accessibility.js && node scripts/test-arabic-search.js && node scripts/test-router.js && node scripts/test-radio-hls.js && node scripts/test-location-date.js && node scripts/test-branding.js && node scripts/test-publish-readiness.js && node scripts/test-contact-form.js",
     "apk": "npm run www && node scripts/gen-android-raw.js && npx cap sync android && node scripts/apk-gradle.js assembleRelease",
     "apk:debug": "npm run www && node scripts/gen-android-raw.js && npx cap sync android && node scripts/apk-gradle.js assembleDebug",
     "assets:android": "node scripts/gen-android-icons.js && node scripts/gen-android-splash.js",
@@ -81,14 +81,17 @@
   "devDependencies": {
     "@capacitor/android": "^8.5.2",
     "@capacitor/app": "^8.1.1",
-    "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "^8.5.2",
     "@capacitor/core": "^8.5.2",
     "@capacitor/local-notifications": "^8.3.1",
     "@capacitor/status-bar": "^8.0.3",
-    "electron": "41.1.0",
+    "electron": "45.2.3",
     "electron-builder": "^26.0.12",
     "esbuild": "^0.28.2",
+    "hls.js": "1.7.4",
     "pngjs": "^7.0.0"
+  },
+  "engines": {
+    "node": ">=22.12.0"
   }
 }

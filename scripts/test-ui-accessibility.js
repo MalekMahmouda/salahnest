@@ -62,6 +62,41 @@ test('full-screen adhan dialog has focus handling, Escape close, and a tab trap'
   assert.match(app, /if \(_azanOpen\) \{[\s\S]*?e\.key === 'Escape'[\s\S]*?e\.key === 'Tab'[\s\S]*?dialog\.contains\(document\.activeElement\)/);
 });
 
+test('all closed overlays are inert/hidden and opening or closing them synchronizes state', () => {
+  for (const id of ['mMoreSheet', 'locOverlay', 'nameOverlay', 'txtModal', 'azanOverlay']) {
+    const tag = html.match(new RegExp(`<[^>]+id="${id}"[^>]*>`));
+    assert.ok(tag, `${id} exists`);
+    assert.match(tag[0], /\binert(?:\s|>)/, `${id} starts inert`);
+    assert.match(tag[0], /aria-hidden="true"/, `${id} starts hidden from assistive technology`);
+  }
+  assert.match(css, /\.overlay\{[^}]*visibility:hidden/);
+  assert.match(css, /\.azan-screen\{[^}]*visibility:hidden/);
+  assert.match(app, /function setLayerOpen\(el, open\)/);
+  assert.match(app, /el\.setAttribute\('aria-hidden', String\(!isOpen\)\)/);
+  assert.match(pages, /window\.setLayerOpen\(overlay, true\)/);
+  assert.match(pages, /function closeNameOverlay\(\)[\s\S]*?window\.setLayerOpen\(overlay, false\)/);
+  assert.match(app, /opener\.focus\(\)/);
+});
+
+test('calendar cells have enough mobile height for Hijri dates', () => {
+  assert.match(css, /\.cal-cell\{[^}]*aspect-ratio:auto;min-height:58px/);
+});
+
+test('remaining history, Quran, calendar, stats, and Android adhan labels use translations', () => {
+  const data = read('js/data.js');
+  assert.match(data, /tabsSurahs: 'Surahs'/);
+  assert.match(data, /tabsSurahs: 'السور'/);
+  assert.match(data, /androidAdhanNote: '[^']+'/);
+  assert.match(data, /androidAdhanNote: 'على أندرويد/);
+  assert.match(app, /histLbl = \$\('lblHist'\); if \(histLbl\) histLbl\.textContent = t\('hist\.title'\)/);
+  assert.match(app, /\['qtList', 'quran\.tabsSurahs'\]/);
+  assert.match(app, /calToday\.textContent = t\('cal\.todayBtn'\)/);
+  assert.match(app, /statsToday\.textContent = t\('today'\)/);
+  assert.match(app, /applyAndroidAdhanNotesLang\(\)/);
+  assert.match(pages, /t\('set\.defaultMuadhdhin'\)/);
+  assert.match(pages, /title="\$\{t\('set\.volume'\)\}"/);
+});
+
 test('reduced-motion media query removes transitions', () => {
   const block = css.match(/@media\s*\(prefers-reduced-motion:\s*reduce\)\s*\{([\s\S]*?)\n\}/);
   assert.ok(block, 'reduced-motion media query exists');

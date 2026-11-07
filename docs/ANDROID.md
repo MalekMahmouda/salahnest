@@ -92,9 +92,9 @@ Gradle writes `android/app/build/outputs/apk/release/app-release.apk` and `andro
 
 ## Versioning
 
-`package.json` and `android/app/build.gradle` agree on candidate `versionName 1.6.5`; Android uses `versionCode 13`. This is a local review candidate; no public tag, upload, or release has been made during this review. Increase the Android version code for every distributed update.
+Desktop and Android versions are intentionally independent. Current source values are desktop `1.6.5` in `package.json` and Android `versionName 1.6.6` / `versionCode 14` in `android/app/build.gradle`; the release/download card also points to Android `1.6.6`. See [the version-source table](VERSIONS.md). Increase the Android version code for every distributed update.
 
-## Verified for the current source candidate
+## Historical verification recorded for Android 1.6.5 / version code 13
 
 - `npm test`: scheduler, contract, motion, alert, UI-accessibility, and location-date suites pass.
 - `npm audit --omit=dev`: zero production dependency vulnerabilities.

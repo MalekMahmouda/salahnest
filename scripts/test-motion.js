@@ -92,4 +92,9 @@ test('reduced-motion CSS removes transitions instead of leaving residual fades',
   assert.match(block[1], /transition-duration:0s\s*!important/);
   assert.doesNotMatch(block[1], /transition-duration:\.15s/);
 });
+test('page View Transitions handle ready and finished promise rejection', () => {
+  const source = fs.readFileSync(path.join(__dirname, '../js/motion.js'), 'utf8');
+  assert.match(source, /if \(vt && vt\.ready\) vt\.ready\.catch\(\(\) => \{ delete root\.dataset\.vtdir; \}\)/);
+  assert.match(source, /vt\.finished\.then\([\s\S]*?\.catch\(\(\) => \{ delete root\.dataset\.vtdir; \}\)/);
+});
 console.log(`${tests} motion regression tests passed.`);
