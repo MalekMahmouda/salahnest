@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' https://cdn.jsdelivr.net; connect-src 'self' https://api.aladhan.com https://nominatim.openstreetmap.org; media-src 'self' https://cdn.islamic.network https://cdn.aladhan.com https://*.mp3quran.net https://edge.mixlr.com https://radio.xecod.com https://stream.radiojar.com; object-src 'none'">
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' https://cdn.jsdelivr.net; connect-src 'self' https://api.aladhan.com https://nominatim.openstreetmap.org https://service.webvideocore.net https://cdnvideo.webvideocore.net; media-src 'self' blob: https://cdn.islamic.network https://cdn.aladhan.com https://*.mp3quran.net https://edge.mixlr.com https://radio.xecod.com https://stream.radiojar.com https://service.webvideocore.net https://cdnvideo.webvideocore.net; object-src 'none'">
 <!-- v1.3.3: remote hosts are scheme-prefixed (https:) — schemeless hosts match
      the document's own scheme per CSP3, so on Electron's file:// page nothing
      remote ever matched: Test Adhan CDN, Quran audio AND Arabic web fonts were
@@ -594,7 +594,7 @@
 </nav>
 
 <!-- ══ MOBILE MORE SHEET ══ -->
-<div class="overlay msheet-overlay" id="mMoreSheet">
+<div class="overlay msheet-overlay" id="mMoreSheet" inert aria-hidden="true">
   <div class="msheet">
     <div class="msheet-grab"></div>
     <div class="msheet-title" id="mMoreTitle">More</div>
@@ -617,7 +617,7 @@
 </div>
 
 <!-- ══ LOCATION MODAL ══ -->
-<div class="overlay" id="locOverlay" aria-hidden="true">
+<div class="overlay" id="locOverlay" inert aria-hidden="true">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="locTitle" tabindex="-1">
     <h3 id="locTitle">Set Location</h3>     <button class="btn" id="btnGps2" style="width:100%;margin-bottom:11px"><span data-icon="pin"></span> <span id="locGpsLbl">Use GPS / Current Location</span></button>
     <div class="fgrp"><label id="lblCity" for="cityInp">City</label><input class="inp" id="cityInp" placeholder="e.g. Riyadh, Cairo, London…"></div>
@@ -627,7 +627,7 @@
 </div>
 
 <!-- ══ NAME DETAIL MODAL ══ -->
-<div class="overlay" id="nameOverlay">
+<div class="overlay" id="nameOverlay" inert aria-hidden="true">
   <div class="modal" style="text-align:center">
     <div id="nmNum" style="font-size:11.5px;color:var(--text-muted);font-weight:700"></div>
     <div id="nmArabic" style="font-size:48px;font-weight:800;color:var(--primary);font-family:var(--font-ar);line-height:1.3;margin:6px 0 2px"></div>
@@ -665,7 +665,7 @@
 </div>
 
 <!-- ══ TEXT INPUT MODAL (replaces window.prompt, unsupported in Electron) ══ -->
-<div class="overlay" id="txtModal">
+<div class="overlay" id="txtModal" inert aria-hidden="true">
   <div class="modal" style="max-width:420px;width:min(92vw,420px)">
     <div id="txtModalTitle" style="font-size:15.5px;font-weight:750;margin-bottom:10px"></div>
     <label id="txtModalLabel" for="txtModalInput" style="display:block;font-size:12px;color:var(--text-muted);margin-bottom:6px;white-space:pre-line"></label>
@@ -679,7 +679,7 @@
 </div>
 
 <!-- ══ FULL-SCREEN AZAN (mobile Test Adhan + foreground prayer time) ══ -->
-<div class="azan-screen" id="azanOverlay" role="dialog" aria-modal="true" aria-labelledby="azanArName" aria-hidden="true" tabindex="-1">
+<div class="azan-screen" id="azanOverlay" role="dialog" aria-modal="true" aria-labelledby="azanArName" aria-hidden="true" inert tabindex="-1">
   <div class="azan-inner">
     <div class="azan-city" id="azanCity">—</div>
     <div class="azan-ar" id="azanArName">الفجر</div>
@@ -698,10 +698,11 @@
 <audio id="beepAudio" preload="none"></audio>
 <!-- Live Quran radio: its own element so a station never interrupts the adhan
      or the surah player, and stopping it can never stop a prayer alert. -->
-<audio id="radioAudio" preload="none"></audio>
+<video id="radioAudio" preload="none" playsinline aria-hidden="true" tabindex="-1" style="display:none"></video>
 
 <script src="shared/pt-engine.js"></script>
 <script src="js/data.js"></script>
+<script src="js/search-utils.js"></script>
 <script src="js/platform.js"></script>
 <script src="js/store3.js"></script>
 <script src="js/compass.js"></script>
@@ -712,6 +713,7 @@
 <script src="js/pages3.js"></script>
 <script src="js/reader.js"></script>
 <script src="js/stats.js"></script>
+<script src="js/vendor/hls.min.js"></script>
 <script src="js/extras.js"></script>
 <!-- overlay/widget pages load their own scripts: js/overlay.js, js/widget.js -->
 </body>

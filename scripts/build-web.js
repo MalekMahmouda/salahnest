@@ -133,7 +133,7 @@ html = replaceOnce(html, settingsNav, `${contactNav}\n      ${settingsNav}`, 'si
 html = replaceOnce(html, moreSettingsNav, `${moreContactNav}\n      ${moreSettingsNav}`, 'mobile contact navigation');
 html = replaceOnce(html, '    </main>', `${contactPage}\n    </main>`, 'contact page');
 html = replaceOnce(html, '<link rel="stylesheet" href="styles/web.css">', '<link rel="stylesheet" href="styles/web.css">\n<link rel="stylesheet" href="styles/contact.css">', 'contact stylesheet');
-html = replaceOnce(html, 'https://nominatim.openstreetmap.org;', 'https://nominatim.openstreetmap.org https://formspree.io;', 'Formspree CSP permission');
+html = replaceOnce(html, 'https://nominatim.openstreetmap.org https://service.webvideocore.net https://cdnvideo.webvideocore.net;', 'https://nominatim.openstreetmap.org https://service.webvideocore.net https://cdnvideo.webvideocore.net https://formspree.io;', 'Formspree CSP permission');
 html = replaceOnce(html, '  <script src="sw-reg.js"></script>', '  <script src="js/contact-config.js"></script>\n  <script src="js/contact.js"></script>\n  <script src="sw-reg.js"></script>', 'contact form scripts');
 fs.writeFileSync(path.join(DIST, 'index.html'), html);
 
@@ -241,7 +241,7 @@ const SHELL = [
   'index.html', 'styles/app.css', 'styles/motion.css', 'styles/fonts.css',
   'styles/companion.css', 'styles/web.css', 'styles/contact.css', 'js/early-locale.js',
   'js/web-alerts.js', 'js/app.js', 'js/motion.js', 'js/pages.js', 'js/pages3.js',
-  'js/reader.js', 'js/store3.js', 'js/data.js', 'js/platform.js', 'js/adhan-bundle.js',
+  'js/reader.js', 'js/store3.js', 'js/data.js', 'js/search-utils.js', 'js/vendor/hls.min.js', 'js/platform.js', 'js/adhan-bundle.js',
   'js/pt-engine.js', 'js/compass.js', 'js/stats.js', 'js/extras.js', 'js/contact-config.js', 'js/contact.js',
   'data/quran.json', 'manifest.webmanifest',
   'assets/salahnest-mark.png', 'assets/social-preview.png',

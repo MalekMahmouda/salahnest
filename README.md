@@ -7,7 +7,8 @@ A native Windows desktop & Android Islamic companion built with Electron — pra
 > 🇸🇦 العربية: [README.ar.md](README.ar.md)
 🌐 **Web app:** https://malekmahmouda.github.io/salahnest/ — installable PWA, works fully offline after the first visit.
 📥 **Downloads:** signed Android APKs are published in [GitHub Releases](https://github.com/MalekMahmouda/salahnest/releases); the Windows installer is held until it is code-signed and tested.
-![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Android%20%7C%20Web-blue) ![Electron](https://img.shields.io/badge/Electron-41-47848F) ![Version](https://img.shields.io/badge/version-1.6.5-green)
+**Versions:** desktop source `1.6.5`; Android `1.6.6` (version code `14`); web/PWA has no separate product version. See [version sources](docs/VERSIONS.md).
+![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Android%20%7C%20Web-blue) ![Electron](https://img.shields.io/badge/Electron-45-47848F) ![Desktop](https://img.shields.io/badge/desktop-1.6.5-green) ![Android](https://img.shields.io/badge/Android-1.6.6-green)
 
 ## Features
 
@@ -43,6 +44,8 @@ A native Windows desktop & Android Islamic companion built with Electron — pra
 - No Electron menu bar, no DevTools in production builds
 
 ## Getting started
+
+Local development and packaging require Node.js `22.12.0` or newer (Electron 45 requirement); CI uses Node.js 24.
 
 ```bash
 npm install

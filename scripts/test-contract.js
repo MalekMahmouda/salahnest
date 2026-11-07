@@ -330,7 +330,11 @@ section('6. netFetch query-key isolation + per-request timeout');
       'GPS location change cannot inherit the previous saved timezone');
 
     // Manual city search has the same timezone/provenance requirements as GPS.
-    globalThis.fetch = async () => ({ ok: true, json: async () => ({ code: 200, data: { latitude: 40.7128, longitude: -74.006 } }) });
+    globalThis.fetch = async (url) => {
+      ok(String(url).startsWith('https://nominatim.openstreetmap.org/search?'),
+        'plain city names bypass the known AlAdhan addressInfo 404');
+      return { ok: true, json: async () => [{ lat: '40.7128', lon: '-74.006' }] };
+    };
     await X.fetchByCity('New York', 'United States');
     ok(X.S.lat === 40.7128 && X.S.lon === -74.006 && !DB3.prefs.activeLoc
       && X.resolveTz() === 'America/New_York', 'manual city search replaces coordinates without inheriting a saved timezone');
@@ -879,7 +883,7 @@ function runArtifactChecks() {
   ok(!/beep: '🔊'/.test(read('js/data.js')), 'data.js no longer defines the emoji-only beep toast');
   const csp = (read('prayer-times.html').match(/Content-Security-Policy[\s\S]*?content="([^"]+)"/) || [])[1] || '';
   ok(csp.length > 0, 'desktop page defines a CSP');
-  ok(csp.split(/;\s*/).every((d) => d.split(/\s+/).slice(1).every((t) => !t || t === '' || /^(https?:|'self'|'none'|data:|'unsafe-inline')/.test(t))),
+  ok(csp.split(/;\s*/).every((d) => d.split(/\s+/).slice(1).every((t) => !t || t === '' || /^(https?:|'self'|'none'|data:|blob:|'unsafe-inline')/.test(t))),
     'every CSP host token is scheme-prefixed or self/data/none (CSP3 file:// safety)');
   ok(csp.includes('https://*.mp3quran.net') && csp.includes('https://cdn.islamic.network'),
     'media-src covers both Quran streaming hosts');
@@ -975,7 +979,7 @@ function runArtifactChecks() {
   ok(gradleVersionName === androidReleaseVersion,
     `Android versionName (${gradleVersionName}) matches Android release metadata (${androidReleaseVersion})`);
   ok(Object.keys(pkgJson.dependencies).join(',') === 'adhan,tz-lookup', 'runtime deps = adhan + tz-lookup only (capacitor moved to dev)');
-  ok(pkgJson.devDependencies.electron === '41.1.0', 'electron pinned to the exact 41.1.0');
+  ok(pkgJson.devDependencies.electron === '45.2.3', 'electron pinned to the exact supported stable 45.2.3');
   ok(typeof pkgJson.scripts.test === 'string' && pkgJson.scripts.test.includes('test-scheduler'), 'npm test wired');
   ok(fs.existsSync(path.join(ROOT, '.github', 'workflows', 'ci.yml')), 'CI workflow runs the suites');
   ok(!/media-src[^"]*file: cdn\./.test(overlayHtml) && overlayHtml.includes('file: https://cdn.aladhan.com'), 'overlay CSP hosts are scheme-prefixed');

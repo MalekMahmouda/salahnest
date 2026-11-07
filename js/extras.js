@@ -23,32 +23,29 @@ const PT_RELEASE = {
 };
 const PT_REPO = 'https://github.com/MalekMahmouda/salahnest';
 
-/* ── Stations — where each one actually comes from ────────────────────────
-   Both stations the user asked for are the same two feeds everybody publishes,
-   and both upstreams sit behind one hard wall: this page is served over HTTPS,
-   and Radiojar answers every request with `302 → http://nXX.radiojar.com/...`
-   plus a 5-minute token. Chromium refuses the downgrade before the audio
-   element ever sees it (measured on the live site: "Media load rejected by URL
-   safety check"), and the https edge nodes just redirect to another http node,
-   so there is no loop-hole to walk.
-
-   Hence `urls`: an ordered ladder. The first entry is what plays on the web —
-   an HTTPS relay carrying the same station — and the canonical Radiojar URL is
-   kept second, because the desktop build loads from file:// where no
-   mixed-content rule applies and the original feed is the better source.
-   Verified 2026-10-19: HTTP 200, audio/mpeg, no redirect, no expiring token. */
+/* ── Stations — each source is explicit about its media type ──────────────
+   Cairo's official site currently supplies HLS; the player uses the locally
+   bundled Hls.js build (or native HLS where available). Older direct feeds stay
+   as fallbacks and remain constrained by the existing HTTPS CSP allowlist. */
 const PT_RADIO_STATIONS = [
   /* إذاعة القرآن الكريم — TuneIn s37232 (“Saudi Quran Station”, 100.0 FM)
      resolves to stream.radiojar.com/0tpy1h0kxtzuv. The relay plays the same
      feed; the canonical stays behind it for file:// builds. */
   { id: 'saudi', nameKey: 'radio.saudiName', subKey: 'radio.saudiSub',
-    urls: ['https://edge.mixlr.com/channel/rwumx', 'https://stream.radiojar.com/0tpy1h0kxtzuv'] },
+    sources: [
+      { url: 'https://edge.mixlr.com/channel/rwumx', type: 'direct' },
+      { url: 'https://stream.radiojar.com/0tpy1h0kxtzuv', type: 'direct' },
+    ] },
   /* إذاعة القرآن الكريم من القاهرة — surahquran.com/Radio-Quran-Cairo.html
      embeds stream.radiojar.com/8s5u5tpdtwzuv; the relay used first identifies
      itself as "Holy Quran Radio Cairo" in its ICY headers, i.e. the same
      station. */
   { id: 'egypt', nameKey: 'radio.egyptName', subKey: 'radio.egyptSub',
-    urls: ['https://radio.xecod.com/station/quran-cairo', 'https://stream.radiojar.com/8s5u5tpdtwzuv'] },
+    sources: [
+      { url: 'https://service.webvideocore.net/CL1olYogIrDWvwqiIKK7eCxOS4PStqG9DuEjAr2ZjZQtvS3d4y9r0cvRhvS17SGN/a_7a4vuubc6mo8.m3u8', type: 'hls' },
+      { url: 'https://radio.xecod.com/station/quran-cairo', type: 'direct' },
+      { url: 'https://stream.radiojar.com/8s5u5tpdtwzuv', type: 'direct' },
+    ] },
 ];
 
 const ptEl = (id) => document.getElementById(id);
@@ -57,9 +54,10 @@ const ptBtnId = (st) => 'radio' + st.id.charAt(0).toUpperCase() + st.id.slice(1)
 let ptRadioAudio = null;
 let ptRadioStation = null;   // station currently loaded into the audio element
 let ptRadioError = false;    // last play attempt failed (network / blocked / 4xx)
-let ptRadioTry = 0;          // index into the station's `urls` ladder
+let ptRadioTry = 0;          // index into the station's `sources` ladder
 let ptRadioAttempt = 0;      // bumped on every src change; stale callbacks compare
 let ptRadioBlocked = false;  // the browser refused autoplay — not a dead stream
+let ptRadioHls = null;
 
 /* ═══ RADIO: state → DOM ═══ */
 function ptRadioSync() {
@@ -106,6 +104,7 @@ function ptRadioStop() {
   const a = ptRadioAudio;
   if (!a) return;
   ptRadioAttempt += 1;   // invalidate any in-flight play() / error callback
+  ptRadioDestroyHls();
   a.pause();
   ptRadioError = false;
   ptRadioBlocked = false;
@@ -115,6 +114,29 @@ function ptRadioStop() {
   if ('mediaSession' in navigator) { try { navigator.mediaSession.playbackState = 'paused'; } catch (e) {} }
 }
 
+function ptRadioDestroyHls() {
+  const hls = ptRadioHls; ptRadioHls = null;
+  if (hls) { try { hls.destroy(); } catch (e) { /* ignore */ } }
+}
+
+function ptRadioStartPlayback(st, attempt) {
+  const a = ptRadioAudio;
+  if (!a || attempt !== ptRadioAttempt) return;
+  ptRadioStatus(); ptRadioSync(); ptRadioPaintMediaSession();
+  const p = a.play();
+  if (p && typeof p.catch === 'function') {
+    p.catch((err) => {
+      if (attempt !== ptRadioAttempt) return;
+      if (err && err.name === 'NotAllowedError') {
+        ptRadioBlocked = true;
+        ptRadioStatus(); ptRadioSync();
+        return;
+      }
+      ptRadioFail(st, attempt);
+    });
+  }
+}
+
 /* Load one rung of the ladder. Everything async carries `attempt`, so a slow
    rejection from a source we have already moved past cannot mark the station
    failed or knock it back a rung. */
@@ -122,38 +144,48 @@ function ptRadioPlay(st) {
   const a = ptRadioAudio;
   if (!a) return;
   const attempt = ++ptRadioAttempt;
+  ptRadioDestroyHls();
   ptRadioBlocked = false;
-  a.src = st.urls[ptRadioTry];
+  const source = st.sources[ptRadioTry];
+  if (!source) { ptRadioFail(st, attempt); return; }
+  if (source.type === 'hls') {
+    let hlsSupported = false;
+    try { hlsSupported = !!(window.Hls && window.Hls.isSupported()); } catch (e) { /* unsupported */ }
+    if (hlsSupported) {
+      const hls = new window.Hls({ enableWorker: false });
+      ptRadioHls = hls;
+      hls.on(window.Hls.Events.ERROR, (_event, data) => {
+        if (attempt !== ptRadioAttempt || !data || !data.fatal) return;
+        ptRadioDestroyHls();
+        ptRadioFail(st, attempt);
+      });
+      hls.on(window.Hls.Events.MANIFEST_PARSED, () => ptRadioStartPlayback(st, attempt));
+      hls.on(window.Hls.Events.MEDIA_ATTACHED, () => {
+        if (attempt === ptRadioAttempt) hls.loadSource(source.url);
+      });
+      hls.attachMedia(a);
+      ptRadioStatus(); ptRadioSync(); ptRadioPaintMediaSession();
+      return;
+    }
+    if (!a.canPlayType || !a.canPlayType('application/vnd.apple.mpegurl')) {
+      ptRadioFail(st, attempt); return;
+    }
+  }
+  a.src = source.url;
   a.load();
   ptRadioStatus();
   ptRadioSync();
   ptRadioPaintMediaSession();
-  const p = a.play();
-  if (p && typeof p.catch === 'function') {
-    p.catch((err) => {
-      if (attempt !== ptRadioAttempt) return;   // superseded by a newer attempt
-      /* Autoplay policy, not the network. Stepping down the ladder here was a
-         real bug: the block has nothing to do with the source, so the bar would
-         end on the always-blocked Radiojar feed and report a dead stream for a
-         station that was never asked properly. Say what happened instead — one
-         more tap is a gesture, and the same source then plays. */
-      if (err && err.name === 'NotAllowedError') {
-        ptRadioBlocked = true;
-        ptRadioStatus();
-        ptRadioSync();
-        return;
-      }
-      ptRadioFail(st);
-    });
-  }
+  ptRadioStartPlayback(st, attempt);
 }
 
 /* One failure handler for both failure paths (play() rejecting and the element
    firing `error`): step down the ladder, and only surface an error once the
    last rung is spent. */
-function ptRadioFail(st) {
+function ptRadioFail(st, attempt) {
+  if (attempt !== ptRadioAttempt) return;
   if (!ptRadioStation || ptRadioStation.id !== st.id) return;   // superseded
-  if (ptRadioTry + 1 < st.urls.length) { ptRadioTry += 1; ptRadioPlay(st); return; }
+  if (ptRadioTry + 1 < st.sources.length) { ptRadioTry += 1; ptRadioPlay(st); return; }
   ptRadioError = true;
   ptRadioStatus();
   ptRadioSync();
@@ -200,7 +232,7 @@ function ptRadioInit() {
     if ('mediaSession' in navigator) { try { navigator.mediaSession.playbackState = 'playing'; } catch (e) {} }
   });
   a.addEventListener('pause', () => { ptRadioStatus(); ptRadioSync(); });
-  a.addEventListener('error', () => { if (ptRadioStation) ptRadioFail(ptRadioStation); });
+  a.addEventListener('error', () => { if (ptRadioStation && !ptRadioHls) ptRadioFail(ptRadioStation, ptRadioAttempt); });
 
   /* Never talk over another audio source: the adhan, the pre-prayer beep or a
      surah. `play` does not bubble, but a capture listener on document still
@@ -295,6 +327,7 @@ let ptRouterInstalled = false;
 let ptRouterOn = false;      // hash writes stay off until the app has booted
 let ptRouterQuiet = false;   // a navigation we started ourselves from the hash
 let ptPendingRoute = null;   // the route the URL asked for, before boot clobbers it
+let ptCurrentRoute = null;   // current in-app page, including the no-hash prayers root
 let ptBootHold = 0;          // ms timestamp: boot navigations must not rewrite the hash
 
 function ptRouteFromHash() {
@@ -335,12 +368,21 @@ function ptOpenDownloads() {
   try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); }
 }
 
-function ptApplyRoute() {
-  const target = ptRouteFromHash();
+function ptApplyRoute(target = ptRouteFromHash()) {
   if (!target) return;
+  ptCurrentRoute = target;
   if (target === 'downloads') { ptOpenDownloads(); return; }
   if (typeof window.gotoPage !== 'function') return;
   ptGoSilently(target);
+}
+
+function ptHandleHistoryNavigation() {
+  const route = ptRouteFromHash();
+  if (!route && location.hash) return; // ignore an unknown, non-empty route
+  const target = route || 'prayers';
+  if (target === ptCurrentRoute) return;
+  ptCurrentRoute = target;
+  ptApplyRoute(target);
 }
 
 function ptSyncHash(name) {
@@ -352,13 +394,17 @@ function ptSyncHash(name) {
      and is cut short by the visitor's first click, so a real navigation is never
      swallowed. */
   if (Date.now() < ptBootHold) return;
-  const want = '#/' + (name === 'mhome' ? 'prayers' : name);
-  if (location.hash === want) return;
+  const route = name === 'mhome' ? 'prayers' : name;
+  const want = '#/' + route;
+  if (route === ptCurrentRoute && (location.hash === want || !location.hash)) return;
+  if (location.hash === want) { ptCurrentRoute = route; return; }
+  ptCurrentRoute = route;
   ptRouterQuiet = true;
   /* finally, not a trailing line: this flag gates EVERY later hash write, so
      letting an exception (or an early return added later) skip the reset would
      freeze the URL on the previous page for the rest of the session. */
-  try { history.replaceState(null, '', want); } catch (e) { /* file:// */ }
+  try { history.pushState({ ptRoute: route }, '', want); }
+  catch (e) { try { history.replaceState(null, '', want); } catch (ignored) { /* file:// */ } }
   finally { ptRouterQuiet = false; }
 }
 
@@ -383,12 +429,13 @@ function ptExtrasInit() {
      otherwise wipe a #/quran deep link before it could be honoured. */
   const wanted = ptRouteFromHash();
   if (wanted) { ptPendingRoute = wanted; ptApplyRoute(); }
+  else ptCurrentRoute = 'prayers';
 
   window.addEventListener('load', () => {
     ptRouterOn = true;
-    if (!ptPendingRoute) return;
-    const route = ptPendingRoute;
     ptBootHold = Date.now() + 900;
+    if (!ptPendingRoute) { setTimeout(() => { ptBootHold = 0; }, 900); return; }
+    const route = ptPendingRoute;
     const settle = () => { if (ptPendingRoute === route) { ptApplyRoute(); ptRestoreHash(route); } };
     settle();
     setTimeout(settle, 140);     // after the resize / mobile-mode debounce
@@ -399,11 +446,8 @@ function ptExtrasInit() {
      with it, so it ends there. */
   document.addEventListener('pointerdown', () => { ptBootHold = 0; }, { capture: true, passive: true });
 
-  window.addEventListener('hashchange', () => {
-    const r = ptRouteFromHash();
-    ptPendingRoute = r;
-    if (r) ptApplyRoute();
-  });
+  window.addEventListener('popstate', ptHandleHistoryNavigation);
+  window.addEventListener('hashchange', ptHandleHistoryNavigation);
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ptExtrasInit);

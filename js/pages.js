@@ -254,9 +254,13 @@ window.renderNames = function renderNames() {
   $('nhEn').textContent = hero.en;
   $('nhDh').textContent = hero.dhikr;
 
-  const q = $('nmSearch').value.toLowerCase().trim();
+  const q = $('nmSearch').value.trim();
+  const lowerQuery = q.toLowerCase();
+  const normalizedQuery = window.normalizeSearchText(q);
   const list = !q ? ASMA : ASMA.filter((x) =>
-    x.tr.toLowerCase().includes(q) || x.en.toLowerCase().includes(q) || x.ar.includes(q) || x.ar2.includes(q) || String(x.n) === q);
+    x.tr.toLowerCase().includes(lowerQuery) || x.en.toLowerCase().includes(lowerQuery)
+    || window.normalizeSearchText(x.ar).includes(normalizedQuery)
+    || window.normalizeSearchText(x.ar2).includes(normalizedQuery) || String(x.n) === q);
   $('namesGrid').innerHTML = list.length ? list.map((x) => `
     <div class="ncard${x.n === hero.n ? ' today' : ''}" data-n="${x.n}">
       <div class="nn">${String(x.n).padStart(2, '0')}</div>
@@ -270,6 +274,8 @@ window.renderNames = function renderNames() {
 };
 function openName(n) {
   const x = ASMA.find((a) => a.n === n); if (!x) return;
+  const overlay = $('nameOverlay');
+  if (!overlay.classList.contains('open')) window._nameModalOpener = document.activeElement;
   $('nmNum').textContent = `${String(x.n).padStart(2, '0')} / 99`;
   $('nmArabic').textContent = x.ar;
   $('nmTr').textContent = x.tr;
@@ -277,7 +283,14 @@ function openName(n) {
   $('nmAr2').textContent = x.ar2;
   $('nmDhikr').textContent = x.dhikr;
   $('nmDhikrLbl').textContent = t('names.dhikr');
-  $('nameOverlay').classList.add('open');
+  window.setLayerOpen(overlay, true);
+}
+function closeNameOverlay() {
+  const overlay = $('nameOverlay');
+  if (!overlay || !overlay.classList.contains('open')) return;
+  window.setLayerOpen(overlay, false);
+  const opener = window._nameModalOpener; window._nameModalOpener = null;
+  if (opener && opener.isConnected && typeof opener.focus === 'function') opener.focus();
 }
 
 /* ═══ DHIKR ═══ */
@@ -476,10 +489,10 @@ window.renderSettings = function renderSettings() {
       <span class="lbl" style="min-width:70px">${S.lang === 'ar' ? AR_PRAYER[p] : p}</span>
       <button class="toggle${on ? ' on' : ''}" data-adp="${p}" role="switch" aria-checked="${on}" aria-label="${S.lang === 'ar' ? `أذان صلاة ${AR_PRAYER[p]}` : `Adhan for ${p}`}"></button>
       <select class="select" data-prof-rec="${p}" style="max-width:150px;font-size:12px">
-        <option value="">${S.lang === 'ar' ? 'المؤذن الافتراضي' : 'Default muadhdhin'}</option>
+        <option value="">${t('set.defaultMuadhdhin')}</option>
         ${Object.keys(ADHAN_SOUNDS).map((k) => `<option value="${k}" ${prof.reciter === k ? 'selected' : ''}>${k}</option>`).join('')}
       </select>
-      <input type="range" data-prof-vol="${p}" min="0" max="1" step="0.05" value="${prof.vol != null ? prof.vol : 1}" style="width:80px" title="Volume">
+      <input type="range" data-prof-vol="${p}" min="0" max="1" step="0.05" value="${prof.vol != null ? prof.vol : 1}" style="width:80px" title="${t('set.volume')}" aria-label="${t('set.volume')}">
       <span style="font-size:11px;color:var(--text-muted);min-width:34px">${prof.vol != null ? Math.round(prof.vol * 100) + '%' : '—'}</span>
     </div>`;
   }).join('');
@@ -603,8 +616,8 @@ function wireSettings() {
 
   // Names
   $('nmSearch').oninput = renderNames;
-  $('nmClose').onclick = () => $('nameOverlay').classList.remove('open');
-  $('nameOverlay').addEventListener('click', (e) => { if (e.target === $('nameOverlay')) $('nameOverlay').classList.remove('open'); });
+  $('nmClose').onclick = closeNameOverlay;
+  $('nameOverlay').addEventListener('click', (e) => { if (e.target === $('nameOverlay')) closeNameOverlay(); });
 
   // Calendar
   $('calPrev').onclick = () => calNav(-1);
