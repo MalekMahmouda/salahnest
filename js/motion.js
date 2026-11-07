@@ -372,6 +372,7 @@
     let vt;
     try { vt = document.startViewTransition(fn); }
     catch (e) { fn(); return; }
+    if (vt && vt.ready) vt.ready.catch(() => { delete root.dataset.vtdir; });
     if (vt && vt.finished) vt.finished.then(() => { delete root.dataset.vtdir; }).catch(() => { delete root.dataset.vtdir; });
   };
 

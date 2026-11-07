@@ -230,17 +230,20 @@ function themeIsDark(id) {
 function openTextModal({ title, label, initial = '', ok, onOK }) {
   const ov = $('txtModal'), inp = $('txtModalInput');
   if (!ov || !inp) return;
+  if (!ov.classList.contains('open')) _textModalOpener = document.activeElement;
   $('txtModalTitle').textContent = title || '';
   $('txtModalLabel').textContent = label || '';
   $('txtModalOk').textContent = ok || (S.lang === 'ar' ? 'موافق' : 'OK');
   inp.value = initial || '';
-  ov.classList.add('open');
+  setLayerOpen(ov, true);
   const done = (val) => {
-    ov.classList.remove('open');
+    setLayerOpen(ov, false);
     inp.onkeydown = null; $('txtModalOk').onclick = null; $('txtModalCancel').onclick = null;
     ov.onclick = null;
     document.removeEventListener('keydown', esc, true);
     if (val != null && onOK) onOK(val);
+    const opener = _textModalOpener; _textModalOpener = null;
+    if (opener && opener !== document.body && opener.isConnected && typeof opener.focus === 'function') opener.focus();
   };
   const esc = (e) => { if (e.key === 'Escape') { e.stopPropagation(); done(null); } };
   $('txtModalOk').onclick = () => done(inp.value);
@@ -288,7 +291,12 @@ window.addEventListener('DOMContentLoaded', () => {
   const note = document.getElementById('androidAzanNote');
   if (note) note.style.display = '';
   const perSub = document.getElementById('slPerPrayer');
-  if (perSub) perSub.insertAdjacentHTML('afterend', '<div class="note" id="androidPerNote">Off = a silent notification — the alert still arrives.</div>');
+  if (perSub && !document.getElementById('androidPerNote')) {
+    const perNote = document.createElement('div');
+    perNote.className = 'note'; perNote.id = 'androidPerNote';
+    perSub.insertAdjacentElement('afterend', perNote);
+  }
+  applyAndroidAdhanNotesLang();
 });
 
 /* ═══ MOBILE UI (Android / narrow viewport): dedicated home + 5-tab nav + More sheet ═══ */
@@ -331,9 +339,9 @@ function moreSheetOpen() { const sh = $('mMoreSheet'); return !!(sh && sh.classL
 function openMoreSheet() {
   const sh = $('mMoreSheet'); if (!sh) return;
   buildMSwatches();
-  sh.classList.add('open');
+  setLayerOpen(sh, true);
 }
-function closeMoreSheet() { const sh = $('mMoreSheet'); if (sh) sh.classList.remove('open'); }
+function closeMoreSheet() { const sh = $('mMoreSheet'); if (sh) setLayerOpen(sh, false); }
 
 function buildMSwatches() {
   const wrap = $('mSwatches'); if (!wrap) return;
@@ -426,6 +434,17 @@ function t(key) {
   if (cur == null) { cur = T.en; for (const p of parts) cur = cur && cur[p]; }
   return cur == null ? key : cur;
 }
+
+let _textModalOpener = null;
+function setLayerOpen(el, open) {
+  if (!el) return;
+  const isOpen = !!open;
+  el.classList.toggle('open', isOpen);
+  if (isOpen) el.removeAttribute('inert');
+  else el.setAttribute('inert', '');
+  el.setAttribute('aria-hidden', String(!isOpen));
+}
+window.setLayerOpen = setLayerOpen;
 
 const $ = (id) => document.getElementById(id);
 
@@ -576,6 +595,8 @@ function gotoPage(name) {
 function _activatePage(name) {
   document.querySelectorAll('.page').forEach((p) => p.classList.remove('active'));
   const pg = $('page-' + name); if (pg) pg.classList.add('active');
+  const content = document.querySelector('main.content');
+  if (content) content.scrollTop = 0;
   if (name === 'mhome') { renderMHome(); renderMHomeCards(); }
   if (window.PTMotion && name === 'mhome') PTMotion.stagger($('mStrip'));
   // Sidebar indicator + list stagger + sun arc — the motion module keeps one
@@ -717,12 +738,17 @@ async function fetchByCity(city, country) {
   // fills in when AlAdhan can't geocode. Both only ever supply coordinates.
   const url = `https://api.aladhan.com/v1/addressInfo?address=${encodeURIComponent(city + (country ? ',' + country : ''))}`;
   let geo = null;                 // { lat, lon } — the ONLY thing these APIs give us
-  try {
-    const r = await netFetch(url); const d = await r.json();
-    if (d.code === 200 && d.data && isFiniteLat(d.data.latitude) && isFiniteLon(d.data.longitude)) {
-      geo = { lat: Number(d.data.latitude), lon: Number(d.data.longitude) };
-    }
-  } catch (e) { /* AlAdhan down / 404 — try OSM below */ }
+  // AlAdhan addressInfo returns 404 for plain city-name searches. Only send
+  // address-like input (with a street number) there; city names go straight
+  // to the existing Nominatim resolver instead of generating a known 404.
+  if (/\d/.test(city)) {
+    try {
+      const r = await netFetch(url); const d = await r.json();
+      if (d.code === 200 && d.data && isFiniteLat(d.data.latitude) && isFiniteLon(d.data.longitude)) {
+        geo = { lat: Number(d.data.latitude), lon: Number(d.data.longitude) };
+      }
+    } catch (e) { /* AlAdhan down / 404 — try OSM below */ }
+  }
   if (requestId !== _locationRequestSeq) return;
   if (!geo) {
     // Fallback: Nominatim (already allowed by CSP). Nominatim asks for an app
@@ -965,13 +991,13 @@ const GPS_POOR_ACCURACY_M = 1000;
 function openLocModal() {
   const overlay = $('locOverlay');
   if (!overlay.classList.contains('open')) _locModalOpener = document.activeElement;
-  overlay.classList.add('open'); overlay.setAttribute('aria-hidden', 'false');
+  setLayerOpen(overlay, true);
   const input = $('cityInp'); if (input && input.focus) input.focus();
 }
 function closeLocModal() {
   const overlay = $('locOverlay');
   if (!overlay.classList.contains('open')) return;
-  overlay.classList.remove('open'); overlay.setAttribute('aria-hidden', 'true');
+  setLayerOpen(overlay, false);
   const opener = _locModalOpener; _locModalOpener = null;
   if (opener && opener.isConnected && typeof opener.focus === 'function') opener.focus();
 }
@@ -1171,16 +1197,14 @@ function showAzanScreen(prayer) {
   _azanTick();
   if (_azanClockTimer) clearInterval(_azanClockTimer);
   _azanClockTimer = setInterval(_azanTick, 1000);
-  el.setAttribute('aria-hidden', 'false');
-  el.classList.add('open');
+  setLayerOpen(el, true);
   _azanOpen = true;
   const stop = $('azanStop');
   if (stop) stop.focus(); else el.focus();
 }
 function hideAzanScreen(stopAudio) {
   const el = $('azanOverlay'); if (!el) return;
-  el.classList.remove('open');
-  el.setAttribute('aria-hidden', 'true');
+  setLayerOpen(el, false);
   _azanOpen = false;
   if (_azanClockTimer) { clearInterval(_azanClockTimer); _azanClockTimer = null; }
   if (stopAudio) { const a = $('adhanAudio'); if (a) { try { a.pause(); } catch (e) { /* ignore */ } } }
@@ -1220,6 +1244,13 @@ function testAdhan() {
   showToast(t('toast.adhanPlay'));
   showAzanScreen('Test');
   playAdhanBrowser();
+}
+
+function applyAndroidAdhanNotesLang() {
+  const androidNote = $('androidAzanNote');
+  if (androidNote) androidNote.textContent = t('set.androidAdhanNote');
+  const perPrayerNote = $('androidPerNote');
+  if (perPrayerNote) perPrayerNote.textContent = t('set.androidPerPrayerNote');
 }
 
 /* ═══ I18N APPLY ═══ */
@@ -1275,6 +1306,7 @@ function applyLang() {
   const mTheme = $('mThemeLbl'); if (mTheme) mTheme.textContent = t('set.theme');
   const mHistHint = $('histHintM'); if (mHistHint) mHistHint.textContent = t('hist.hint');
   const mHistLbl = $('lblHistM'); if (mHistLbl) mHistLbl.textContent = t('hist.title');
+  const histLbl = $('lblHist'); if (histLbl) histLbl.textContent = t('hist.title');
   const histHint = $('histHint'); if (histHint) histHint.textContent = t('hist.hint');
   ['histControls', 'histControlsM'].forEach((id) => { const el = $(id); if (el) el.setAttribute('aria-label', t('hist.date')); });
 
@@ -1299,6 +1331,10 @@ function applyLang() {
 
   // Quran
   $('qrSearch').placeholder = t('quran.search');
+  [['qtList', 'quran.tabsSurahs'], ['qtRead', 'quran.tabsRead'], ['qtSearch', 'quran.tabsSearch'], ['qtMarks', 'quran.tabsBookmarks']]
+    .forEach(([id, key]) => { const el = $(id); if (el) el.textContent = t(key); });
+  const calToday = $('calToday'); if (calToday) { calToday.textContent = t('cal.todayBtn'); calToday.setAttribute('aria-label', t('cal.todayBtn')); }
+  const statsToday = $('stTodayH'); if (statsToday) statsToday.textContent = t('today');
 
   // Names
   $('nmSearch').placeholder = t('names.search');
@@ -1348,7 +1384,7 @@ function applyLang() {
   $('slBeep').textContent = t('set.beep');
   $('slAdhan').textContent = t('set.adhanSound');
   $('slReciter').textContent = t('set.reciter');
-  $('slAdhanStyle').textContent = S.lang === 'ar' ? 'نمط الأذان' : 'Adhan style';
+  $('slAdhanStyle').textContent = t('set.adhanStyle');
   $('slVol').textContent = t('set.volume');
   $('slOverlay').textContent = t('set.overlay');
   $('slPerPrayer').textContent = t('set.perPrayer');
@@ -1383,6 +1419,7 @@ function applyLang() {
   const footDua = $('footDua'); if (footDua) footDua.textContent = t('set.dua');
   $('slGps').textContent = t('set.gps');
   $('slCitySearch').textContent = t('set.searchCity');
+  applyAndroidAdhanNotesLang();
 
   // Location modal
   $('locTitle').textContent = S.lang === 'ar' ? 'تحديد الموقع' : 'Set Location';

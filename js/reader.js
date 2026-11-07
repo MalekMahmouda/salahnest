@@ -256,10 +256,11 @@ function quranSearch() {
   const el = $('qsResults');
   if (q.length < 2 || !QURAN_DATA) { el.innerHTML = ''; return; }
   const ql = q.toLowerCase();
+  const normalizedArabicQuery = window.normalizeSearchText(q);
   const hits = [];
   for (const sur of QURAN_DATA.surahs) {
     for (const ay of sur.ayahs) {
-      if (ay.ar.includes(q) || ay.en.toLowerCase().includes(ql)) {
+      if (window.normalizeSearchText(ay.ar).includes(normalizedArabicQuery) || ay.en.toLowerCase().includes(ql)) {
         hits.push({ sur, ay });
         if (hits.length >= 60) break;
       }
