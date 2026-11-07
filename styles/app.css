@@ -581,8 +581,8 @@ hr.sep{border:none;border-top:1px solid var(--border);margin:14px 0}
 .set-card .note{font-size:11px;color:var(--text-muted);line-height:1.55;margin-top:12px;border-top:1px dashed var(--border);padding-top:11px}
 
 /* ── Modals ── */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(3px);z-index:300;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
-.overlay.open{opacity:1;pointer-events:all}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(3px);z-index:300;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s,visibility 0s linear .25s}
+.overlay.open{opacity:1;visibility:visible;pointer-events:all;transition:opacity .25s,visibility 0s}
 .modal{background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:26px;width:440px;max-width:94vw;max-height:88vh;overflow-y:auto;box-shadow:var(--shadow-lg);transform:scale(.94) translateY(12px);transition:transform .25s var(--ease)}
 .overlay.open .modal{transform:scale(1) translateY(0)}
 .modal h3{font-size:17.5px;font-weight:800;margin-bottom:15px}
@@ -638,7 +638,7 @@ hr.sep{border:none;border-top:1px solid var(--border);margin:14px 0}
   .cal-nav{justify-content:center}
   /* tighter gutters so 7 columns stay legible at 320–390px */
   .cal-grid{gap:4px}
-  .cal-cell{padding:6px 5px;border-radius:10px;aspect-ratio:1/.92}
+  .cal-cell{padding:6px 5px;border-radius:10px;aspect-ratio:auto;min-height:58px}
   .cal-cell .dg{font-size:13px}
   .cal-cell .hj{font-size:10px}
   .cal-cell.today::after{width:5px;height:5px;bottom:4px;inset-inline-end:5px}
@@ -706,11 +706,11 @@ hr.sep{border:none;border-top:1px solid var(--border);margin:14px 0}
 /* ── Full-screen Azan screen (mobile: Test Adhan + foreground prayer time) ──
    Restrained motion: a single fade + slight scale, ease-out, no bouncing.
    Reduced-motion users get the same screen with the transition removed. */
-.azan-screen{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;
+.azan-screen{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;visibility:hidden;
   padding:calc(env(safe-area-inset-top,0px) + 24px) 22px calc(env(safe-area-inset-bottom,0px) + 24px);
   background:radial-gradient(120% 90% at 50% -10%,var(--primary-soft),transparent 62%),var(--bg);
-  opacity:0;pointer-events:none;transition:opacity var(--dur) var(--ease)}
-.azan-screen.open{opacity:1;pointer-events:all}
+  opacity:0;pointer-events:none;transition:opacity var(--dur) var(--ease),visibility 0s linear var(--dur)}
+.azan-screen.open{opacity:1;visibility:visible;pointer-events:all;transition:opacity var(--dur) var(--ease),visibility 0s}
 .azan-inner{width:min(92vw,460px);text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;
   transform:scale(.96);transition:transform var(--dur-slow) var(--ease)}
 .azan-screen.open .azan-inner{transform:scale(1)}
