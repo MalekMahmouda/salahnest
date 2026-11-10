@@ -1318,7 +1318,7 @@ function applyLang() {
   $('lblToday').textContent = S.lang === 'ar' ? 'صلوات اليوم' : "Today's Prayers";
   $('lblSun').textContent = t('sunNight');
   const lblSunM = $('lblSunM'); if (lblSunM) lblSunM.textContent = t('sunNight');
-  $('lblGlance').textContent = t('glance');
+  $('lblGlance').textContent = t('qiblaBearing');
   $('heroNextLbl').textContent = t('nextPrayer');
   $('heroCdLbl').textContent = t('startsIn');
 
