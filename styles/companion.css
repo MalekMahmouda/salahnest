@@ -414,6 +414,51 @@ body.web-mode .btn{border-radius:999px}
   #page-quran .qtabs{gap:12px}
 }
 
+/* Second focused pass: let the timetable, not a hero card, carry the home screen. */
+#page-prayers .hero{padding:18px 0 16px;margin-bottom:18px;border:0;border-radius:0;background:transparent}
+#page-prayers .hero .hz{align-items:center;justify-content:flex-start;gap:clamp(40px,4vw,64px)}
+#page-prayers .hero-next-lbl{margin-bottom:4px}
+#page-prayers .hero-name{display:inline-block;margin:0;font-size:46px;letter-spacing:-1.2px;vertical-align:baseline}
+[dir="rtl"] #page-prayers .hero-name{font-size:44px;line-height:1.3;letter-spacing:0}
+#page-prayers .hero-time{display:inline-block;margin:0 0 0 12px;margin-inline-start:12px;font-size:18px;vertical-align:baseline}
+#page-prayers .hero-loc{display:none}
+#page-prayers .hero-glass{min-width:0;padding:0;border:0;align-items:flex-end}
+#page-prayers .hero-cd{font-size:clamp(32px,2.8vw,38px);margin-top:4px;letter-spacing:-.5px}
+#page-prayers .hero-cd-lbl{letter-spacing:0;text-transform:none}
+#page-prayers .ribbon{display:none}
+
+@media(max-width:768px){
+  #page-mhome .mhero{padding:6px 0 10px;border:0;border-radius:0;background:transparent}
+  #page-mhome .mh-next-lbl{margin-top:12px}
+  #page-mhome .mh-name{margin-top:4px}
+  #page-mhome .mh-time,#page-mhome .mh-cd{margin-top:8px}
+  #page-mhome .mh-prog{display:none}
+  #page-mhome .mstrip .mobile-next{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+}
+
+#page-settings .set-grid{gap:16px}
+@media(min-width:1100px){
+  #page-settings .set-grid{display:block;columns:2;column-gap:16px;column-fill:balance}
+  #page-settings .set-grid>.set-card{display:inline-block;vertical-align:top;width:100%;margin:0 0 16px;break-inside:avoid}
+}
+#page-settings .set-card .card-h>[data-icon]{display:none}
+
+#page-quran .surah-item .num{width:24px;height:24px;border-radius:0;background:transparent;color:var(--text-muted)}
+#page-quran .surah-item.playing .num{color:var(--on-primary)}
+#page-quran .tag,#page-quran .tag.mc,#page-quran .tag.md{padding:0;border:0;border-radius:0;background:transparent;color:var(--text-muted);font-weight:400}
+
+/* The arc already labels sunrise and sunset; keep the remaining solar times below. */
+#page-prayers .sun-grid,#page-mhome .sun-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+#page-prayers .sun-grid>.sun-cell:nth-child(-n+2),#page-mhome .sun-grid>.sun-cell:nth-child(-n+2){display:none}
+#page-prayers .sun-grid>.sun-cell{border-inline-end:1px solid var(--border);border-bottom:0}
+#page-prayers .sun-grid>.sun-cell:last-child{border-inline-end:0}
+@media(max-width:768px){
+  #page-mhome .sun-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #page-mhome .sun-grid>.sun-cell{border-inline-end:1px solid var(--border);border-bottom:1px solid var(--border)}
+  #page-mhome .sun-grid>.sun-cell:nth-child(2n){border-inline-end:0}
+  #page-mhome .sun-grid>.sun-cell:nth-last-child(-n+2){border-bottom:0}
+}
+
 @media(prefers-contrast:more){
   .card,.set-card,.hero,.mhero,.sun-grid,.radio-bar,.dl-help-card{border:1px solid var(--text)}
   .hero-glass{background:transparent!important;border-color:var(--text)}
