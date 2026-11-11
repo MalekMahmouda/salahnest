@@ -80,6 +80,16 @@ data/quran.json     bundled verified Quran text + translation
 
 Security model: `contextIsolation: true`, `sandbox: true`, `nodeIntegration: false`, validated IPC channels, CSP on every window, no remote debugging endpoints.
 
+## Project map
+
+- `main/`, `preload.js`, `widget.html` — Electron process, secure bridge, and desktop widget.
+- `js/`, `styles/`, `shared/` — app modules, styling, and shared code.
+- `android/`, `android-assets/` — Capacitor Android project and Android-specific assets.
+- `assets/`, `fonts/`, `data/` — bundled media, fonts, and Quran data.
+- `scripts/`, `.github/workflows/` — build, test, release, and CI automation.
+- `www/` — generated Capacitor web assets (`npm run www`); `dist-web/` — generated installable web/PWA build (`npm run web`).
+- `docs/` — project notes and reviews. Start with [versions](docs/VERSIONS.md), [Android](docs/ANDROID.md), [testing](docs/TESTING.md), the [release checklist](docs/RELEASE-CHECKLIST.md), or the [design-review gallery](docs/design-review/README.md).
+
 ## Privacy
 
 Everything personal — settings, prayer history, bookmarks, locations, custom themes — is stored locally on your device. There are no accounts, analytics, or trackers.
