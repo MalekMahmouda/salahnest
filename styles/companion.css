@@ -465,3 +465,42 @@ body.web-mode .btn{border-radius:999px}
   .hero-cd,.hero-cd-lbl,.cd-units,.mh-cd-lbl,.hero-next-lbl,.mh-next-lbl{color:var(--text)}
   .pcard.next{outline:2px solid var(--primary);outline-offset:-2px}
 }
+
+/* Approved Qibla, Calendar and Stats composition pass. Keep every surface on
+   SalahNest's existing semantic colors; phone layouts retain their own rhythm. */
+#page-stats .stats-detail+.stats-detail{margin-top:24px}
+#page-stats .stats-chart-legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:12px;color:var(--text-muted);font-size:12px}
+#page-stats .stats-chart-legend>span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+#page-stats .stats-chart-legend[hidden]{display:none!important}
+#page-stats #stChart .stats-empty{display:grid;place-items:center;min-height:112px;padding:16px;text-align:center;color:var(--text-muted);font-size:13px;line-height:1.55}
+#page-stats #stNote{font-size:12px!important;line-height:1.6}
+
+@media(min-width:901px){
+  #page-calendar,#page-stats{max-width:1020px}
+  #page-calendar .cal-head{margin-bottom:20px}
+  #page-calendar .cal-grid{gap:8px}
+  #page-calendar .cal-cell{min-height:92px;aspect-ratio:auto;padding:10px 12px;border-radius:14px}
+  #page-calendar .cal-cell .dg{font-size:16px}
+  #page-calendar .cal-cell .hj{font-size:12px;line-height:1.35}
+
+  #page-qibla{max-width:960px;margin-inline:auto}
+  #page-qibla>.grid-2{grid-template-columns:minmax(0,1fr);gap:16px}
+  #page-qibla>.grid-2>.card{display:flex;align-items:center;justify-content:center;min-height:360px}
+  #page-qibla .qibla-wrap{width:min(100%,680px);padding:16px 0;gap:32px;flex-wrap:nowrap}
+  #page-qibla .compass{width:240px;height:240px}
+  #page-qibla .compass-in{width:208px;height:208px}
+  #page-qibla .q-needle{height:176px;margin:-88px 0 0 -5px}
+  #page-qibla .q-needle::before{height:88px}
+  #page-qibla .q-needle::after{height:70px}
+  #page-qibla>.grid-2>div:last-child{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  #page-qibla>.grid-2>div:last-child>.card{min-width:0;margin:0!important}
+
+  #page-stats .stats-details{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.9fr);gap:16px;align-items:start;margin-top:24px}
+  #page-stats .stats-detail+.stats-detail{margin-top:0}
+  #page-stats .stats-detail .sec-lbl{margin:0 0 12px;font-size:18px}
+  #page-stats .stats-chart-card{margin:0!important}
+}
+
+@media(min-width:901px) and (min-height:761px){
+  #page-qibla.active{display:grid;align-content:center;min-height:calc(100dvh - var(--topbar-h,64px) - 110px)}
+}

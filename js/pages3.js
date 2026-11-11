@@ -181,6 +181,7 @@ function activateLocation(id) {
   fetchTimes(S.lat, S.lon);
   refreshTodaySchedule();
   updateLocNames();
+  animateLocationArrival();
   showToast((S.lang === 'ar' ? `التنشيط: ${loc.name}` : `Active: ${loc.name}`));
 }
 
@@ -288,17 +289,26 @@ window.renderStats = function renderStats() {
     const missed = PRAYERS.filter((p) => r[p] === 'missed').length;
     days.push({ k, d, done, missed, rec: done + missed });
   }
-  const maxRec = 5;
-  $('stChart').innerHTML = `<div style="display:flex;align-items:flex-end;gap:3px;height:120px">
-    ${days.map((x, bi) => {
-      const h = (x.rec / maxRec) * 100;
-      const color = x.missed > 0 && x.done === 0 ? 'var(--danger)' : (x.done > 0 && x.missed === 0 && x.rec === 5 ? 'var(--success)' : (x.rec === 0 ? 'var(--border)' : 'var(--warning)'));
-      return `<div class="stk-bar" title="${x.k}: ${x.done} completed, ${x.missed} missed" style="--i:${29 - bi};flex:1;height:${Math.max(4, h)}%;background:${color};border-radius:3px 3px 0 0;opacity:${x.rec ? 1 : .45}"></div>`;
-    }).join('')}
-  </div><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);margin-top:4px">
-    <span>${days[0].d.toLocaleDateString(S.lang === 'ar' ? 'ar-SA' : 'en-US', { month: 'short', day: 'numeric' })}</span>
-    <span>${S.lang === 'ar' ? 'اليوم' : 'Today'}</span>
-  </div>`;
+  const chartEl = $('stChart');
+  const chartLegend = $('stChartLegend');
+  const hasChartData = days.some((x) => x.rec > 0);
+  if (!hasChartData) {
+    chartEl.innerHTML = `<div class="stats-empty" role="status">${t('stats.noHistory')}</div>`;
+    if (chartLegend) chartLegend.hidden = true;
+  } else {
+    if (chartLegend) chartLegend.hidden = false;
+    const maxRec = 5;
+    chartEl.innerHTML = `<div style="display:flex;align-items:flex-end;gap:3px;height:120px">
+      ${days.map((x, bi) => {
+        const h = (x.rec / maxRec) * 100;
+        const color = x.missed > 0 && x.done === 0 ? 'var(--danger)' : (x.done > 0 && x.missed === 0 && x.rec === 5 ? 'var(--success)' : (x.rec === 0 ? 'var(--border)' : 'var(--warning)'));
+        return `<div class="stk-bar" title="${x.k}: ${x.done} ${t('stats.doneCount')}, ${x.missed} ${t('stats.missedCount')}" style="--i:${29 - bi};flex:1;height:${Math.max(4, h)}%;background:${color};border-radius:3px 3px 0 0;opacity:${x.rec ? 1 : .45}"></div>`;
+      }).join('')}
+    </div><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);margin-top:4px">
+      <span>${days[0].d.toLocaleDateString(S.lang === 'ar' ? 'ar-SA' : 'en-US', { month: 'short', day: 'numeric' })}</span>
+      <span>${S.lang === 'ar' ? 'اليوم' : 'Today'}</span>
+    </div>`;
+  }
 
   // Per-prayer totals (this month)
   const perPrayer = {};
@@ -316,7 +326,7 @@ window.renderStats = function renderStats() {
     return `<div style="margin-bottom:9px">
       <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
         <span style="font-weight:650">${S.lang === 'ar' ? AR_PRAYER[p] : p}</span>
-        <span class="muted">${x.done} done · ${x.missed} missed</span>
+        <span class="muted">${x.done} ${t('stats.doneCount')} · ${x.missed} ${t('stats.missedCount')}</span>
       </div>
       <div style="height:9px;background:var(--surface2);border-radius:5px;overflow:hidden;display:flex">
         <div class="stk-fill" style="--i:${pi};width:${(x.done / maxPP) * 100}%;background:var(--success);transition:width .4s"></div>

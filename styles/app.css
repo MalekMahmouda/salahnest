@@ -117,7 +117,8 @@
 }
 [data-theme="sahara"]{
   --bg:#f8f1e4; --surface:#fffaf0; --surface2:#f4ecdd;
-  --primary:#b45309; --primary-soft:rgba(180,83,9,.1);
+  --primary:#b25209; --primary-soft:rgba(178,82,9,.1);
+  /* Slightly darkened so small accent text clears 4.5:1 on the warm page background. */
   /* v1.5: --text-muted was #8a6f52 → 4.00:1 on --surface2 and 4.18:1 on --bg,
      i.e. below the 4.5:1 AA floor for the small muted labels that use it
      (.sec-lbl, .tb-date, .sub, .note). Darkened by ~14% luminance: same warm
