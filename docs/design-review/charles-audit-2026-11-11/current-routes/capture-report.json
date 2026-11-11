@@ -1,0 +1,226 @@
+{
+  "url": "http://127.0.0.1:8767/index.html",
+  "routes": [
+    "prayers",
+    "calendar",
+    "qibla",
+    "quran",
+    "names",
+    "dhikr",
+    "stats",
+    "downloads",
+    "contact",
+    "settings"
+  ],
+  "cases": [
+    {
+      "name": "en-islamic-desktop-1440",
+      "width": 1440,
+      "height": 900,
+      "lang": "en",
+      "theme": "islamic",
+      "city": "Makkah",
+      "country": "Saudi Arabia",
+      "lat": 21.4225,
+      "lon": 39.8262,
+      "screens": [
+        {
+          "route": "prayers",
+          "activePage": "page-prayers",
+          "pageVisible": true,
+          "documentWidth": 1440,
+          "horizontalOverflow": false,
+          "documentTitle": "SalahNest | Prayer Times — أوقات الصلاة، مسبحة، قرآن، قبلة، تقويم هجري",
+          "brandCandidate": ""
+        },
+        {
+          "route": "calendar",
+          "activePage": "page-calendar",
+          "pageVisible": true,
+          "documentWidth": 1440,
+          "horizontalOverflow": false,
+          "documentTitle": "SalahNest | Prayer Times — أوقات الصلاة، مسبحة، قرآن، قبلة، تقويم هجري",
+          "brandCandidate": ""
+        },
+        {
+          "route": "qibla",
+          "activePage": "page-qibla",
+          "pageVisible": true,
+          "documentWidth": 1440,
+          "horizontalOverflow": false,
+          "documentTitle": "SalahNest | Prayer Times — أوقات الصلاة، مسبحة، قرآن، قبلة، تقويم هجري",
+          "brandCandidate": ""
+        },
+        {
+          "route": "quran",
+          "activePage": "page-quran",
+          "pageVisible": true,
+          "documentWidth": 1440,
+          "horizontalOverflow": false,
+          "documentTitle": "SalahNest | Prayer Times — أوقات الصلاة، مسبحة، قرآن، قبلة، تقويم هجري",
+          "brandCandidate": ""
+        },
+        {
+          "route": "names",
+          "activePage": "page-names",
+          "pageVisible": true,
+          "documentWidth": 1440,
+          "horizontalOverflow": false,
+          "documentTitle": "SalahNest | Prayer Times — أوقات الصلاة، مسبحة، قرآن، قبلة، تقويم هجري",
+          "brandCandidate": ""
+        },
+        {
+          "route": "dhikr",
+          "activePage": "page-dhikr",
+          "pageVisible": true,
+          "documentWidth": 1440,
+          "horizontalOverflow": false,
+          "documentTitle": "SalahNest | Prayer Times — أوقات الصلاة، مسبحة، قرآن، قبلة، تقويم هجري",
+          "brandCandidate": ""
+        },
+        {
+          "route": "stats",
+          "activePage": "page-stats",
+          "pageVisible": true,
+          "documentWidth": 1440,
+          "horizontalOverflow": false,
+          "documentTitle": "SalahNest | Prayer Times — أوقات الصلاة، مسبحة، قرآن، قبلة، تقويم هجري",
+          "brandCandidate": ""
+        },
+        {
+          "route": "downloads",
+          "activePage": "page-downloads",
+          "pageVisible": true,
+          "documentWidth": 1440,
+          "horizontalOverflow": false,
+          "documentTitle": "SalahNest | Prayer Times — أوقات الصلاة، مسبحة، قرآن، قبلة، تقويم هجري",
+          "brandCandidate": ""
+        },
+        {
+          "route": "contact",
+          "activePage": "page-contact",
+          "pageVisible": true,
+          "documentWidth": 1440,
+          "horizontalOverflow": false,
+          "documentTitle": "SalahNest | Prayer Times — أوقات الصلاة، مسبحة، قرآن، قبلة، تقويم هجري",
+          "brandCandidate": ""
+        },
+        {
+          "route": "settings",
+          "activePage": "page-settings",
+          "pageVisible": true,
+          "documentWidth": 1440,
+          "horizontalOverflow": false,
+          "documentTitle": "SalahNest | Prayer Times — أوقات الصلاة، مسبحة، قرآن، قبلة، تقويم هجري",
+          "brandCandidate": ""
+        }
+      ]
+    },
+    {
+      "name": "ar-midnight-phone-390",
+      "width": 390,
+      "height": 844,
+      "lang": "ar",
+      "theme": "midnight",
+      "city": "مكة المكرمة",
+      "country": "السعودية",
+      "lat": 21.4225,
+      "lon": 39.8262,
+      "screens": [
+        {
+          "route": "prayers",
+          "activePage": "page-mhome",
+          "pageVisible": true,
+          "documentWidth": 390,
+          "horizontalOverflow": false,
+          "documentTitle": "SalahNest | Prayer Times — أوقات الصلاة، مسبحة، قرآن، قبلة، تقويم هجري",
+          "brandCandidate": ""
+        },
+        {
+          "route": "calendar",
+          "activePage": "page-calendar",
+          "pageVisible": true,
+          "documentWidth": 390,
+          "horizontalOverflow": false,
+          "documentTitle": "SalahNest | Prayer Times — أوقات الصلاة، مسبحة، قرآن، قبلة، تقويم هجري",
+          "brandCandidate": ""
+        },
+        {
+          "route": "qibla",
+          "activePage": "page-qibla",
+          "pageVisible": true,
+          "documentWidth": 390,
+          "horizontalOverflow": false,
+          "documentTitle": "SalahNest | Prayer Times — أوقات الصلاة، مسبحة، قرآن، قبلة، تقويم هجري",
+          "brandCandidate": ""
+        },
+        {
+          "route": "quran",
+          "activePage": "page-quran",
+          "pageVisible": true,
+          "documentWidth": 390,
+          "horizontalOverflow": false,
+          "documentTitle": "SalahNest | Prayer Times — أوقات الصلاة، مسبحة، قرآن، قبلة، تقويم هجري",
+          "brandCandidate": ""
+        },
+        {
+          "route": "names",
+          "activePage": "page-names",
+          "pageVisible": true,
+          "documentWidth": 390,
+          "horizontalOverflow": false,
+          "documentTitle": "SalahNest | Prayer Times — أوقات الصلاة، مسبحة، قرآن، قبلة، تقويم هجري",
+          "brandCandidate": ""
+        },
+        {
+          "route": "dhikr",
+          "activePage": "page-dhikr",
+          "pageVisible": true,
+          "documentWidth": 390,
+          "horizontalOverflow": false,
+          "documentTitle": "SalahNest | Prayer Times — أوقات الصلاة، مسبحة، قرآن، قبلة، تقويم هجري",
+          "brandCandidate": ""
+        },
+        {
+          "route": "stats",
+          "activePage": "page-stats",
+          "pageVisible": true,
+          "documentWidth": 390,
+          "horizontalOverflow": false,
+          "documentTitle": "SalahNest | Prayer Times — أوقات الصلاة، مسبحة، قرآن، قبلة، تقويم هجري",
+          "brandCandidate": ""
+        },
+        {
+          "route": "downloads",
+          "activePage": "page-downloads",
+          "pageVisible": true,
+          "documentWidth": 390,
+          "horizontalOverflow": false,
+          "documentTitle": "SalahNest | Prayer Times — أوقات الصلاة، مسبحة، قرآن، قبلة، تقويم هجري",
+          "brandCandidate": ""
+        },
+        {
+          "route": "contact",
+          "activePage": "page-contact",
+          "pageVisible": true,
+          "documentWidth": 390,
+          "horizontalOverflow": false,
+          "documentTitle": "SalahNest | Prayer Times — أوقات الصلاة، مسبحة، قرآن، قبلة، تقويم هجري",
+          "brandCandidate": ""
+        },
+        {
+          "route": "settings",
+          "activePage": "page-settings",
+          "pageVisible": true,
+          "documentWidth": 390,
+          "horizontalOverflow": false,
+          "documentTitle": "SalahNest | Prayer Times — أوقات الصلاة، مسبحة، قرآن، قبلة، تقويم هجري",
+          "brandCandidate": ""
+        }
+      ]
+    }
+  ],
+  "console": [],
+  "pageErrors": [],
+  "failedRequests": []
+}

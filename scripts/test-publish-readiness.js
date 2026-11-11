@@ -168,7 +168,7 @@ test('responsive mode changes preserve every page except the prayers/mobile-home
   assert.equal(transition('mhome', true, false), 'page-prayers');
 });
 
-test('GPS accuracy thresholds and first-run protection remain unchanged from the public source', () => {
+test('GPS safeguards remain unchanged; arrival animation is added only on successful explicit updates', () => {
   const baseline = execFileSync('git', ['show', '947d18d8aab2241fa30c5eb1e3b21215368dae11:js/app.js'], { cwd: root, encoding: 'utf8' });
   const gpsRegion = (source) => {
     const options = source.match(/^const GPS_OPTIONS = .*?;\nconst GPS_POOR_ACCURACY_M = .*?;$/m);
@@ -176,7 +176,12 @@ test('GPS accuracy thresholds and first-run protection remain unchanged from the
     assert.ok(options && handler, 'GPS options and guarded position handler exist');
     return `${options[0]}\n${handler[0]}`;
   };
-  assert.equal(gpsRegion(app), gpsRegion(baseline));
+  const baselineGps = gpsRegion(baseline);
+  const successTail = '  if (userInitiated) closeLocModal();\n  return true;\n}';
+  assert.ok(baselineGps.endsWith(successTail), 'baseline success branch is recognized');
+  const expectedGps = baselineGps.replace(successTail,
+    '  if (userInitiated) {\n    closeLocModal();\n    animateLocationArrival();\n  }\n  return true;\n}');
+  assert.equal(gpsRegion(app), expectedGps);
 });
 
 console.log(`${checks} publication-readiness regression groups passed.`);

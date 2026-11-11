@@ -1,0 +1,310 @@
+{
+  "directory": "location-ltr-phone-390-light",
+  "frames": 33,
+  "dimensions": "520x140",
+  "largestChanges": [
+    {
+      "fromMs": 0,
+      "toMs": 17,
+      "meanRGBA": 1.0752,
+      "changedPct": 3.699,
+      "maxPixelSum": 527
+    },
+    {
+      "fromMs": 17,
+      "toMs": 33,
+      "meanRGBA": 0.7742,
+      "changedPct": 3.56,
+      "maxPixelSum": 527
+    },
+    {
+      "fromMs": 33,
+      "toMs": 50,
+      "meanRGBA": 0.6453,
+      "changedPct": 2.893,
+      "maxPixelSum": 553
+    },
+    {
+      "fromMs": 233,
+      "toMs": 250,
+      "meanRGBA": 0.6174,
+      "changedPct": 2.518,
+      "maxPixelSum": 527
+    }
+  ],
+  "lastFive": [
+    {
+      "fromMs": 450,
+      "toMs": 467,
+      "meanRGBA": 0.0056,
+      "changedPct": 0.019,
+      "maxPixelSum": 109
+    },
+    {
+      "fromMs": 467,
+      "toMs": 483,
+      "meanRGBA": 0,
+      "changedPct": 0,
+      "maxPixelSum": 0
+    },
+    {
+      "fromMs": 483,
+      "toMs": 500,
+      "meanRGBA": 0,
+      "changedPct": 0,
+      "maxPixelSum": 0
+    },
+    {
+      "fromMs": 500,
+      "toMs": 517,
+      "meanRGBA": 0.0003,
+      "changedPct": 0,
+      "maxPixelSum": 3
+    },
+    {
+      "fromMs": 517,
+      "toMs": 533,
+      "meanRGBA": 0,
+      "changedPct": 0,
+      "maxPixelSum": 0
+    }
+  ],
+  "zeroChangeIntervals": [
+    "467-483ms",
+    "483-500ms",
+    "500-517ms",
+    "517-533ms"
+  ]
+}
+{
+  "directory": "location-ltr-desktop-1440-light",
+  "frames": 33,
+  "dimensions": "460x140",
+  "largestChanges": [
+    {
+      "fromMs": 0,
+      "toMs": 17,
+      "meanRGBA": 1.2727,
+      "changedPct": 4.415,
+      "maxPixelSum": 527
+    },
+    {
+      "fromMs": 17,
+      "toMs": 33,
+      "meanRGBA": 0.9061,
+      "changedPct": 4.214,
+      "maxPixelSum": 527
+    },
+    {
+      "fromMs": 33,
+      "toMs": 50,
+      "meanRGBA": 0.7402,
+      "changedPct": 3.495,
+      "maxPixelSum": 553
+    },
+    {
+      "fromMs": 233,
+      "toMs": 250,
+      "meanRGBA": 0.7075,
+      "changedPct": 2.863,
+      "maxPixelSum": 527
+    }
+  ],
+  "lastFive": [
+    {
+      "fromMs": 450,
+      "toMs": 467,
+      "meanRGBA": 0.007,
+      "changedPct": 0.034,
+      "maxPixelSum": 107
+    },
+    {
+      "fromMs": 467,
+      "toMs": 483,
+      "meanRGBA": 0.0001,
+      "changedPct": 0,
+      "maxPixelSum": 2
+    },
+    {
+      "fromMs": 483,
+      "toMs": 500,
+      "meanRGBA": 0,
+      "changedPct": 0,
+      "maxPixelSum": 0
+    },
+    {
+      "fromMs": 500,
+      "toMs": 517,
+      "meanRGBA": 0.0174,
+      "changedPct": 0.087,
+      "maxPixelSum": 109
+    },
+    {
+      "fromMs": 517,
+      "toMs": 533,
+      "meanRGBA": 0,
+      "changedPct": 0,
+      "maxPixelSum": 0
+    }
+  ],
+  "zeroChangeIntervals": [
+    "467-483ms",
+    "483-500ms",
+    "517-533ms"
+  ]
+}
+{
+  "directory": "location-rtl-phone-390-dark",
+  "frames": 33,
+  "dimensions": "420x140",
+  "largestChanges": [
+    {
+      "fromMs": 0,
+      "toMs": 17,
+      "meanRGBA": 1.1763,
+      "changedPct": 4.599,
+      "maxPixelSum": 446
+    },
+    {
+      "fromMs": 17,
+      "toMs": 33,
+      "meanRGBA": 0.829,
+      "changedPct": 4.231,
+      "maxPixelSum": 446
+    },
+    {
+      "fromMs": 233,
+      "toMs": 250,
+      "meanRGBA": 0.6881,
+      "changedPct": 3.109,
+      "maxPixelSum": 446
+    },
+    {
+      "fromMs": 217,
+      "toMs": 233,
+      "meanRGBA": 0.6795,
+      "changedPct": 2.92,
+      "maxPixelSum": 446
+    }
+  ],
+  "lastFive": [
+    {
+      "fromMs": 450,
+      "toMs": 467,
+      "meanRGBA": 0.0059,
+      "changedPct": 0.026,
+      "maxPixelSum": 107
+    },
+    {
+      "fromMs": 467,
+      "toMs": 483,
+      "meanRGBA": 0,
+      "changedPct": 0,
+      "maxPixelSum": 0
+    },
+    {
+      "fromMs": 483,
+      "toMs": 500,
+      "meanRGBA": 0,
+      "changedPct": 0,
+      "maxPixelSum": 0
+    },
+    {
+      "fromMs": 500,
+      "toMs": 517,
+      "meanRGBA": 0.0003,
+      "changedPct": 0,
+      "maxPixelSum": 2
+    },
+    {
+      "fromMs": 517,
+      "toMs": 533,
+      "meanRGBA": 0,
+      "changedPct": 0,
+      "maxPixelSum": 0
+    }
+  ],
+  "zeroChangeIntervals": [
+    "467-483ms",
+    "483-500ms",
+    "500-517ms",
+    "517-533ms"
+  ]
+}
+{
+  "directory": "location-rtl-desktop-1440-dark",
+  "frames": 33,
+  "dimensions": "440x140",
+  "largestChanges": [
+    {
+      "fromMs": 0,
+      "toMs": 17,
+      "meanRGBA": 1.1712,
+      "changedPct": 4.542,
+      "maxPixelSum": 446
+    },
+    {
+      "fromMs": 17,
+      "toMs": 33,
+      "meanRGBA": 0.8229,
+      "changedPct": 4.263,
+      "maxPixelSum": 446
+    },
+    {
+      "fromMs": 233,
+      "toMs": 250,
+      "meanRGBA": 0.6659,
+      "changedPct": 3.016,
+      "maxPixelSum": 446
+    },
+    {
+      "fromMs": 33,
+      "toMs": 50,
+      "meanRGBA": 0.656,
+      "changedPct": 3.477,
+      "maxPixelSum": 446
+    }
+  ],
+  "lastFive": [
+    {
+      "fromMs": 450,
+      "toMs": 467,
+      "meanRGBA": 0.0064,
+      "changedPct": 0.034,
+      "maxPixelSum": 105
+    },
+    {
+      "fromMs": 467,
+      "toMs": 483,
+      "meanRGBA": 0.0001,
+      "changedPct": 0,
+      "maxPixelSum": 2
+    },
+    {
+      "fromMs": 483,
+      "toMs": 500,
+      "meanRGBA": 0,
+      "changedPct": 0,
+      "maxPixelSum": 0
+    },
+    {
+      "fromMs": 500,
+      "toMs": 517,
+      "meanRGBA": 0.0176,
+      "changedPct": 0.091,
+      "maxPixelSum": 107
+    },
+    {
+      "fromMs": 517,
+      "toMs": 533,
+      "meanRGBA": 0,
+      "changedPct": 0,
+      "maxPixelSum": 0
+    }
+  ],
+  "zeroChangeIntervals": [
+    "467-483ms",
+    "483-500ms",
+    "517-533ms"
+  ]
+}

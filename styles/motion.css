@@ -18,6 +18,8 @@
    js/motion.js for anything driven by WAAPI/View Transitions.
    ═════════════════════════════════════════════════════════════════════ */
 
+:root{--t-location-arrival:480ms}
+
 /* ── 1. Page transitions (View Transitions API) ──────────────────────
    Shared axis: the outgoing page eases toward the trailing edge, the new page
    arrives from the reading direction. Direction is set per-navigation by
@@ -173,6 +175,32 @@ html.pt-vt-theme::view-transition-new(root){animation:pt-theme-reveal var(--t-sl
   animation-delay:calc(90ms + var(--i,0) * 80ms)}
 #page-downloads .dl-help-card:nth-child(2){--i:1}
 @keyframes pt-fade-in{from{opacity:0;transform:translateY(6px)}}
+/* ── 11. Location change: one quiet flight from the chip's trailing edge
+   to its pin, only after an explicit location change succeeds. The dotted
+   arc explains the change without moving or obscuring the location label. */
+.tb-loc{position:relative;--flight-angle:-90deg;--flight-bank:-12deg}
+[dir="rtl"] .tb-loc{--flight-angle:90deg;--flight-bank:12deg}
+.loc-flight{display:none;position:absolute;inset:0;z-index:2;overflow:hidden;
+  border-radius:inherit;pointer-events:none}
+.tb-loc.loc-arriving .loc-flight{display:block}
+.loc-flight-route{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+[dir="rtl"] .loc-flight-route{transform:scaleX(-1)}
+.loc-flight-route path{fill:none;stroke:var(--primary);stroke-width:1.5;stroke-linecap:round;
+  stroke-dasharray:2.7 3.4;opacity:0;
+  animation:pt-location-route var(--t-location-arrival) var(--ease-out) both}
+.loc-flight-plane{position:absolute;top:4px;inset-inline-start:calc(100% - 23px);width:13px;height:13px;
+  color:var(--primary);fill:currentColor;background:var(--surface);border-radius:50%;
+  box-shadow:0 0 0 2px var(--surface);transform-origin:center;
+  animation:pt-location-flight var(--t-location-arrival) var(--ease-out) both}
+.tb-loc.loc-arriving>[data-icon="pin"]{animation:pt-location-pin var(--t-location-arrival) var(--ease-out) both}
+@keyframes pt-location-route{0%{opacity:0}18%{opacity:.68}78%{opacity:.32}100%{opacity:0}}
+@keyframes pt-location-flight{
+  0%{transform:translate3d(0,0,0) rotate(var(--flight-angle));opacity:1}
+  46%{transform:translate3d(var(--flight-x-mid),-5px,0) rotate(calc(var(--flight-angle) + var(--flight-bank)));opacity:1}
+  78%{transform:translate3d(var(--flight-x-near),2px,0) rotate(var(--flight-angle));opacity:1}
+  100%{transform:translate3d(var(--flight-x),3px,0) rotate(var(--flight-angle));opacity:0}
+}
+@keyframes pt-location-pin{0%,70%,100%{transform:scale(1)}84%{transform:scale(1.12)}}
 /* hover only where a pointer exists; press is for everyone */
 .dlb-btn{transition:transform var(--t-fast) var(--ease-out),box-shadow var(--t-fast),filter var(--t-fast)}
 .dlb-btn:active{transform:scale(.985);filter:brightness(1.08)}
@@ -193,4 +221,6 @@ html.pt-vt-theme::view-transition-new(root){animation:pt-theme-reveal var(--t-sl
   #stChart .stk-bar,#stByPrayer .stk-fill{transform:scale(1)}
   .sun-arc .pt-sun-marker,.cd-arc rect,.mh-prog i,.sb-ind{transition:none}
   .bnav .bbtn.active .bi{animation:none}
+  .tb-loc.loc-arriving .loc-flight{display:none}
+  .tb-loc.loc-arriving>[data-icon="pin"]{animation:none}
 }

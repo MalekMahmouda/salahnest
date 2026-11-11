@@ -7,6 +7,7 @@ const read = (file) => fs.readFileSync(path.join(__dirname, '..', file), 'utf8')
 const html = read('prayer-times.html');
 const app = read('js/app.js');
 const pages = read('js/pages.js');
+const pages3 = read('js/pages3.js');
 const reader = read('js/reader.js');
 const css = read('styles/app.css');
 const earlyLocale = read('js/early-locale.js');
@@ -95,6 +96,50 @@ test('remaining history, Quran, calendar, stats, and Android adhan labels use tr
   assert.match(app, /applyAndroidAdhanNotesLang\(\)/);
   assert.match(pages, /t\('set\.defaultMuadhdhin'\)/);
   assert.match(pages, /title="\$\{t\('set\.volume'\)\}"/);
+});
+
+test('Stats headings, legend, note, and prayer-count labels are bilingual', () => {
+  const data = read('js/data.js');
+  const en = data.match(/\ben:\s*\{[\s\S]*?stats:\s*\{([\s\S]*?)\n    \},\s*set:\s*\{/);
+  const ar = data.match(/\bar:\s*\{[\s\S]*?stats:\s*\{([\s\S]*?)\n    \},\s*set:\s*\{/);
+  assert.ok(en, 'English Stats dictionary exists');
+  assert.ok(ar, 'Arabic Stats dictionary exists');
+  const keys = ['streaks', 'thisWeek', 'thisMonth', 'last30Days', 'byPrayer', 'completed', 'partial', 'missed', 'doneCount', 'missedCount', 'note'];
+  const requiredKeys = [...keys, 'noHistory'];
+  for (const key of requiredKeys) {
+    assert.match(en[1], new RegExp(`\\b${key}:`), `English Stats translation exists: ${key}`);
+    assert.match(ar[1], new RegExp(`\\b${key}:`), `Arabic Stats translation exists: ${key}`);
+  }
+  for (const id of ['stStreakH', 'stWeekH', 'stMonthH', 'stChartH', 'stPerPrayerH', 'stChartLegend', 'stLegendCompleted', 'stLegendPartial', 'stLegendMissed', 'stNote']) {
+    assert.ok(html.includes(`id="${id}"`), `${id} exists in the Stats screen`);
+  }
+  for (const key of ['streaks', 'thisWeek', 'thisMonth', 'last30Days', 'byPrayer', 'completed', 'partial', 'missed', 'note']) {
+    assert.ok(app.includes(`'stats.${key}'`), `language switch maps stats.${key}`);
+  }
+  assert.match(app, /el\.textContent = t\(key\)/, 'mapped Stats labels use the selected dictionary');
+  assert.match(pages3, /t\('stats\.doneCount'\)/);
+  assert.match(pages3, /t\('stats\.missedCount'\)/);
+  assert.match(pages3, /t\('stats\.noHistory'\)/, 'empty chart message uses the active language');
+  assert.match(pages3, /class="stats-empty" role="status"/, 'empty state is announced as status content');
+  assert.match(app, /if \(window\.renderStatsIfVisible\) window\.renderStatsIfVisible\(\);/, 'visible Stats chart re-renders after a language change');
+});
+
+test('Sahara primary text accent clears AA on the page background and matches its picker swatch', () => {
+  const block = css.match(/\[data-theme="sahara"\]\{([^}]+)\}/);
+  assert.ok(block, 'Sahara theme tokens exist');
+  const bg = block[1].match(/--bg:(#[0-9a-f]{6})/i)?.[1];
+  const primary = block[1].match(/--primary:(#[0-9a-f]{6})/i)?.[1];
+  assert.ok(bg && primary, 'Sahara background and primary colors are defined');
+  const luminance = hex => {
+    const rgb = hex.slice(1).match(/../g).map(pair => parseInt(pair, 16) / 255);
+    const linear = rgb.map(c => c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+    return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2];
+  };
+  const a = luminance(bg), b = luminance(primary);
+  const ratio = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+  assert.ok(ratio >= 4.5, `Sahara primary contrast ${ratio.toFixed(2)}:1 is below 4.5:1`);
+  const data = read('js/data.js');
+  assert.match(data, /id: 'sahara',[^}]*color: '#b25209', preview: \['#f8f1e4', '#fffaf0', '#b25209'/);
 });
 
 test('reduced-motion media query removes transitions', () => {

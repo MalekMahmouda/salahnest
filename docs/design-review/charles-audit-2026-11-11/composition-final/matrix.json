@@ -1,0 +1,122 @@
+{
+  "url": "http://127.0.0.1:8768/index.html?composition-check=1",
+  "widths": [
+    320,
+    360,
+    390,
+    414,
+    768,
+    769,
+    901,
+    1024,
+    1440,
+    1920
+  ],
+  "themes": [
+    "blue",
+    "emerald",
+    "islamic",
+    "ocean",
+    "sahara",
+    "midnight",
+    "royal",
+    "oled"
+  ],
+  "languages": [
+    "en",
+    "ar"
+  ],
+  "routes": [
+    "qibla",
+    "calendar",
+    "stats"
+  ],
+  "totalStates": 480,
+  "overflowFailures": 0,
+  "failures": [],
+  "contrasts": {
+    "blue": {
+      "textOnBg": 13.63,
+      "mutedOnBg": 4.55,
+      "primaryOnBg": 5.04,
+      "primaryOnSurface": 5.75,
+      "emptyTextOnCard": 4.73
+    },
+    "emerald": {
+      "textOnBg": 13.57,
+      "mutedOnBg": 4.57,
+      "primaryOnBg": 4.75,
+      "primaryOnSurface": 5.36,
+      "emptyTextOnCard": 4.68
+    },
+    "islamic": {
+      "textOnBg": 10.68,
+      "mutedOnBg": 5.01,
+      "primaryOnBg": 7.06,
+      "primaryOnSurface": 7.57,
+      "emptyTextOnCard": 4.7
+    },
+    "ocean": {
+      "textOnBg": 13.44,
+      "mutedOnBg": 4.71,
+      "primaryOnBg": 7.96,
+      "primaryOnSurface": 9.2,
+      "emptyTextOnCard": 4.89
+    },
+    "sahara": {
+      "textOnBg": 13.82,
+      "mutedOnBg": 5.16,
+      "primaryOnBg": 4.56,
+      "primaryOnSurface": 4.92,
+      "emptyTextOnCard": 4.93
+    },
+    "midnight": {
+      "textOnBg": 16.63,
+      "mutedOnBg": 6.17,
+      "primaryOnBg": 6.11,
+      "primaryOnSurface": 5.65,
+      "emptyTextOnCard": 5.06
+    },
+    "royal": {
+      "textOnBg": 16.55,
+      "mutedOnBg": 6.43,
+      "primaryOnBg": 7.14,
+      "primaryOnSurface": 6.59,
+      "emptyTextOnCard": 5.29
+    },
+    "oled": {
+      "textOnBg": 20.02,
+      "mutedOnBg": 5.36,
+      "primaryOnBg": 16.74,
+      "primaryOnSurface": 15.79,
+      "emptyTextOnCard": 4.71
+    }
+  },
+  "liveLanguageToggle": {
+    "enToAr": {
+      "dir": "rtl",
+      "text": "لا توجد سجلات للصلاة في هذه الفترة."
+    },
+    "arToEn": {
+      "dir": "ltr",
+      "text": "No prayer records for this period."
+    }
+  },
+  "populatedChart": {
+    "bars": 30,
+    "legendHidden": false,
+    "restoredEmpty": "No prayer records for this period."
+  },
+  "reducedMotion": {
+    "preference": true,
+    "dir": "rtl",
+    "active": true,
+    "transitionDuration": "0s",
+    "overflow": false
+  },
+  "diagnostics": {
+    "consoleErrors": [],
+    "pageErrors": [],
+    "requestFailures": []
+  }
+}

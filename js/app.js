@@ -729,7 +729,7 @@ async function fetchTimes(lat, lon) {
   renderAll();
 }
 
-async function fetchByCity(city, country) {
+async function fetchByCity(city, country, userInitiated = false) {
   const requestId = ++_locationRequestSeq;
   // Geocoding only (lat/lon) — timings are ALWAYS computed by the local engine
   // so there is exactly one source of prayer times.
@@ -772,7 +772,9 @@ async function fetchByCity(city, country) {
   S.times = null; S.hijri = null;            // drop any stale API cache
   localStorage.removeItem('ptt');
   await refreshTodaySchedule();
-  renderAll(); closeLocModal(); showToast(t('toast.locSet'));
+  renderAll(); closeLocModal();
+  if (userInitiated) animateLocationArrival();
+  showToast(t('toast.locSet'));
 }
 
 /* ═══ OFFLINE SCHEDULE (platform adapter: main process on desktop, adhan lib on mobile/browser) ═══ */
@@ -986,8 +988,34 @@ function updateLocNames() {
 }
 let _locModalOpener = null;
 let _locationRequestSeq = 0;
+let _locationArrivalTimer = null;
 const GPS_OPTIONS = Object.freeze({ timeout: 15000, maximumAge: 0, enableHighAccuracy: true });
 const GPS_POOR_ACCURACY_M = 1000;
+function animateLocationArrival() {
+  const chip = $('tbLoc');
+  if (!chip || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+  if (chip.classList.contains('loc-arriving')) return;
+  const plane = chip.querySelector('.loc-flight-plane');
+  const width = chip.clientWidth;
+  if (plane && typeof width === 'number' && Number.isFinite(width)) {
+    const distance = Math.max(0, width - 31) * (document.documentElement.dir === 'rtl' ? 1 : -1);
+    plane.style.setProperty('--flight-x', `${distance}px`);
+    plane.style.setProperty('--flight-x-mid', `${distance / 2}px`);
+    plane.style.setProperty('--flight-x-near', `${distance * 0.9}px`);
+  }
+  clearTimeout(_locationArrivalTimer);
+  chip.classList.add('loc-arriving');
+  const rawDuration = typeof getComputedStyle === 'function'
+    ? getComputedStyle(chip).getPropertyValue('--t-location-arrival').trim()
+    : '480ms';
+  const duration = Number.parseFloat(rawDuration);
+  const durationMs = rawDuration.endsWith('ms') ? duration : rawDuration.endsWith('s') ? duration * 1000 : 480;
+  const cleanupDelay = Number.isFinite(durationMs) && durationMs > 0 ? durationMs + 32 : 512;
+  _locationArrivalTimer = setTimeout(() => {
+    chip.classList.remove('loc-arriving');
+    _locationArrivalTimer = null;
+  }, cleanupDelay);
+}
 function openLocModal() {
   const overlay = $('locOverlay');
   if (!overlay.classList.contains('open')) _locModalOpener = document.activeElement;
@@ -1043,7 +1071,10 @@ function applyGPSPosition(pos, requestId, userInitiated) {
   S.lat = lat; S.lon = lon; S.city = ''; S.country = ''; S.locLabelKey = '';
   saveLoc(); updateLocNames();
   revGeo(S.lat, S.lon); fetchTimes(S.lat, S.lon); refreshTodaySchedule();
-  if (userInitiated) closeLocModal();
+  if (userInitiated) {
+    closeLocModal();
+    animateLocationArrival();
+  }
   return true;
 }
 function requestCurrentLocation(userInitiated, startup) {
@@ -1118,7 +1149,7 @@ async function revGeo(lat, lon) {
 function setManualLoc() {
   const c = $('cityInp').value.trim();
   if (!c) { showToast(t('toast.noCity')); return; }
-  fetchByCity(c, $('cntryInp').value.trim());
+  fetchByCity(c, $('cntryInp').value.trim(), true);
 }
 
 /* ═══ AUDIO (browser fallback; desktop uses main process) ═══ */
@@ -1335,6 +1366,13 @@ function applyLang() {
     .forEach(([id, key]) => { const el = $(id); if (el) el.textContent = t(key); });
   const calToday = $('calToday'); if (calToday) { calToday.textContent = t('cal.todayBtn'); calToday.setAttribute('aria-label', t('cal.todayBtn')); }
   const statsToday = $('stTodayH'); if (statsToday) statsToday.textContent = t('today');
+  // Stats — keep page headings, legend, and note in the active language.
+  [
+    ['stStreakH', 'stats.streaks'], ['stWeekH', 'stats.thisWeek'], ['stMonthH', 'stats.thisMonth'],
+    ['stChartH', 'stats.last30Days'], ['stPerPrayerH', 'stats.byPrayer'],
+    ['stLegendCompleted', 'stats.completed'], ['stLegendPartial', 'stats.partial'],
+    ['stLegendMissed', 'stats.missed'], ['stNote', 'stats.note'],
+  ].forEach(([id, key]) => { const el = $(id); if (el) el.textContent = t(key); });
 
   // Names
   $('nmSearch').placeholder = t('names.search');
@@ -1458,6 +1496,7 @@ function applyLang() {
   // Downloads + Quran Radio labels live in js/extras.js (loaded after this file).
   if (window.applyExtrasLang) window.applyExtrasLang();
   if (window.applyContactLanguage) window.applyContactLanguage();
+  if (window.renderStatsIfVisible) window.renderStatsIfVisible();
 }
 
 /* ═══ APP-CHROME ICONS ═══

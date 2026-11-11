@@ -53,6 +53,10 @@
     <header class="topbar">
       <button class="tb-loc" id="tbLoc" type="button" aria-label="Change location">
         <span data-icon="pin"></span><span class="loc-name" id="locName">Detecting…</span><span style="font-size:11px" data-icon="pencil"></span>
+        <span class="loc-flight" aria-hidden="true">
+          <svg class="loc-flight-route" viewBox="0 0 100 34" preserveAspectRatio="none" focusable="false"><path d="M92 11 C72 2 35 2 8 14"></path></svg>
+          <svg class="loc-flight-plane" viewBox="0 0 24 24" focusable="false"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5L21 16z"></path></svg>
+        </span>
       </button>
       <span class="tb-date" id="tbDate">—</span>
       <span class="tb-spacer"></span>
@@ -328,17 +332,23 @@
           <div class="card set-card"><div class="card-h" id="stWeekH">This Week</div><div id="stWeek" style="margin-top:8px"></div></div>
           <div class="card set-card"><div class="card-h" id="stMonthH">This Month</div><div id="stMonth" style="margin-top:8px"></div></div>
         </div>
-        <div class="sec-lbl" id="stChartH">Last 30 Days</div>
-        <div class="card" style="margin-bottom:16px"><div id="stChart"></div>
-          <div style="display:flex;gap:16px;margin-top:12px;font-size:11.5px;color:var(--text-muted)">
-            <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--success);vertical-align:-1px"></span> Completed</span>
-            <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--warning);vertical-align:-1px"></span> Partial</span>
-            <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--danger);vertical-align:-1px"></span> Missed</span>
+        <div class="stats-details">
+          <div class="stats-detail">
+            <div class="sec-lbl" id="stChartH">Last 30 Days</div>
+            <div class="card stats-chart-card"><div id="stChart"></div>
+              <div id="stChartLegend" class="stats-chart-legend" hidden>
+                <span><span aria-hidden="true" style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--success);vertical-align:-1px"></span> <span id="stLegendCompleted">Completed</span></span>
+                <span><span aria-hidden="true" style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--warning);vertical-align:-1px"></span> <span id="stLegendPartial">Partial</span></span>
+                <span><span aria-hidden="true" style="display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--danger);vertical-align:-1px"></span> <span id="stLegendMissed">Missed</span></span>
+              </div>
+            </div>
+          </div>
+          <div class="stats-detail">
+            <div class="sec-lbl" id="stPerPrayerH">By Prayer</div>
+            <div class="card"><div id="stByPrayer"></div></div>
           </div>
         </div>
-        <div class="sec-lbl" id="stPerPrayerH">By Prayer</div>
-        <div class="card"><div id="stByPrayer"></div></div>
-        <div class="note muted" style="font-size:11px;margin-top:12px" id="stNote">These statistics describe your records in this app only — never a judgment. Days count as “recorded” when at least one prayer is logged.</div>
+        <div class="note muted" style="font-size:12px;margin-top:16px" id="stNote">These statistics describe your records in this app only — never a judgment. Days count as “recorded” when at least one prayer is logged.</div>
       </section>
 
       <!-- ══════════ DOWNLOAD ══════════

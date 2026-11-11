@@ -37,7 +37,7 @@ const THEMES = [
   { id: 'emerald',  en: 'Emerald',  ar: 'زمردي',    color: '#1d7a44', preview: ['#e9f4ec', '#ffffff', '#1d7a44', '#bb5085'], dark: false },
   { id: 'islamic',  en: 'Islamic',  ar: 'إسلامي',   color: '#146b47', preview: ['#f7f6f0', '#fffefa', '#245d4d', '#b4517f'], dark: false },
   { id: 'ocean',    en: 'Ocean',    ar: 'محيطي',    color: '#0a4a7c', preview: ['#e6f0f7', '#ffffff', '#0a4a7c', '#bd4f8c'], dark: false },
-  { id: 'sahara',   en: 'Sahara',   ar: 'صحراوي',   color: '#b45309', preview: ['#f8f1e4', '#fffaf0', '#b45309', '#a63d6e'], dark: false },
+  { id: 'sahara',   en: 'Sahara',   ar: 'صحراوي',   color: '#b25209', preview: ['#f8f1e4', '#fffaf0', '#b25209', '#a63d6e'], dark: false },
 ];
 
 // Migration map for theme ids saved by earlier builds.
@@ -163,6 +163,12 @@ const T = {
     quran: { search: 'Search surah by name or number…', tabsSurahs: 'Surahs', tabsRead: 'Read', tabsSearch: 'Search', tabsBookmarks: 'Bookmarks', meccan: 'Meccan', medinan: 'Medinan', verses: 'verses', noResults: 'No surahs found.', reciter: 'Reciter', loading: 'Could not load audio. Check connection.' },
     names: { search: 'Search by name or meaning…', day: 'Name of the Day', all: 'All 99 Names', dhikr: 'Dhikr', noResults: 'No names found.', source: 'Asma Allah al-Husna' },
     dhikr: { title: 'Dhikr Counter', target: 'Target', custom: 'Custom', reset: 'Reset', daily: 'Today', total: 'All time', count: 'Count dhikr', tapHint: 'Tap the counter or press Space', done: 'Target reached — Alhamdulillah!' },
+    stats: {
+      streaks: 'Streaks', thisWeek: 'This Week', thisMonth: 'This Month', last30Days: 'Last 30 Days', byPrayer: 'By Prayer',
+      completed: 'Completed', partial: 'Partial', missed: 'Missed', doneCount: 'done', missedCount: 'missed',
+      noHistory: 'No prayer records for this period.',
+      note: 'These statistics describe your records in this app only — never a judgment. Days count as “recorded” when at least one prayer is logged.',
+    },
     set: {
       title: 'Settings', general: 'General', language: 'Language', theme: 'Theme', h24: '24-Hour Format',
       data: 'Data Management', export: 'Export backup (JSON)', import: 'Import backup', backupNote: 'Backup includes settings, locations, prayer record, dhikr data, bookmarks, and themes. Import shows a preview before replacing anything.',
@@ -246,6 +252,12 @@ const T = {
     quran: { search: 'ابحث عن سورة بالاسم أو الرقم…', tabsSurahs: 'السور', tabsRead: 'قراءة', tabsSearch: 'بحث', tabsBookmarks: 'العلامات المرجعية', meccan: 'مكية', medinan: 'مدنية', verses: 'آية', noResults: 'لا توجد نتائج.', reciter: 'القارئ', loading: 'تعذر تحميل الصوت. تحقق من الاتصال.' },
     names: { search: 'ابحث عن الاسم أو المعنى…', day: 'اسم اليوم', all: 'أسماء الله الحسنى', dhikr: 'الذكر', noResults: 'لا توجد نتائج.', source: 'أسماء الله الحسنى' },
     dhikr: { title: 'مسبحة إلكترونية', target: 'الهدف', custom: 'مخصص', reset: 'تصفير', daily: 'اليوم', total: 'الإجمالي', count: 'عدّ الذكر', tapHint: 'اضغط على العداد أو مفتاح المسافة', done: 'اكتمل الهدف — الحمد لله!' },
+    stats: {
+      streaks: 'سلاسل المواظبة', thisWeek: 'هذا الأسبوع', thisMonth: 'هذا الشهر', last30Days: 'آخر 30 يومًا', byPrayer: 'حسب الصلاة',
+      completed: 'مكتملة', partial: 'جزئية', missed: 'فائتة', doneCount: 'مكتملة', missedCount: 'فائتة',
+      noHistory: 'لا توجد سجلات للصلاة في هذه الفترة.',
+      note: 'تعكس هذه الإحصاءات سجلاتك في هذا التطبيق فقط — ولا تمثل حكماً عليك. يُحسب اليوم مسجلاً عند تدوين صلاة واحدة على الأقل.',
+    },
     set: {
       title: 'الإعدادات', general: 'عام', language: 'اللغة', theme: 'المظهر', h24: 'صيغة 24 ساعة',
       data: 'إدارة البيانات', export: 'تصدير نسخة احتياطية (JSON)', import: 'استيراد نسخة احتياطية', backupNote: 'تشمل النسخة الاحتياطية الإعدادات والمواقع وسجل الصلاة وبيانات الذكر والعلامات المرجعية والمظاهر. يعرض الاستيراد معاينة قبل استبدال أي بيانات.',
