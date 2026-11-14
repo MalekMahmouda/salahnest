@@ -20,6 +20,7 @@ const { createScheduler } = require('./scheduler');
 const { createTray } = require('./tray');
 const JsonStore = require('./json-store');
 const { resolveAdhanAudio, clampVolume } = require('./adhan-files');
+const { clearDesktopCache } = require('./cache-clear');
 
 const PRAYER_AR = { Fajr: 'الفجر', Dhuhr: 'الظهر', Asr: 'العصر', Maghrib: 'المغرب', Isha: 'العشاء' };
 
@@ -332,6 +333,11 @@ if (!isPrimary) {
     if (!res.ok) azlog('config REJECTED', { error: res.error });
     if (res.ok) updateTray(scheduler.getInfo());
     return res;
+  });
+
+  ipcMain.handle('pt:clear-cache', async (e) => {
+    if (!win || win.isDestroyed() || e.sender !== win.webContents) throw new Error('Unauthorized cache clear request');
+    return clearDesktopCache(win.webContents.session);
   });
 
   ipcMain.on('pt:set-close-to-tray', (e, v) => {

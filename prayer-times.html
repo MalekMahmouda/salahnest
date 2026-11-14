@@ -549,6 +549,8 @@
 
           <div class="card set-card">             <div class="card-h"><span data-icon="disk"></span><span id="shData">Data Management</span></div>             <button class="btn" id="btnExport" style="width:100%;margin-bottom:9px"><span data-icon="upload"></span> <span id="slExport">Export backup (JSON)</span></button>             <button class="btn" id="btnImport" style="width:100%;margin-bottom:9px"><span data-icon="download"></span> <span id="slImport">Import backup</span></button>
             <input type="file" id="importFile" accept=".json,application/json" style="display:none">
+            <button class="btn" id="btnClearCache" type="button" style="width:100%;margin-bottom:9px"><span data-icon="trash"></span> <span id="slClearCache">Clear SalahNest cache</span></button>
+            <div class="note" id="cacheNote">Clears SalahNest offline assets and its service worker; the desktop app also clears Chromium’s cache. Offline assets may need to be downloaded again. A web page cannot clear the general browser cache.</div>
             <div class="note" id="backupNote">Backup includes settings, locations, prayer record, dhikr data, bookmarks, and themes. Import shows a preview before replacing anything.</div>
           </div>
 
@@ -718,6 +720,7 @@
 <script src="js/compass.js"></script>
 <script src="js/motion.js"></script>
 <script src="js/web-alerts.js"></script>
+<script src="js/cache-clear.js"></script>
 <script src="js/app.js"></script>
 <script src="js/pages.js"></script>
 <script src="js/pages3.js"></script>

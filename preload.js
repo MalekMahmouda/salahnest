@@ -69,6 +69,8 @@ contextBridge.exposeInMainWorld('ptDesktop', {
   setCloseToTray: (v) => ipcRenderer.send('pt:set-close-to-tray', !!v),
   setStartWithWindows: (v) => ipcRenderer.send('pt:set-start-with-windows', !!v),
   setOverlayEnabled: (v) => ipcRenderer.send('pt:set-overlay-enabled', !!v),
+  /** Clears transient Chromium and offline cache data without touching user stores. */
+  clearCache: () => ipcRenderer.invoke('pt:clear-cache'),
   /** One-way renderer diagnostics → main → azan-debug.log (v1.3.2 P9). */
   debug: (msg, data) => { try { ipcRenderer.send('pt:debug', String(msg == null ? '' : msg).slice(0, 300), data == null ? null : data); } catch (e) { /* never break the renderer */ } },
   setTheme: (id, isDark) => {

@@ -240,7 +240,7 @@ const CACHE = 'pt-cache-' + new Date().toISOString().replace(/\D/g, '').slice(0,
 const SHELL = [
   'index.html', 'styles/app.css', 'styles/motion.css', 'styles/fonts.css',
   'styles/companion.css', 'styles/web.css', 'styles/contact.css', 'js/early-locale.js',
-  'js/web-alerts.js', 'js/app.js', 'js/motion.js', 'js/pages.js', 'js/pages3.js',
+  'js/web-alerts.js', 'js/cache-clear.js', 'js/app.js', 'js/motion.js', 'js/pages.js', 'js/pages3.js',
   'js/reader.js', 'js/store3.js', 'js/data.js', 'js/search-utils.js', 'js/vendor/hls.min.js', 'js/platform.js', 'js/adhan-bundle.js',
   'js/pt-engine.js', 'js/compass.js', 'js/stats.js', 'js/extras.js', 'js/contact-config.js', 'js/contact.js',
   'data/quran.json', 'manifest.webmanifest',
