@@ -536,6 +536,22 @@ function wireSettings() {
   $('setTheme').onchange = (e) => { PTMotion.themeChange(() => { applyTheme(e.target.value); saveCfg(); }); };
   $('setMethod').onchange = (e) => { S.cfg.method = e.target.value; saveCfg(); if (S.lat != null) fetchTimes(S.lat, S.lon); };
   $('setMadhab').onchange = (e) => { S.cfg.madhab = e.target.value; saveCfg(); refreshTodaySchedule(); };
+  $('btnClearCache').onclick = async () => {
+    if (!confirm(t('set.cacheConfirm'))) return;
+    const button = $('btnClearCache');
+    button.disabled = true;
+    button.setAttribute('aria-busy', 'true');
+    try {
+      if (!window.SalahNestCache) throw new Error('Cache cleanup is unavailable');
+      await window.SalahNestCache.clear();
+      showToast(t('set.cacheCleared'));
+    } catch (e) {
+      showToast(t('set.cacheClearFailed'));
+    } finally {
+      button.disabled = false;
+      button.removeAttribute('aria-busy');
+    }
+  };
   $('tg24').onclick = () => { S.cfg.h24 = !S.cfg.h24; saveCfg(); renderSettings(); renderDashboard(); };
   $('tgNotif').onclick = async () => {
     if (S.cfg.notif) { S.cfg.notif = false; saveCfg(); renderSettings(); return; }

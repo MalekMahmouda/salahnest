@@ -1440,6 +1440,8 @@ function applyLang() {
   ['histTodayBtn', 'histTodayBtnM'].forEach((id) => { const el = $(id); if (el) { el.textContent = t('hist.today'); el.setAttribute('aria-label', t('hist.today')); } });
   ['histDate', 'histDateM'].forEach((id) => { const el = $(id); if (el) el.setAttribute('aria-label', t('hist.date')); });
   $('dataNote').textContent = t('set.dataNote');
+  $('slClearCache').textContent = t('set.clearCache');
+  $('cacheNote').textContent = t('set.cacheNote');
   $('creditsNote').textContent = t('set.credits');
   const aboutLine = $('aboutLine');
   if (aboutLine && typeof aboutLine.textContent === 'string') {
