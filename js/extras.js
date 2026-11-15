@@ -285,6 +285,9 @@ function applyExtrasLang() {
   set('dlTitle', 'dl.title');
   set('dlLead', 'dl.lead');
   set('dlAndroidT', 'dl.androidT');
+  set('dlWindowsT', 'dl.windowsT');
+  set('dlWindowsMeta', 'dl.windowsMeta');
+  set('dlWindowsBtnT', 'dl.windowsBtn');
   set('dlAndroidBtnT', PT_RELEASE.available ? 'dl.androidBtn' : 'dl.androidPending');
   set('dlCodeT', 'dl.codeT');
   set('dlCodeBtnT', 'dl.codeBtn');
