@@ -16,6 +16,7 @@ const compass = read('js/compass.js');
 const store3Source = read('js/store3.js');
 const html = read('prayer-times.html');
 const css = read('styles/app.css');
+const companionCss = read('styles/companion.css');
 let checks = 0;
 function test(name, fn) { fn(); checks++; console.log('PASS', name); }
 
@@ -30,7 +31,7 @@ function functionSource(source, name) {
   return match[0];
 }
 
-test('all built-in theme previews include their background, surface, primary and prayer colors', () => {
+test('theme swatches use one main color while preserving each complete built-in palette', () => {
   assert.equal(THEMES.length, 8);
   for (const theme of THEMES) assert.equal(theme.preview.length, 4, `${theme.id} has four preview colors`);
   const oled = THEMES.find((theme) => theme.id === 'oled');
@@ -40,14 +41,15 @@ test('all built-in theme previews include their background, surface, primary and
   const context = vm.createContext({});
   vm.runInContext(`${previewSource}\nglobalThis.preview = themePreview;`, context);
   for (const theme of THEMES) {
-    const gradient = context.preview(theme);
-    for (const color of theme.preview) assert.ok(gradient.includes(color), `${theme.id} includes ${color}`);
+    assert.equal(context.preview(theme), theme.color, `${theme.id} swatch uses its main color`);
+    assert.equal(theme.preview.length, 4, `${theme.id} retains all four palette preview colors`);
   }
 });
 
 test('swatch marks are circular and the active theme uses a ring around the color mark', () => {
   assert.match(css, /\.sw-dot\{[^}]*border-radius:50%/);
   assert.match(css, /\.sw\.active \.sw-dot\{[^}]*0 0 0 4px var\(--primary\)/);
+  assert.match(companionCss, /\.msheet-theme \.swatches\{[^}]*display:grid/);
   assert.match(css, /\.ms \.sw\{[^}]*min-width:44px;min-height:44px/);
   assert.match(css, /\.history-undo\[hidden\]\{display:none!important\}/);
   assert.match(app, /aria-pressed', String\(th\.id === S\.cfg\.theme\)/);

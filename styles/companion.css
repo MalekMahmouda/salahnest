@@ -302,7 +302,7 @@ body.web-mode .btn{border-radius:999px}
   .msheet-title{font-size:18px;font-weight:600;letter-spacing:-.4px;text-transform:none;color:var(--text)}
   .msq{background:var(--surface2,var(--surface));border:0;border-radius:18px;font-weight:400}
   .msheet-theme{background:var(--surface2,var(--surface));border:0;border-radius:24px;padding:18px}
-  .msheet-theme .swatches{grid-template-columns:repeat(4,1fr);gap:10px}.msheet-theme .sw{min-height:44px}
+  .msheet-theme .swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.msheet-theme .sw{min-height:44px}
   .modal{max-height:92dvh;overflow-y:auto;overscroll-behavior:contain;border-radius:28px 28px 0 0}
   .card,.set-card,body.web-mode .card,.mhome .card{padding:22px}
   .set-grid{grid-template-columns:minmax(0,1fr);gap:20px}.set-card .card-h{font-size:18px}

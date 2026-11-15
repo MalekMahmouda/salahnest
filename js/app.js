@@ -362,9 +362,8 @@ function buildMSwatches() {
 }
 
 function themePreview(th) {
-  const colors = Array.isArray(th.preview) && th.preview.length ? th.preview : [th.color];
-  const stops = colors.map((color, i) => `${color} ${Math.round(i * 100 / colors.length)}% ${Math.round((i + 1) * 100 / colors.length)}%`);
-  return `linear-gradient(135deg, ${stops.join(', ')})`;
+  // One clear circular marker per theme; the full palette remains in THEMES.
+  return th.color;
 }
 
 /* ── mHome renderers (dedicated mobile home screen) ── */
