@@ -92,6 +92,15 @@ test('reduced-motion CSS removes transitions instead of leaving residual fades',
   assert.match(block[1], /transition-duration:0s\s*!important/);
   assert.doesNotMatch(block[1], /transition-duration:\.15s/);
 });
+test('homepage Gentle Flow reveals on scroll and stays visible for reduced motion', () => {
+  const source = fs.readFileSync(path.join(__dirname, '../js/motion.js'), 'utf8');
+  const css = fs.readFileSync(path.join(__dirname, '../styles/motion.css'), 'utf8');
+  assert.match(source, /PTM\.revealHome = function/);
+  assert.match(source, /new window\.IntersectionObserver/);
+  assert.match(css, /@keyframes pt-home-rise/);
+  assert.match(css, /\.home-reveal\.home-visible\{animation:pt-home-rise/);
+  assert.match(css, /\.home-reveal,\.home-reveal\.home-visible\{opacity:1;transform:none;animation:none!important\}/);
+});
 test('page View Transitions handle ready and finished promise rejection', () => {
   const source = fs.readFileSync(path.join(__dirname, '../js/motion.js'), 'utf8');
   assert.match(source, /if \(vt && vt\.ready\) vt\.ready\.catch\(\(\) => \{ delete root\.dataset\.vtdir; \}\)/);

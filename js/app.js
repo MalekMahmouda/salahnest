@@ -594,6 +594,7 @@ function gotoPage(name) {
 function _activatePage(name) {
   document.querySelectorAll('.page').forEach((p) => p.classList.remove('active'));
   const pg = $('page-' + name); if (pg) pg.classList.add('active');
+  if (window.PTMotion && pg && (name === 'prayers' || name === 'mhome')) PTMotion.revealHome(pg);
   const content = document.querySelector('main.content');
   if (content) content.scrollTop = 0;
   if (name === 'mhome') { renderMHome(); renderMHomeCards(); }
@@ -813,6 +814,12 @@ function renderAll() {
   // 30th tick — up to half a minute of live countdown under an unnamed prayer.
   if (document.body.classList.contains('m-mode')) renderMHome();
   renderMHomeCards();
+  const activeHome = typeof document.querySelector === 'function'
+    ? document.querySelector('#page-prayers.active, #page-mhome.active') : null;
+  if (window.PTMotion && activeHome) {
+    PTMotion.revealHome(activeHome);
+    PTMotion.stagger(activeHome.id === 'page-mhome' ? $('mStrip') : $('prayerCards'));
+  }
   renderSunSection(); // API-backed rows in browser; full night times via ptGetDay on desktop
   if (window.renderQibla) renderQibla();
   if (window.renderCalendar && document.getElementById('page-calendar').classList.contains('active')) renderCalendar();
