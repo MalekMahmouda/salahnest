@@ -303,6 +303,9 @@
   // Preference changes apply immediately, including to already-running motion.
   function motionPreferenceChanged() {
     if (!reduced()) return;
+    document.querySelectorAll('.home-reveal').forEach((elm) => {
+      elm.classList.remove('home-reveal', 'home-visible');
+    });
     document.querySelectorAll('.cd-face').forEach((elm) => {
       const st = faces.get(elm);
       if (elm.getAnimations) elm.getAnimations({ subtree: true }).forEach(a => a.cancel());
@@ -424,8 +427,61 @@
     Array.from(container.children).forEach((c, i) => {
       if (!c.style.getPropertyValue('--i')) c.style.setProperty('--i', String(i));
     });
-    clearTimeout(PTM.stagger._t);
-    PTM.stagger._t = setTimeout(() => container.classList.remove('stagger'), 900);
+    const oldTimer = staggerTimers.get(container);
+    if (oldTimer) clearTimeout(oldTimer);
+    staggerTimers.set(container, setTimeout(() => container.classList.remove('stagger'), 900));
+  };
+
+  /* ── 9c. Homepage reveal: motion begins only as a section enters view ──
+     Home content below the prayer schedule should not animate off-screen on
+     page load. Observe the section groups once, using the app's own scroll
+     pane; each revealed group stays settled on later visits. */
+  const homeObserved = new WeakSet();
+  let homeObserver = null;
+  const staggerTimers = new WeakMap();
+  function settleHomeReveal(elm) {
+    const onEnd = (event) => {
+      if (event.target !== elm) return;
+      elm.classList.remove('home-reveal', 'home-visible');
+      elm.removeEventListener('animationend', onEnd);
+    };
+    elm.addEventListener('animationend', onEnd);
+  }
+  PTM.revealHome = function (root) {
+    if (!root || typeof root.querySelectorAll !== 'function') return;
+    const targets = root.querySelectorAll(
+      '.day-heading,.hero,.mhero,.sec-lbl,.prayer-cards,.mstrip,.mquick,.sun-grid,.glance,#histCard,#dailyCard,#dailyCardM,#ramadanCard,#ramadanCardM,.card'
+    );
+    if (reduced()) {
+      targets.forEach((elm) => elm.classList.remove('home-reveal', 'home-visible'));
+      return;
+    }
+    if (!homeObserver && typeof window.IntersectionObserver === 'function') {
+      const scrollRoot = document.querySelector('main.content');
+      homeObserver = new window.IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const elm = entry.target;
+          homeObserver.unobserve(elm);
+          if (reduced()) {
+            elm.classList.remove('home-reveal', 'home-visible');
+            return;
+          }
+          elm.classList.add('home-visible');
+          settleHomeReveal(elm);
+        });
+      }, { root: scrollRoot || null, threshold: 0.08, rootMargin: '0px 0px -8% 0px' });
+    }
+    targets.forEach((elm) => {
+      if (homeObserved.has(elm)) return;
+      homeObserved.add(elm);
+      elm.classList.add('home-reveal');
+      if (homeObserver) homeObserver.observe(elm);
+      else {
+        elm.classList.add('home-visible');
+        settleHomeReveal(elm);
+      }
+    });
   };
 
   /* ── 9. Sidebar sliding indicator ────────────────────────────────────

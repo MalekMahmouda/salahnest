@@ -175,6 +175,37 @@ html.pt-vt-theme::view-transition-new(root){animation:pt-theme-reveal var(--t-sl
   animation-delay:calc(90ms + var(--i,0) * 80ms)}
 #page-downloads .dl-help-card:nth-child(2){--i:1}
 @keyframes pt-fade-in{from{opacity:0;transform:translateY(6px)}}
+/* ── SalahNest Gentle Flow — homepage motion system ───────────────────
+   The title and next-prayer hero settle in first; supporting home sections
+   reveal only as they enter the app's scroll pane. Prayer times stay primary.
+   Nested hero lines use short, calm delays; no layout properties animate. */
+@keyframes pt-home-rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.home-reveal{opacity:0;transform:translateY(12px)}
+.home-reveal.home-visible{animation:pt-home-rise .46s var(--ease-out) both}
+#page-prayers .hero.home-visible .hero-prayer>*{animation:pt-home-rise .36s var(--ease-out) both}
+#page-prayers .hero.home-visible .hero-prayer>:nth-child(1){animation-delay:55ms}
+#page-prayers .hero.home-visible .hero-prayer>:nth-child(2){animation-delay:115ms}
+#page-prayers .hero.home-visible .hero-prayer>:nth-child(3){animation-delay:175ms}
+#page-prayers .hero.home-visible .hero-prayer>:nth-child(4){animation-delay:235ms}
+#page-prayers .hero.home-visible .hero-glass>*{animation:pt-home-rise .36s var(--ease-out) both}
+#page-prayers .hero.home-visible .hero-glass>:nth-child(1){animation-delay:135ms}
+#page-prayers .hero.home-visible .hero-glass>:nth-child(2){animation-delay:195ms}
+#page-prayers .hero.home-visible .hero-glass>:nth-child(3){animation-delay:255ms}
+#page-mhome .mhero.home-visible>*{animation:pt-home-rise .36s var(--ease-out) both}
+#page-mhome .mhero.home-visible>:nth-child(1){animation-delay:45ms}
+#page-mhome .mhero.home-visible>:nth-child(2){animation-delay:100ms}
+#page-mhome .mhero.home-visible>:nth-child(3){animation-delay:155ms}
+#page-mhome .mhero.home-visible>:nth-child(4){animation-delay:210ms}
+#page-mhome .mhero.home-visible>:nth-child(5){animation-delay:265ms}
+#page-mhome .mhero.home-visible>:nth-child(6){animation-delay:320ms}
+#page-mhome .mquick .mq{transition:transform var(--t-fast) var(--ease-out),border-color var(--t-med),box-shadow var(--t-med)}
+#page-mhome .mquick .mq:active{transform:scale(.97)}
+#page-mhome .mquick .mq [data-icon] svg{transition:transform var(--t-med) var(--ease-out);transform-origin:center}
+@media(hover:hover){
+  #page-mhome #mQiblaBtn:hover [data-icon] svg{transform:rotate(10deg)}
+  [dir="rtl"] #page-mhome #mQiblaBtn:hover [data-icon] svg{transform:rotate(-10deg)}
+  #page-mhome #mHomeMore:hover [data-icon] svg{transform:translateY(-2px)}
+}
 /* ── 11. Location change: one quiet flight from the chip's trailing edge
    to its pin, only after an explicit location change succeeds. The dotted
    arc explains the change without moving or obscuring the location label. */
@@ -214,6 +245,7 @@ html.pt-vt-theme::view-transition-new(root){animation:pt-theme-reveal var(--t-sl
 @media (prefers-reduced-motion: reduce){
   .pcard.next::before,.compass.aligned::before{animation:none}
   .compass.aligned::before{opacity:.22;transform:none;inset:-7px}
+  .home-reveal,.home-reveal.home-visible{opacity:1;transform:none;animation:none!important}
   .prayer-cards.stagger .pcard,.mstrip.stagger .pcard,
   #stChart .stk-bar,#stByPrayer .stk-fill,
   #page-downloads.active .dlb-item,#page-downloads.active .dl-help-card{
