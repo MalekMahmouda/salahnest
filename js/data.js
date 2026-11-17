@@ -160,7 +160,13 @@ const T = {
     setDate: 'Date', failedLoad: 'Failed to load. Check connection.',
     cal: { title: 'Monthly Calendar', prev: 'Previous month', nextM: 'Next month', todayBtn: 'Today', selectDay: 'Select a day to see prayer times', noTimes: 'Times unavailable for this date', exportCsv: 'Export month (CSV)' },
     qibla: { title: 'Qibla Direction', from: 'from', distance: 'Distance to Kaaba', km: 'km', yourCoords: 'Your coordinates', kaabaCoords: 'Kaaba coordinates', how: 'How to use', howText: 'The number is the Qibla bearing from north. A live compass needle reacts as you turn the device; a static bearing does not move when you rotate it.', howLive: 'Live compass: turn the device until the needle points to the top of the dial. The number is the Qibla bearing from north.', howStatic: 'Static bearing: the number is the Qibla direction from north. This needle does not react when you rotate the device.', howDenied: 'Compass access is blocked, so the needle shows a static bearing from north and will not react to rotation. Enable compass access in device settings to use the live compass.', live: 'Live compass — turn until the needle points to the top of the dial', aligned: 'Aligned — you are facing the Qibla ✓', calibrate: 'Compass unreliable — move the phone in a ∞ figure to calibrate', noSensor: 'No compass data yet — showing static bearing', static: 'Static bearing — this device has no compass', denied: 'Compass permission denied — showing static bearing', turn: 'Turn' },
-    quran: { search: 'Search surah by name or number…', tabsSurahs: 'Surahs', tabsRead: 'Read', tabsSearch: 'Search', tabsBookmarks: 'Bookmarks', meccan: 'Meccan', medinan: 'Medinan', verses: 'verses', noResults: 'No surahs found.', reciter: 'Reciter', loading: 'Could not load audio. Check connection.' },
+    quran: {
+      search: 'Search surah by name or number…', tabsSurahs: 'Surahs', tabsRead: 'Read', tabsSearch: 'Search', tabsBookmarks: 'Bookmarks', meccan: 'Meccan', medinan: 'Medinan', verses: 'verses', noResults: 'No surahs found.', reciter: 'Reciter', loading: 'Could not load audio. Check connection.',
+      fontIdle: 'KFGQPC Hafs by Quran Foundation loads on demand. If offline or unavailable, SalahNest uses its installed Arabic fonts.',
+      fontLoading: 'Loading KFGQPC Hafs from Quran Foundation… the installed Arabic fallback remains available.',
+      fontLoaded: 'KFGQPC Hafs by Quran Foundation is active.',
+      fontFallback: 'KFGQPC Hafs is unavailable; using SalahNest’s installed Arabic fonts.',
+    },
     names: { search: 'Search by name or meaning…', day: 'Name of the Day', all: 'All 99 Names', dhikr: 'Dhikr', noResults: 'No names found.', source: 'Asma Allah al-Husna' },
     dhikr: { title: 'Dhikr Counter', target: 'Target', custom: 'Custom', reset: 'Reset', daily: 'Today', total: 'All time', count: 'Count dhikr', tapHint: 'Tap the counter or press Space', done: 'Target reached — Alhamdulillah!' },
     stats: {
@@ -182,7 +188,7 @@ const T = {
       location: 'Location', gps: 'Use GPS / Current Location', searchCity: 'Search city', city: 'City', country: 'Country', setLoc: 'Search & Set Location', cancel: 'Cancel', coords: 'Coordinates',
       notif: 'Prayer Alerts', notifS: 'Notify before each prayer', minutesBefore: 'Minutes before', beep: 'Pre-prayer beep', adhanSound: 'Play adhan at prayer time',
       adjust: 'Time Adjustments (min)', dataNote: 'All data is stored locally on this device. No account, no analytics.', localData: 'data stored locally',
-      credits: 'Quran text: Tanzil (quran-uthmani) · Translation: Saheeh International · Adhan recordings: courtesy of AlAdhan.com · Prayer engine: adhan-js',
+      credits: 'Quran text: Tanzil (quran-uthmani) · Translation: Saheeh International · Quran font: KFGQPC Hafs by Quran Foundation (online; installed Arabic fallback offline) · Adhan recordings: courtesy of AlAdhan.com · Prayer engine: adhan-js',
       about: 'About', developer: 'Developed by Malek Mahmoud', dua: 'يرجى الدعاء ليا ولوالدي',
     },
     toast: { locSet: 'Location updated!', locFail: 'City not found. Try again.', noCity: 'Please enter a city', gpsDenied: 'Location denied. Set manually.', gpsNo: 'Geolocation not supported', gpsFail: 'Location unavailable — set your city manually', switchedEn: 'Switched to English', switchedAr: 'تم التبديل للعربية', testIn3: 'Test notification in 3s…', deskOnly: 'Desktop mode only', adhanPlay: 'Playing adhan preview…', adhanOverlay: 'Playing adhan — fullscreen overlay', adhanFail: 'Could not play the adhan preview', makkahDefault: 'No location set yet — showing Makkah by default. Set your city from Location.' },
@@ -193,7 +199,7 @@ const T = {
       androidT: 'Android app',
       androidBtn: 'Download APK for Android',
       androidPending: 'Android download unavailable',
-      windowsT: 'Windows x64 installer', windowsMeta: 'Version 1.6.7', windowsBtn: 'Download installer',
+      windowsT: 'Windows x64 installer', windowsMeta: 'Version 1.6.8', windowsBtn: 'Download installer',
       unitMB: 'MB', androidReq: 'Android 7.0+', sizePending: 'APK size unavailable',
       codeT: 'Source code',
       codeBtn: 'View on GitHub',
@@ -252,7 +258,13 @@ const T = {
     setDate: 'التاريخ', failedLoad: 'فشل التحميل. تحقق من الاتصال.',
     cal: { title: 'التقويم الشهري', prev: 'الشهر السابق', nextM: 'الشهر التالي', todayBtn: 'اليوم', selectDay: 'اختر يوماً لعرض أوقات الصلاة', noTimes: 'الأوقات غير متاحة لهذا التاريخ', exportCsv: 'تصدير الشهر (CSV)' },
     qibla: { title: 'اتجاه القبلة', from: 'من', distance: 'المسافة إلى الكعبة', km: 'كم', yourCoords: 'إحداثياتك', kaabaCoords: 'إحداثيات الكعبة', how: 'كيفية الاستخدام', howText: 'الرقم هو اتجاه القبلة من الشمال. يتفاعل مؤشر البوصلة الحية مع تدوير الجهاز، أما الاتجاه الثابت فلا يتغير عند تدويره.', howLive: 'بوصلة حية: أدر الجهاز حتى يشير المؤشر إلى أعلى القرص. الرقم هو اتجاه القبلة من الشمال.', howStatic: 'اتجاه ثابت: الرقم هو اتجاه القبلة من الشمال. هذا المؤشر لا يتفاعل مع تدوير الجهاز.', howDenied: 'إذن البوصلة محجوب، لذلك يعرض المؤشر اتجاهاً ثابتاً من الشمال ولا يتفاعل مع التدوير. فعّل إذن البوصلة من إعدادات الجهاز لاستخدامها مباشرة.', live: 'بوصلة حية — أدر الهاتف حتى يشير المؤشر إلى أعلى القرص', aligned: 'تم الاستقامة — أنت متجه نحو القبلة ✓', calibrate: 'البوصلة غير مستقرة — حرّك الهاتف على شكل ∞ للمعايرة', noSensor: 'لا توجد بيانات بوصلة بعد — يتم عرض الاتجاه الثابت', static: 'اتجاه ثابت — هذا الجهاز لا يحتوي بوصلة', denied: 'تم رفض إذن البوصلة — يتم عرض الاتجاه الثابت', turn: 'أدر حتى' },
-    quran: { search: 'ابحث عن سورة بالاسم أو الرقم…', tabsSurahs: 'السور', tabsRead: 'قراءة', tabsSearch: 'بحث', tabsBookmarks: 'العلامات المرجعية', meccan: 'مكية', medinan: 'مدنية', verses: 'آية', noResults: 'لا توجد نتائج.', reciter: 'القارئ', loading: 'تعذر تحميل الصوت. تحقق من الاتصال.' },
+    quran: {
+      search: 'ابحث عن سورة بالاسم أو الرقم…', tabsSurahs: 'السور', tabsRead: 'قراءة', tabsSearch: 'بحث', tabsBookmarks: 'العلامات المرجعية', meccan: 'مكية', medinan: 'مدنية', verses: 'آية', noResults: 'لا توجد نتائج.', reciter: 'القارئ', loading: 'تعذر تحميل الصوت. تحقق من الاتصال.',
+      fontIdle: 'خط KFGQPC Hafs من Quran Foundation يُحمّل عند الحاجة؛ وعند عدم الاتصال أو تعذّر التحميل تُستخدم الخطوط العربية المثبتة في SalahNest.',
+      fontLoading: 'جارٍ تحميل خط KFGQPC Hafs من Quran Foundation… وتبقى الخطوط العربية المثبتة متاحة.',
+      fontLoaded: 'خط KFGQPC Hafs من Quran Foundation قيد الاستخدام.',
+      fontFallback: 'تعذّر تحميل KFGQPC Hafs؛ تُستخدم الخطوط العربية المثبتة في SalahNest.',
+    },
     names: { search: 'ابحث عن الاسم أو المعنى…', day: 'اسم اليوم', all: 'أسماء الله الحسنى', dhikr: 'الذكر', noResults: 'لا توجد نتائج.', source: 'أسماء الله الحسنى' },
     dhikr: { title: 'مسبحة إلكترونية', target: 'الهدف', custom: 'مخصص', reset: 'تصفير', daily: 'اليوم', total: 'الإجمالي', count: 'عدّ الذكر', tapHint: 'اضغط على العداد أو مفتاح المسافة', done: 'اكتمل الهدف — الحمد لله!' },
     stats: {
@@ -274,7 +286,7 @@ const T = {
       location: 'الموقع', gps: 'استخدام الموقع الحالي (GPS)', searchCity: 'بحث عن مدينة', city: 'المدينة', country: 'الدولة', setLoc: 'بحث وتحديد الموقع', cancel: 'إلغاء', coords: 'الإحداثيات',
       notif: 'تنبيهات الصلاة', notifS: 'إشعار قبل كل صلاة', minutesBefore: 'دقائق قبل', beep: 'تنبيه قبل الصلاة', adhanSound: 'تشغيل الأذان عند وقت الصلاة',
       adjust: 'تعديل الأوقات (د)', dataNote: 'جميع البيانات محفوظة محلياً على هذا الجهاز. لا حسابات ولا تحليلات.', localData: 'البيانات محفوظة محلياً',
-      credits: 'النص القرآني: تنزيل (قرآن عثماني) · الترجمة: سعد الدولعة (صحيح إنترناشونال) · تسجيلات الأذان: من AlAdhan.com · محرك المواقيت: adhan-js',
+      credits: 'النص القرآني: تنزيل (قرآن عثماني) · الترجمة: سعد الدولعة (صحيح إنترناشونال) · خط KFGQPC Hafs من Quran Foundation (عبر الإنترنت؛ والخطوط العربية المثبتة تعمل دون اتصال) · تسجيلات الأذان: من AlAdhan.com · محرك المواقيت: adhan-js',
       about: 'حول التطبيق', developer: 'تطوير: Malek Mahmoud', dua: 'يرجى الدعاء ليا ولوالدي',
     },
     toast: { locSet: 'تم تحديث الموقع!', locFail: 'لم يتم العثور على المدينة. حاول مجدداً.', noCity: 'الرجاء إدخال مدينة', gpsDenied: 'تم رفض الموقع. حدد يدوياً.', gpsNo: 'تحديد الموقع غير مدعوم', gpsFail: 'تعذر تحديد الموقع — حدد مدينتك يدوياً', switchedEn: 'Switched to English', switchedAr: 'تم التبديل للعربية', testIn3: 'تنبيه تجريبي بعد ٣ ثوان…', deskOnly: 'يعمل في وضع سطح المكتب فقط', adhanPlay: 'تجربة الأذان…', adhanOverlay: 'تشغيل الأذان — شاشة كاملة', adhanFail: 'تعذر تشغيل معاينة الأذان', makkahDefault: 'لم يتم تحديد موقع بعد — تُعرض مكة افتراضياً. حدد مدينتك من صفحة الموقع.' },
@@ -284,7 +296,7 @@ const T = {
       androidT: 'تطبيق أندرويد',
       androidBtn: 'تحميل ملف APK لأندرويد',
       androidPending: 'تنزيل تطبيق أندرويد غير متاح حاليًا',
-      windowsT: 'مثبّت Windows x64', windowsMeta: 'الإصدار 1.6.7', windowsBtn: 'تحميل المثبّت',
+      windowsT: 'مثبّت Windows x64', windowsMeta: 'الإصدار 1.6.8', windowsBtn: 'تحميل المثبّت',
       /* “7.0+” in an RTL line throws its “+” to the far left of the run — the
          bidi algorithm reads it as punctuation, not part of the number. Spelled
          out instead, which is also how Arabic release notes say it. */
