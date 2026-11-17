@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' https://cdn.jsdelivr.net; connect-src 'self' https://api.aladhan.com https://nominatim.openstreetmap.org https://service.webvideocore.net https://cdnvideo.webvideocore.net; media-src 'self' blob: https://cdn.islamic.network https://cdn.aladhan.com https://*.mp3quran.net https://edge.mixlr.com https://radio.xecod.com https://stream.radiojar.com https://service.webvideocore.net https://cdnvideo.webvideocore.net; object-src 'none'">
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' https://cdn.jsdelivr.net https://verses.quran.foundation; connect-src 'self' https://verses.quran.foundation https://api.aladhan.com https://nominatim.openstreetmap.org https://service.webvideocore.net https://cdnvideo.webvideocore.net; media-src 'self' blob: https://cdn.islamic.network https://cdn.aladhan.com https://*.mp3quran.net https://edge.mixlr.com https://radio.xecod.com https://stream.radiojar.com https://service.webvideocore.net https://cdnvideo.webvideocore.net; object-src 'none'">
 <!-- v1.3.3: remote hosts are scheme-prefixed (https:) — schemeless hosts match
      the document's own scheme per CSP3, so on Electron's file:// page nothing
      remote ever matched: Test Adhan CDN, Quran audio AND Arabic web fonts were
@@ -272,6 +272,7 @@
 
         <!-- Read tab (mushaf) -->
         <div id="qtab-read" style="display:none">
+          <p class="quran-font-status" id="quranFontStatus" role="status" aria-live="polite">KFGQPC Hafs by Quran Foundation loads on demand; SalahNest’s installed Arabic fonts remain available offline.</p>
           <div class="mushaf-ctl">
             <button class="icon-btn" id="rdBack" title="Back to list">←</button>
             <button class="icon-btn" id="rdPrev" title="Previous surah">‹</button>
@@ -355,9 +356,8 @@
            A page of its own (reached from the sidebar, #/downloads) rather than
            a block buried under Stats: the download destinations are the only
            things a first-time visitor is looking for, so they get room, a clear
-           heading, and nothing competing beside them. The Android download is
-           the verified v1.6.6 release; js/extras.js owns the version/size strings
-           so they cannot drift away from the published APK. -->
+           heading, and nothing competing beside them. Release version/size values
+           are owned by js/extras.js so they cannot drift from published artifacts. -->
       <section class="page" id="page-downloads">
         <div class="dl-page">
           <header class="dl-head">
@@ -375,9 +375,9 @@
               </span>
               <span class="dlb-txt">
                 <span class="dlb-name" id="dlAndroidT">Android app</span>
-                <span class="dlb-meta" id="dlAndroidMeta">Version 1.6.6 · 54.66 MB · Android 7.0+</span>
+                <span class="dlb-meta" id="dlAndroidMeta">Version 1.6.8 · 54.86 MB · Android 7.0+</span>
               </span>
-              <a class="btn dlb-btn" id="dlAndroidBtn" href="https://github.com/MalekMahmouda/salahnest/releases/download/v1.6.6/SalahNest-1.6.6.apk" rel="noopener noreferrer" target="_blank">
+              <a class="btn dlb-btn" id="dlAndroidBtn" href="https://github.com/MalekMahmouda/salahnest/releases/download/v1.6.8/SalahNest-Android-1.6.8-production-signed.apk" rel="noopener noreferrer" target="_blank">
                 <svg class="dl-btni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7.5 10.5 12 15l4.5-4.5"/><path d="M5 20h14"/></svg><span id="dlAndroidBtnT">Download APK for Android</span>
               </a>
             </li>
@@ -389,9 +389,9 @@
               </span>
               <span class="dlb-txt">
                 <span class="dlb-name" id="dlWindowsT">Windows x64 installer</span>
-                <span class="dlb-meta" id="dlWindowsMeta">Version 1.6.7</span>
+                <span class="dlb-meta" id="dlWindowsMeta">Version 1.6.8</span>
               </span>
-              <a class="btn dlb-btn" id="dlWindowsBtn" href="https://github.com/MalekMahmouda/salahnest/releases/download/v1.6.7/SalahNest-Setup-1.6.7-candidate.exe" rel="noopener noreferrer" target="_blank">
+              <a class="btn dlb-btn" id="dlWindowsBtn" href="https://github.com/MalekMahmouda/salahnest/releases/download/v1.6.8/SalahNest-Setup-1.6.8.exe" rel="noopener noreferrer" target="_blank">
                 <svg class="dl-btni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7.5 10.5 12 15l4.5-4.5"/><path d="M5 20h14"/></svg><span id="dlWindowsBtnT">Download installer</span>
               </a>
             </li>
@@ -417,7 +417,7 @@
               </span>
               <span class="dlb-txt">
                 <span class="dlb-name" id="dlRelT">All versions</span>
-                <span class="dlb-meta" id="dlRelTag">Latest: v1.6.6</span>
+                <span class="dlb-meta" id="dlRelTag">Latest: v1.6.8</span>
               </span>
               <a class="btn dlb-btn" id="dlRelBtn" href="https://github.com/MalekMahmouda/salahnest/releases" rel="noopener noreferrer" target="_blank">
                 <svg class="dl-btni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.3 7 12 12l8.7-5"/><path d="M12 22V12"/></svg><span id="dlRelBtnT">View all releases</span>
@@ -552,7 +552,7 @@
               <button class="toggle" id="tgCtt" type="button" role="switch" aria-checked="false" aria-labelledby="slCtt"></button></div>
             <div class="row"><span class="lbl" id="slTestNotif">Test Notification</span>               <button class="btn sm" id="btnTestNotif"><span data-icon="bell"></span> <span id="slTestNotifBtn">Test</span></button></div>
             <div class="note" id="dataNote">All data is stored locally on this device. No account, no analytics.</div>
-            <div class="note" id="creditsNote">Quran text: Tanzil (quran-uthmani) · Translation: Saheeh International · Adhan recordings: courtesy of AlAdhan.com · Prayer engine: adhan-js</div>
+            <div class="note" id="creditsNote">Quran text: Tanzil (quran-uthmani) · Translation: Saheeh International · Quran font: KFGQPC Hafs by Quran Foundation (online; installed Arabic fallback offline) · Adhan recordings: courtesy of AlAdhan.com · Prayer engine: adhan-js</div>
             <div class="note" style="border-top:none;padding-top:6px" id="aboutLine">SalahNest</div>
           </div>
 

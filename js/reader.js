@@ -12,6 +12,63 @@
 
 let rdSurah = 1;
 
+const KFGQPC_FONT_URL = 'https://verses.quran.foundation/fonts/quran/hafs/uthmanic_hafs/UthmanicHafs1Ver18.woff2';
+const KFGQPC_FONT_FAMILY = 'SalahNest KFGQPC Hafs';
+let kfgqpcFontLoaded = false;
+let kfgqpcFontPromise = null;
+let kfgqpcFontState = 'idle';
+
+window.updateQuranFontStatus = function updateQuranFontStatus() {
+  const el = $('quranFontStatus');
+  if (!el) return;
+  const stateKey = { idle: 'fontIdle', loading: 'fontLoading', loaded: 'fontLoaded', fallback: 'fontFallback' }[kfgqpcFontState];
+  el.textContent = t(`quran.${stateKey}`);
+};
+
+function loadKfgqpcFont() {
+  if (kfgqpcFontLoaded) {
+    kfgqpcFontState = 'loaded';
+    window.updateQuranFontStatus();
+    return Promise.resolve(true);
+  }
+  if (typeof fetch !== 'function' || typeof FontFace !== 'function' || !document.fonts ||
+      (typeof navigator !== 'undefined' && navigator.onLine === false)) {
+    kfgqpcFontState = 'fallback';
+    window.updateQuranFontStatus();
+    return Promise.resolve(false);
+  }
+  if (kfgqpcFontPromise) return kfgqpcFontPromise;
+
+  kfgqpcFontState = 'loading';
+  window.updateQuranFontStatus();
+  kfgqpcFontPromise = fetch(KFGQPC_FONT_URL, {
+    mode: 'cors',
+    credentials: 'omit',
+    cache: 'no-store',
+  })
+    .then((response) => {
+      if (!response.ok) throw new Error(`KFGQPC font request failed: ${response.status}`);
+      return response.arrayBuffer();
+    })
+    .then((fontBytes) => new FontFace(KFGQPC_FONT_FAMILY, fontBytes, {
+      style: 'normal', weight: '400', display: 'swap',
+    }).load())
+    .then((face) => {
+      document.fonts.add(face);
+      kfgqpcFontLoaded = true;
+      kfgqpcFontState = 'loaded';
+      window.updateQuranFontStatus();
+      return true;
+    })
+    .catch(() => {
+      kfgqpcFontPromise = null;
+      kfgqpcFontState = 'fallback';
+      window.updateQuranFontStatus();
+      return false;
+    });
+  return kfgqpcFontPromise;
+}
+
 function rdPrefs() {
   const p = DB3.prefs;
   return {
@@ -153,6 +210,7 @@ window.quranOpenReader = function quranOpenReader(surahN, ayahN) {
 
   rd.innerHTML = html;
   paintIcons(rd);
+  void loadKfgqpcFont();
 
   // Listen button → existing per-surah player
   const play = $('mshPlay');

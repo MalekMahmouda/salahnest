@@ -6,9 +6,9 @@ A native Windows desktop & Android Islamic companion built with Electron — pra
 
 > 🇸🇦 العربية: [README.ar.md](README.ar.md)
 🌐 **Web app:** https://malekmahmouda.github.io/salahnest/ — installable PWA, works fully offline after the first visit.
-📥 **Downloads:** signed Android APKs are published in [GitHub Releases](https://github.com/MalekMahmouda/salahnest/releases); the Windows installer is held until it is code-signed and tested.
-**Versions:** desktop source `1.6.5`; Android `1.6.6` (version code `14`); web/PWA has no separate product version. See [version sources](docs/VERSIONS.md).
-![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Android%20%7C%20Web-blue) ![Electron](https://img.shields.io/badge/Electron-45-47848F) ![Desktop](https://img.shields.io/badge/desktop-1.6.5-green) ![Android](https://img.shields.io/badge/Android-1.6.6-green)
+📥 **Downloads:** the production-signed Android APK and Windows installer are published in [GitHub Releases](https://github.com/MalekMahmouda/salahnest/releases). The Windows installer is not Authenticode-signed.
+**Versions:** desktop `1.6.8`; Android `1.6.8` (version code `16`); web/PWA has no separate product version. See [version sources](docs/VERSIONS.md).
+![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Android%20%7C%20Web-blue) ![Electron](https://img.shields.io/badge/Electron-45-47848F) ![Desktop](https://img.shields.io/badge/desktop-1.6.8-green) ![Android](https://img.shields.io/badge/Android-1.6.8-green)
 
 ## Features
 
@@ -20,7 +20,7 @@ A native Windows desktop & Android Islamic companion built with Electron — pra
 - Timezone-aware display for saved locations
 
 **Islamic content**
-- 📖 Quran reader — bundled verified dataset (Tanzil Uthmani text + Sahih International translation, 114 surahs / 6,236 ayahs), offline search (Arabic + English), bookmarks with notes, font/spacing controls
+- 📖 Quran reader — existing Tanzil Uthmani text + Sahih International translation (114 surahs / 6,236 ayahs), offline search (Arabic + English), bookmarks with notes, font/spacing controls; KFGQPC Hafs loads online on demand with installed Arabic fallback offline
 - 🎧 Audio player — 5 reciters; playback continues while you navigate the app (desktop keeps playing in the tray; Android pauses when the app is backgrounded — a lock-screen service is not implemented yet)
 - 📿 Dhikr library — morning/evening/after-prayer/sleep/general collections, favorites, counter with targets and progress
 - 🌙 99 Names of Allah with search
@@ -55,7 +55,7 @@ npm start
 ### Build the Windows installer
 
 ```bash
-npm run package:installer   # → dist/SalahNest-Setup-1.6.5.exe
+npm run package:installer   # → dist/SalahNest-Setup-1.6.8.exe
 npm run release             # → release/ folder with SHA-256 checksums
 ```
 

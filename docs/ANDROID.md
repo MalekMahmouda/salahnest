@@ -92,7 +92,7 @@ Gradle writes `android/app/build/outputs/apk/release/app-release.apk` and `andro
 
 ## Versioning
 
-Desktop and Android versions are intentionally independent. Current source values are desktop `1.6.5` in `package.json` and Android `versionName 1.6.6` / `versionCode 14` in `android/app/build.gradle`; the release/download card also points to Android `1.6.6`. See [the version-source table](VERSIONS.md). Increase the Android version code for every distributed update.
+Desktop and Android can be versioned independently, though v1.6.8 aligns them: desktop `1.6.8` in `package.json`; Android `versionName 1.6.8` / `versionCode 16` in `android/app/build.gradle`. The production-signed APK uses the existing package ID and signing configuration. It is a sideload release, not a Google Play submission. See [the version-source table](VERSIONS.md). Increase the Android version code for every distributed update.
 
 ## Historical verification recorded for Android 1.6.5 / version code 13
 

@@ -1300,6 +1300,7 @@ function applyLang() {
   $('tbLoc').setAttribute('aria-label', S.lang === 'ar' ? 'تغيير الموقع' : 'Change location');
   document.documentElement.lang = S.lang;
   document.documentElement.dir = S.lang === 'ar' ? 'rtl' : 'ltr';
+  if (window.updateQuranFontStatus) window.updateQuranFontStatus();
   const iconButtonLabels = {
     langBtn: S.lang === 'ar' ? 'تغيير اللغة' : 'Change language',
     histPrev: t('hist.prev'), histNext: t('hist.next'),

@@ -1,5 +1,13 @@
 # Changes — SalahNest
 
+## 1.6.8 — KFGQPC Hafs Quran typography and refreshed installers
+
+- The Quran reader now requests the documented KFGQPC Hafs (Uthmanic Hafs) font from Quran Foundation when Read mode opens. It uses a no-store request and an in-memory font face only; no QF font or new Quran dataset is bundled. Quran Foundation is credited in the reader and Settings.
+- If the font is unavailable or the app is offline, the reader retains the licensed installed Amiri Quran / Noto Naskh Arabic fallback. Existing Tanzil Quran text, Saheeh International translation, search, bookmarks, playback, and offline reader data are unchanged.
+- Desktop and Android source versions are `1.6.8`; Android `versionCode` is `16`, with package `com.malek.prayertimes` and the existing signing setup preserved.
+- The Pages/PWA build uses this release’s Quran typography and v1.6.8 download links; GitHub Pages serves the static build from the separate `gh-pages` branch.
+
+
 ## 1.6.3 — Hand-crafted redesign: palette, type, motion
 
 A full visual-design and motion pass over the same shell, same features, same

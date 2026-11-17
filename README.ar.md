@@ -6,10 +6,10 @@
 
 🌐 **تطبيق الويب:** https://malekmahmouda.github.io/salahnest/ — تطبيق ويب قابل للتثبيت (PWA)، يعمل دون اتصال بالكامل بعد أول زيارة.
 
-📥 **التنزيلات:** حزم أندرويد الموقّعة في [إصدارات GitHub](https://github.com/MalekMahmouda/salahnest/releases)؛ مثبّت ويندوز معلّق حتى توقيعه واختباره.
+📥 **التنزيلات:** ملف Android موقّع للإنتاج ومثبّت ويندوز في [إصدارات GitHub](https://github.com/MalekMahmouda/salahnest/releases). مثبّت ويندوز غير موقّع بشهادة Authenticode.
 
-**الإصدارات:** مصدر سطح المكتب `1.6.5`؛ Android `1.6.6` (رمز الإصدار `14`)؛ ولا يوجد إصدار منتج مستقل للويب/PWA. راجع [مصادر الأرقام](docs/VERSIONS.md).
-![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Android%20%7C%20Web-blue) ![Electron](https://img.shields.io/badge/Electron-45-47848F) ![Desktop](https://img.shields.io/badge/desktop-1.6.5-green) ![Android](https://img.shields.io/badge/Android-1.6.6-green)
+**الإصدارات:** سطح المكتب `1.6.8`؛ Android `1.6.8` (رمز الإصدار `16`)؛ ولا يوجد إصدار منتج مستقل للويب/PWA. راجع [مصادر الأرقام](docs/VERSIONS.md).
+![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Android%20%7C%20Web-blue) ![Electron](https://img.shields.io/badge/Electron-45-47848F) ![Desktop](https://img.shields.io/badge/desktop-1.6.8-green) ![Android](https://img.shields.io/badge/Android-1.6.8-green)
 
 > 🇬🇧 English readme: [README.md](README.md)
 
@@ -63,7 +63,7 @@ npm start
 ### بناء مثبّت ويندوز
 
 ```bash
-npm run package:installer   # → dist/SalahNest-Setup-1.6.5.exe
+npm run package:installer   # → dist/SalahNest-Setup-1.6.8.exe
 npm run release             # → مجلد release/ مع بصمات SHA-256
 ```
 

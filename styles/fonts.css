@@ -1,15 +1,11 @@
 /* ══════════════════════════════════════════════════════════════
-   Prayer Times — bundled fonts (self-hosted, offline-first)
+   SalahNest bundled UI fonts and local Quran fallbacks
    ────────────────────────────────────────────────────────────
-   Cairo                — SIL OFL 1.1 — UI font (latin + arabic), 400–700
-   Noto Naskh Arabic    — SIL OFL 1.1 — Quranic text + mushaf, 400/700
-   Amiri Quran / Amiri  — SIL OFL 1.1 — legacy mushaf fallbacks
-   Licences: fonts/OFL-Cairo.txt, fonts/OFL-NotoNaskhArabic.txt,
-             fonts/OFL-Amiri.txt (see docs/FONTS.md)
-   All files ship locally: packaged in the desktop app (fonts/** in
-   electron-builder), copied into www/ for Android (cap sync) and
-   precached by the web build's service worker. This file never
-   points the PRIMARY interface at a remote server.
+   Cairo / Noto Naskh Arabic / Amiri — SIL OFL 1.1; see fonts/OFL-*.txt
+   KFGQPC Hafs is fetched on demand in memory from the documented
+   Quran Foundation CDN only while reading online; it is not bundled
+   or stored in the app cache. Licensed local Arabic faces stay as fallback.
+   See docs/FONTS.md for terms and attribution details.
    ══════════════════════════════════════════════════════════════ */
 
 /* ── Sora — Latin display/UI (variable, 400–800) ──

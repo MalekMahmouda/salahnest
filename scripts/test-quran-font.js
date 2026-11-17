@@ -1,0 +1,30 @@
+'use strict';
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const root = path.join(__dirname, '..');
+const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
+const reader = read('js/reader.js');
+const css = read('styles/app.css');
+const html = read('prayer-times.html');
+const data = read('js/data.js');
+const fontDocs = read('docs/FONTS.md');
+const webBuild = read('scripts/build-web.js');
+
+assert.match(reader, /https:\/\/verses\.quran\.foundation\/fonts\/quran\/hafs\/uthmanic_hafs\/UthmanicHafs1Ver18\.woff2/);
+assert.match(reader, /cache:\s*'no-store'/);
+assert.match(reader, /document\.fonts\.add\(face\)/);
+assert.match(reader, /kfgqpcFontState = 'fallback'/);
+assert.match(reader, /void loadKfgqpcFont\(\)/);
+assert.match(css, /--font-quran: 'SalahNest KFGQPC Hafs', 'Amiri Quran', 'Amiri', 'Noto Naskh Arabic'/);
+assert.match(html, /https:\/\/verses\.quran\.foundation/);
+assert.match(html, /id="quranFontStatus" role="status" aria-live="polite"/);
+assert.match(data, /fontLoaded: 'KFGQPC Hafs by Quran Foundation is active\.'/);
+assert.match(data, /fontLoaded: 'خط KFGQPC Hafs من Quran Foundation قيد الاستخدام\.'/);
+assert.match(data, /Quran font: KFGQPC Hafs by Quran Foundation/);
+assert.match(data, /خط KFGQPC Hafs من Quran Foundation/);
+assert.match(fontDocs, /does not bundle or persist/);
+assert.match(fontDocs, /cache: 'no-store'/);
+assert.match(webBuild, /if \(url\.origin !== location\.origin\) return;/);
+
+console.log('Quran KFGQPC Hafs loading, attribution, and offline-fallback checks passed.');

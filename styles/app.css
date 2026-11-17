@@ -12,7 +12,7 @@
      numerals, Arabic display · higher only in the adhan overlay. */
   --font: 'Sora', 'Cairo', 'Segoe UI Variable Display', 'Segoe UI', system-ui, -apple-system, sans-serif;
   --font-ar: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif;
-  --font-quran: 'Amiri Quran', 'Amiri', 'Noto Naskh Arabic', var(--font-ar);
+  --font-quran: 'SalahNest KFGQPC Hafs', 'Amiri Quran', 'Amiri', 'Noto Naskh Arabic', var(--font-ar);
   --fs-countdown: 52px;
   --lh-body: 1.55; --lh-numeric: 1.04;
   --fw-body: 400; --fw-medium: 500; --fw-semibold: 600; --fw-bold: 700;
@@ -441,6 +441,7 @@ hr.sep{border:none;border-top:1px solid var(--border);margin:14px 0}
 .mushaf-flow .ayah-inline.marked{background:linear-gradient(180deg,rgba(185,138,47,.30),rgba(185,138,47,.16));border-radius:6px;box-shadow:0 0 0 2px rgba(185,138,47,.28)}
 .ayah-medal{display:inline-flex;align-items:center;justify-content:center;width:calc(var(--rd-font,26px) * 1.18);height:calc(var(--rd-font,26px) * 1.18);margin:0 3px;vertical-align:-4%;border-radius:50%;border:1.4px solid var(--frame);color:var(--frame);font-family:var(--font-quran);font-weight:var(--fw-bold);font-size:calc(var(--rd-font,26px) * .5);background:radial-gradient(circle at 30% 28%,rgba(255,255,255,.85),rgba(233,215,166,.5));box-shadow:0 1px 3px rgba(120,90,20,.22);user-select:none}
 .mushaf-tr{font-family:var(--font);font-size:calc(var(--rd-font,26px) * .55);color:var(--ink-soft);line-height:1.75;margin:10px 14px 22px;padding-top:8px;border-top:1px dashed var(--frame-soft);text-align:left}
+.quran-font-status{margin:0 2px 10px;color:var(--text-muted);font-size:11px;line-height:1.55;text-align:center}
 /* mushaf night mode */
 .mushaf.mnight{--paper:#101726;--paper2:#0b111d;--ink:#dbe4f0;--ink-soft:#8fa0b8;--frame:#c9a24d;--frame-soft:rgba(201,162,77,.4);background:radial-gradient(120% 90% at 50% 0%,var(--paper2) 0%,var(--paper) 58%)}
 .mushaf.mnight .ayah-medal{background:radial-gradient(circle at 30% 28%,rgba(255,255,255,.14),rgba(201,162,77,.10));box-shadow:0 1px 3px rgba(0,0,0,.5)}

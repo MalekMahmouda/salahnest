@@ -1,61 +1,26 @@
-# Typography — bundled fonts
+# Typography and font sources
 
-The application ships **all** of its fonts locally in `fonts/*.woff2`; no
-remote font server is consulted at runtime (two legacy CDN *fallback* URLs for
-the Amiri faces remain second-choice after the local files).
+SalahNest keeps its interface fonts and Arabic fallbacks locally available. The Quran reader additionally prefers the KFGQPC Hafs (Uthmanic Hafs) Unicode font from Quran Foundation while the user is reading online.
 
-| Family | Role | Weights bundled | Files |
+| Family | Role | Delivery | License/source |
 |---|---|---|---|
-| **Cairo** | Entire UI — navigation, menus, headings, prayer names & times, countdown, buttons, forms, all English text | 400 / 500 / 600 / 700 (latin + arabic subsets) | `fonts/cairo-latin-*.woff2`, `fonts/cairo-arabic-*.woff2` |
-| **Noto Naskh Arabic** | Quran reader + mushaf Arabic only | 400 / 700 (arabic + latin subsets) | `fonts/notonaskharabic-*.woff2` |
-| Amiri Quran | Mushaf fallback (kept from ≤1.5.0) | 400 | `fonts/amiri-quran-regular.woff2` |
-| Amiri | Mushaf fallback | 700 | `fonts/amiri-bold.woff2` |
+| Cairo | UI Arabic + Latin | Bundled | SIL OFL 1.1; `fonts/OFL-Cairo.txt` |
+| Noto Naskh Arabic | Quran Arabic fallback | Bundled | SIL OFL 1.1; `fonts/OFL-NotoNaskhArabic.txt` |
+| Amiri Quran / Amiri | Quran Arabic fallback | Bundled | SIL OFL 1.1; `fonts/OFL-Amiri.txt` |
+| KFGQPC Hafs / Uthmanic Hafs | Preferred Quran script when available | Fetched on demand when the reader opens; no-store request, in-memory only | Quran Foundation documented CDN; see its [font-rendering guide](https://api-docs.quran.foundation/docs/tutorials/fonts/font-rendering/) and [Developer Terms](https://api-docs.quran.foundation/legal/developer-terms/) |
 
-System fallbacks: **Tahoma, Arial, sans-serif** (`--font-ar` / `--font`in
-`styles/app.css`). The family tokens:
+## Runtime and offline behavior
 
-- `--font` — UI (Cairo, then Segoe UI / system)
-- `--font-ar` — Arabic UI text (Cairo, then Segoe UI / Tahoma / Arial)
-- `--font-quran` — `Noto Naskh Arabic`, `Amiri Quran`, `Amiri`, then `--font-ar`
+The reader requests only the single documented Unicode font file, `https://verses.quran.foundation/fonts/quran/hafs/uthmanic_hafs/UthmanicHafs1Ver18.woff2`, when Read mode is opened. It is fetched with `cache: 'no-store'`, converted to a `FontFace` in memory, and is not written to the service-worker cache, local storage, or the application bundle. No Quran Foundation account credential or API dataset is used by this font request.
 
-## Sources
+When the device is offline, the request fails, or a browser lacks the FontFace API, the existing locally installed Arabic fonts render the Quran. The verse text and translation remain the existing bundled data, so the reader, Arabic/English search, and translation continue offline. The KFGQPC look itself requires a successful online font fetch in that app session.
 
-- Cairo — Google Fonts (OFL): https://fonts.google.com/specimen/Cairo
-  WOFF2 per subset/weight from the Fontsource packaging of the Google release
-  (`cdn.jsdelivr.net/fontsource/fonts/cairo@latest/<subset>-<weight>-normal.woff2`).
-- Noto Naskh Arabic — Google Fonts (OFL):
-  https://fonts.google.com/noto/specimen/Noto+Naskh+Arabic
-  Same Fontsource packaging (`noto-naskh-arabic@latest`).
-- Amiri — https://github.com/aliftype/amiri (OFL 1.1), already bundled.
+Quran Foundation's terms permit deliberate font caching or bundling only when the developer maintains an active Developer Console account and provides attribution. SalahNest does not bundle or persist the QF font. The application attributes the online font to Quran Foundation in both the reader status and Settings credits.
 
-## Licences
+## Bundled font files
 
-Both new families are distributed under the **SIL Open Font License 1.1**:
+- Cairo — Google Fonts / Fontsource; SIL Open Font License 1.1 (`fonts/OFL-Cairo.txt`).
+- Noto Naskh Arabic — Google Fonts / Fontsource; SIL Open Font License 1.1 (`fonts/OFL-NotoNaskhArabic.txt`).
+- Amiri / Amiri Quran — [aliftype/amiri](https://github.com/aliftype/amiri); SIL Open Font License 1.1 (`fonts/OFL-Amiri.txt`).
 
-- `fonts/OFL-Cairo.txt`
-- `fonts/OFL-NotoNaskhArabic.txt`
-- Amiri's OFL statement appears in its upstream repository; bundled files
-  downloaded from the same OFL distribution.
-
-## Where the files are wired in
-
-- **Desktop (Electron):** `prayer-times.html`, `adhan.html` and `widget.html`
-  all load `styles/fonts.css`; `electron-builder` packs `fonts/**/*` into the
-  asar (see the `files:` list in `package.json`).
-- **Android:** `scripts/build-www.js` copies every `fonts/*.woff2` into
-  `www/fonts/`; `cap sync android` then copies `www/` into the APK assets.
-- **Web/PWA:** `scripts/build-web.js` enumerates `fonts/*.woff2` into the
-  service-worker precache shell, so every face is available offline.
-
-## Fonts not bundled on purpose
-
-- No italic (the app never italicises text).
-- No Cairo 200/300/800/900 and no Noto Naskh 500/600 — no rule requests them;
-  `app.css` caps display weights at 700 (`--fw-bold`) to keep files out.
-
-## Verification hooks
-
-- `node scripts/check-dist.js` asserts every `fonts/…woff2` referenced from
-  `styles/fonts.css` exists on disk **and** is present in the packaged asar.
-- Guarded rendering checks (fonts actually applied) live in the design-review
-  capture process; see `docs/design-review/README.md`.
+The same bundled UI fonts are packaged by Electron and copied into Android/PWA builds. The web service-worker precaches only same-origin bundled files; it does not cache the Quran Foundation font.

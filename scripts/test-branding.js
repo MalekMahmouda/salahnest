@@ -15,7 +15,7 @@ test('visible desktop branding changes without renaming package or Android ident
   assert.equal(pkg.build.productName, 'SalahNest');
   assert.equal(pkg.name, 'prayertimes');
   assert.equal(lock.name, 'prayertimes');
-  assert.equal(pkg.version, '1.6.5');
+  assert.equal(pkg.version, '1.6.8');
   assert.equal(pkg.build.appId, 'com.malek.prayertimes');
   assert.equal(pkg.build.win.artifactName, 'SalahNest-Setup-${version}.${ext}');
   assert.equal(pkg.build.nsis.shortcutName, 'SalahNest');
@@ -96,9 +96,9 @@ test('published Android release has localized metadata and the verified APK link
   const extras = read('js/extras.js');
   const data = read('js/data.js');
   const html = read('prayer-times.html');
-  assert.match(extras, /version: '1\.6\.6'/);
-  assert.match(extras, /apk: 'SalahNest-1\.6\.6\.apk'/);
-  assert.match(extras, /mb: '54\.66'/);
+  assert.match(extras, /version: '1\.6\.8'/);
+  assert.match(extras, /apk: 'SalahNest-Android-1\.6\.8-production-signed\.apk'/);
+  assert.match(extras, /mb: '[0-9]+\.[0-9]{2}'/);
   assert.match(extras, /available: true/);
   assert.match(extras, /elBtn\.href = PT_REPO \+ '\/releases\/download\/v' \+ PT_RELEASE\.version \+ '\/' \+ PT_RELEASE\.apk/);
   assert.match(extras, /androidHelp\.hidden = !PT_RELEASE\.available/);
@@ -106,10 +106,12 @@ test('published Android release has localized metadata and the verified APK link
   assert.match(data, /androidBtn: 'تحميل ملف APK لأندرويد'/);
   assert.match(data, /sizePending: 'APK size unavailable'/);
   assert.match(data, /sizePending: 'حجم ملف APK غير متاح'/);
-  assert.match(html, /id="dlAndroidMeta">Version 1\.6\.6 · 54\.66 MB · Android 7\.0\+</);
-  assert.match(html, /id="dlAndroidBtn" href="https:\/\/github\.com\/MalekMahmouda\/salahnest\/releases\/download\/v1\.6\.6\/SalahNest-1\.6\.6\.apk"/);
+  assert.match(html, /id="dlAndroidMeta">Version 1\.6\.8 · [0-9]+\.[0-9]{2} MB · Android 7\.0\+</);
+  assert.match(html, /id="dlAndroidBtn" href="https:\/\/github\.com\/MalekMahmouda\/salahnest\/releases\/download\/v1\.6\.8\/SalahNest-Android-1\.6\.8-production-signed\.apk"/);
   assert.match(html, /id="dlAndroidBtnT">Download APK for Android</);
   assert.doesNotMatch(html, /id="dlAndroidBtn"[^>]*(?:aria-disabled="true"|tabindex="-1")/);
+  assert.match(html, /id="dlWindowsMeta">Version 1\.6\.8/);
+  assert.match(html, /id="dlWindowsBtn" href="https:\/\/github\.com\/MalekMahmouda\/salahnest\/releases\/download\/v1\.6\.8\/SalahNest-Setup-1\.6\.8\.exe"/);
   assert.doesNotMatch(html, /build pending|Final APK size pending/i);
   assert.doesNotMatch(data, /Android build pending|لم يكتمل بناء تطبيق أندرويد|Final APK size pending|سيُحدَّد حجم APK بعد اكتمال البناء/);
 });
@@ -119,7 +121,7 @@ test('release helper and readmes use the new product name without moving stored 
   assert.match(release, /productName\.replace/);
   assert.match(release, /Manual Test Checklist — \$\{productName\}/);
   assert.match(read('README.md'), /# SalahNest/);
-  assert.match(read('README.md'), /dist\/SalahNest-Setup-1\.6\.5\.exe/);
+  assert.match(read('README.md'), /dist\/SalahNest-Setup-1\.6\.8\.exe/);
   assert.match(read('README.md'), /%APPDATA%\\Prayer Times/);
   assert.match(read('README.ar.md'), /# SalahNest/);
   assert.match(read('README.ar.md'), /%APPDATA%\\Prayer Times/);
