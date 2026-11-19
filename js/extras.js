@@ -288,6 +288,12 @@ function applyExtrasLang() {
   set('dlWindowsT', 'dl.windowsT');
   set('dlWindowsMeta', 'dl.windowsMeta');
   set('dlWindowsBtnT', 'dl.windowsBtn');
+  set('dlSetupHubT', 'dl.setupHubT');
+  set('dlSetupHubMeta', 'dl.setupHubMeta');
+  set('dlSetupHubBtnT', 'dl.setupHubBtn');
+  set('dlSetupHubShaLabel', 'dl.setupHubShaLabel');
+  set('dlSetupHubReleaseT', 'dl.setupHubRelease');
+  set('dlSetupHubChecksumT', 'dl.setupHubChecksum');
   set('dlCapsuleT', 'dl.capsuleT');
   set('dlCapsuleMeta', 'dl.capsuleMeta');
   set('dlCapsuleBtnT', 'dl.capsuleBtn');

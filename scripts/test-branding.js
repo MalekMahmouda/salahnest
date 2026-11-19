@@ -116,6 +116,27 @@ test('published Android release has localized metadata and the verified APK link
   assert.doesNotMatch(data, /Android build pending|لم يكتمل بناء تطبيق أندرويد|Final APK size pending|سيُحدَّد حجم APK بعد اكتمال البناء/);
 });
 
+test('Setup Hub pre-release has a direct installer, release details, and the published SHA-256', () => {
+  const html = read('prayer-times.html');
+  const data = read('js/data.js');
+  const extras = read('js/extras.js');
+  const installer = 'https://github.com/MalekMahmouda/salahnest/releases/download/setup-hub-v1.2.3/SalahNest-Dhikr-Capsule-Setup-Hub-Native-Candidate-1.2.3.exe';
+  const checksum = 'https://github.com/MalekMahmouda/salahnest/releases/download/setup-hub-v1.2.3/SalahNest-Dhikr-Capsule-Setup-Hub-Native-Candidate-1.2.3.exe.sha256';
+  const release = 'https://github.com/MalekMahmouda/salahnest/releases/tag/setup-hub-v1.2.3';
+  const hash = '514cd88f39bc849518f35621802986b334b53f021b5e3bbef2269fee2de521b2';
+  assert.ok(html.includes(`id="dlSetupHubBtn" href="${installer}"`));
+  assert.ok(html.includes(`id="dlSetupHubReleaseT" href="${release}"`));
+  assert.ok(html.includes(`id="dlSetupHubChecksumT" href="${checksum}"`));
+  assert.ok(html.includes(`<code class="dlb-hash" dir="ltr">${hash}</code>`));
+  assert.match(html, /id="dlSetupHubMeta" dir="auto">Windows · Pre-release candidate 1\.2\.3/);
+  assert.match(data, /setupHubT: 'SalahNest \+ Dhikr Capsule Setup Hub'/);
+  assert.match(data, /setupHubT: 'مركز تثبيت SalahNest وكبسولة الذكر'/);
+  assert.match(data, /setupHubMeta: 'Windows · نسخة مرشّحة قبل الإصدار 1\.2\.3'/);
+  assert.match(extras, /set\('dlSetupHubT', 'dl\.setupHubT'\)/);
+  assert.match(extras, /set\('dlSetupHubMeta', 'dl\.setupHubMeta'\)/);
+  assert.match(extras, /set\('dlSetupHubChecksumT', 'dl\.setupHubChecksum'\)/);
+});
+
 test('Dhikr Capsule has a separate localized review card linking to its own release', () => {
   const html = read('prayer-times.html');
   const data = read('js/data.js');
