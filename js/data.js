@@ -200,6 +200,9 @@ const T = {
       androidBtn: 'Download APK for Android',
       androidPending: 'Android download unavailable',
       windowsT: 'Windows x64 installer', windowsMeta: 'Version 1.6.8', windowsBtn: 'Download installer',
+      capsuleT: 'Dhikr Capsule · separate app',
+      capsuleMeta: 'Standalone Windows review build · 2026.11.18',
+      capsuleBtn: 'View review release',
       unitMB: 'MB', androidReq: 'Android 7.0+', sizePending: 'APK size unavailable',
       codeT: 'Source code',
       codeBtn: 'View on GitHub',
@@ -297,6 +300,9 @@ const T = {
       androidBtn: 'تحميل ملف APK لأندرويد',
       androidPending: 'تنزيل تطبيق أندرويد غير متاح حاليًا',
       windowsT: 'مثبّت Windows x64', windowsMeta: 'الإصدار 1.6.8', windowsBtn: 'تحميل المثبّت',
+      capsuleT: 'كبسولة الذكر · تطبيق مستقل',
+      capsuleMeta: 'نسخة مراجعة مستقلة لـ Windows · 2026.11.18',
+      capsuleBtn: 'عرض إصدار المراجعة',
       /* “7.0+” in an RTL line throws its “+” to the far left of the run — the
          bidi algorithm reads it as punctuation, not part of the number. Spelled
          out instead, which is also how Arabic release notes say it. */
