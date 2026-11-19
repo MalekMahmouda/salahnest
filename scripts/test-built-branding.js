@@ -23,6 +23,20 @@ test('generated Pages document carries the approved browser and social title', (
   assert.deepEqual(fs.readFileSync(path.join(root, 'dist-web/google4d2e2a5dfbddfa49.html')), fs.readFileSync(path.join(root, 'google4d2e2a5dfbddfa49.html')));
 });
 
+test('generated Pages and Android web builds carry the separate Capsule review card', () => {
+  const releaseUrl = 'https://github.com/MalekMahmouda/dhikr-capsule/releases/tag/v2026.11.18-review';
+  for (const base of ['dist-web', 'www']) {
+    const html = read(`${base}/index.html`);
+    const data = read(`${base}/js/data.js`);
+    const extras = read(`${base}/js/extras.js`);
+    assert.ok(html.includes(`id="dlCapsuleBtn" href="${releaseUrl}"`), `${base} must link to the published Capsule release`);
+    assert.match(html, /id="dlCapsuleT">Dhikr Capsule · separate app</);
+    assert.match(data, /capsuleT: 'Dhikr Capsule · separate app'/);
+    assert.match(data, /capsuleT: 'كبسولة الذكر · تطبيق مستقل'/);
+    assert.match(extras, /set\('dlCapsuleBtnT', 'dl\.capsuleBtn'\)/);
+  }
+});
+
 test('generated PWA installation metadata carries the approved name', () => {
   const manifest = JSON.parse(read('dist-web/manifest.webmanifest'));
   assert.equal(manifest.name, 'SalahNest — Islamic Companion');

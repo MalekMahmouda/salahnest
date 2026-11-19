@@ -116,6 +116,22 @@ test('published Android release has localized metadata and the verified APK link
   assert.doesNotMatch(data, /Android build pending|لم يكتمل بناء تطبيق أندرويد|Final APK size pending|سيُحدَّد حجم APK بعد اكتمال البناء/);
 });
 
+test('Dhikr Capsule has a separate localized review card linking to its own release', () => {
+  const html = read('prayer-times.html');
+  const data = read('js/data.js');
+  const extras = read('js/extras.js');
+  const releaseUrl = 'https://github.com/MalekMahmouda/dhikr-capsule/releases/tag/v2026.11.18-review';
+  assert.ok(html.includes(`id="dlCapsuleBtn" href="${releaseUrl}"`));
+  assert.match(html, /id="dlCapsuleT">Dhikr Capsule · separate app</);
+  assert.match(data, /capsuleT: 'Dhikr Capsule · separate app'/);
+  assert.match(data, /capsuleT: 'كبسولة الذكر · تطبيق مستقل'/);
+  assert.match(data, /capsuleMeta: 'Standalone Windows review build · 2026\.11\.18'/);
+  assert.match(data, /capsuleMeta: 'نسخة مراجعة مستقلة لـ Windows · 2026\.11\.18'/);
+  assert.match(extras, /set\('dlCapsuleT', 'dl\.capsuleT'\)/);
+  assert.match(extras, /set\('dlCapsuleMeta', 'dl\.capsuleMeta'\)/);
+  assert.match(extras, /set\('dlCapsuleBtnT', 'dl\.capsuleBtn'\)/);
+});
+
 test('release helper and readmes use the new product name without moving stored data', () => {
   const release = read('scripts/make-release.js');
   assert.match(release, /productName\.replace/);
