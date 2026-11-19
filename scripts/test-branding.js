@@ -128,13 +128,28 @@ test('Setup Hub pre-release has a direct installer, release details, and the pub
   assert.ok(html.includes(`id="dlSetupHubReleaseT" href="${release}"`));
   assert.ok(html.includes(`id="dlSetupHubChecksumT" href="${checksum}"`));
   assert.ok(html.includes(`<code class="dlb-hash" dir="ltr">${hash}</code>`));
-  assert.match(html, /id="dlSetupHubMeta" dir="auto">Windows · Pre-release candidate 1\.2\.3/);
+  assert.match(html, /id="dlSetupHubMeta" dir="auto">Windows · Unsigned pre-release candidate 1\.2\.3/);
   assert.match(data, /setupHubT: 'SalahNest \+ Dhikr Capsule Setup Hub'/);
   assert.match(data, /setupHubT: 'مركز تثبيت SalahNest وكبسولة الذكر'/);
-  assert.match(data, /setupHubMeta: 'Windows · نسخة مرشّحة قبل الإصدار 1\.2\.3'/);
+  assert.match(data, /setupHubMeta: 'Windows · نسخة مرشّحة غير موقّعة قبل الإصدار 1\.2\.3'/);
   assert.match(extras, /set\('dlSetupHubT', 'dl\.setupHubT'\)/);
   assert.match(extras, /set\('dlSetupHubMeta', 'dl\.setupHubMeta'\)/);
   assert.match(extras, /set\('dlSetupHubChecksumT', 'dl\.setupHubChecksum'\)/);
+
+  const homeCards = [...html.matchAll(/<section class="setup-hub-feature">[\s\S]*?<\/section>/g)].map((match) => match[0]);
+  assert.equal(homeCards.length, 2, 'desktop and mobile prayer dashboards each have one compact feature card');
+  for (const card of homeCards) {
+    assert.ok(card.includes(`href="${installer}"`), 'home card links directly to the installer');
+    assert.ok(card.includes(`href="${release}"`), 'home card links to release details');
+    assert.match(card, /data-setup-hub-copy="eyebrow"/);
+  }
+  assert.match(html, /<div class="mquick">[\s\S]*?<\/div>\s*<section class="setup-hub-feature">/);
+  assert.match(html, /id="prayerCards" role="list"><\/div>\s*<section class="setup-hub-feature">/);
+  assert.match(data, /setupHubHomeEyebrow: 'WINDOWS · PRE-RELEASE · UNSIGNED'/);
+  assert.match(data, /setupHubHomeEyebrow: 'Windows · نسخة ما قبل الإصدار · غير موقّعة'/);
+  assert.match(data, /setupHubHomeDescription: 'ثبّت أو حدّث SalahNest وكبسولة الذكر من مكان واحد\.'/);
+  assert.match(extras, /setHomeHub\('eyebrow', 'dl\.setupHubHomeEyebrow'\)/);
+  assert.match(extras, /setHomeHub\('release', 'dl\.setupHubHomeRelease'\)/);
 });
 
 test('Dhikr Capsule has a separate localized review card linking to its own release', () => {

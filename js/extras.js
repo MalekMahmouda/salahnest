@@ -281,6 +281,10 @@ function ptApplyRelease() {
 /* ═══ i18n — called from applyLang() on every language switch ═══ */
 function applyExtrasLang() {
   const set = (id, key) => { const el = ptEl(id); if (el) el.textContent = t(key); };
+  const setHomeHub = (name, key) => {
+    const value = t(key);
+    document.querySelectorAll(`[data-setup-hub-copy="${name}"]`).forEach((el) => { el.textContent = value; });
+  };
 
   set('dlTitle', 'dl.title');
   set('dlLead', 'dl.lead');
@@ -294,6 +298,11 @@ function applyExtrasLang() {
   set('dlSetupHubShaLabel', 'dl.setupHubShaLabel');
   set('dlSetupHubReleaseT', 'dl.setupHubRelease');
   set('dlSetupHubChecksumT', 'dl.setupHubChecksum');
+  setHomeHub('eyebrow', 'dl.setupHubHomeEyebrow');
+  setHomeHub('title', 'dl.setupHubHomeTitle');
+  setHomeHub('description', 'dl.setupHubHomeDescription');
+  setHomeHub('download', 'dl.setupHubHomeDownload');
+  setHomeHub('release', 'dl.setupHubHomeRelease');
   set('dlCapsuleT', 'dl.capsuleT');
   set('dlCapsuleMeta', 'dl.capsuleMeta');
   set('dlCapsuleBtnT', 'dl.capsuleBtn');

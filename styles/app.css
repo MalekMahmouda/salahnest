@@ -336,6 +336,20 @@ hr.sep{border:none;border-top:1px solid var(--border);margin:14px 0}
 .pt-maghrib{--pc:var(--h-maghrib);--pc-soft:color-mix(in srgb,var(--h-maghrib) 14%,transparent)}
 .pt-isha{--pc:var(--h-isha);--pc-soft:color-mix(in srgb,var(--h-isha) 14%,transparent)}
 
+/* A quiet, compact release callout below the prayer schedule — theme-aware and RTL-safe. */
+.setup-hub-feature{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:14px 0 18px;padding:13px 16px;background:linear-gradient(110deg,var(--primary-soft),var(--surface) 68%);border:1px solid var(--border);border-inline-start:4px solid var(--primary);border-radius:var(--r-lg);box-shadow:var(--shadow-sm)}
+.setup-hub-feature-copy{flex:1;min-width:0}
+.setup-hub-feature-label{margin-bottom:2px;color:var(--gold-ink);font-size:9px;font-weight:800;letter-spacing:.08em;line-height:1.45;text-transform:uppercase}
+.setup-hub-feature-title{font-size:14px;font-weight:750;line-height:1.35}
+.setup-hub-feature-desc{margin-top:3px;color:var(--text-muted);font-size:11.5px;line-height:1.45}
+.setup-hub-feature-actions{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.setup-hub-feature .btn{min-height:40px;min-width:0;padding:8px 12px;font-size:11.5px;justify-content:center;text-align:center}
+@media(max-width:560px){
+  .setup-hub-feature{align-items:stretch;flex-direction:column;gap:9px;padding:12px}
+  .setup-hub-feature-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .setup-hub-feature .btn{padding:8px 6px;font-size:10.5px}
+}
+
 /* ── Sun & night ── */
 .sun-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:11px}
 .sun-cell{background:var(--surface);border:1px solid var(--border);border-radius:15px;padding:14px 8px;text-align:center;transition:transform .18s var(--ease),box-shadow var(--dur)}
