@@ -31,13 +31,16 @@
       "output": "dist",
       "buildResources": "assets"
     },
+    "compression": "maximum",
     "files": [
       "main/**/*",
       "shared/**/*",
       "js/**/*",
       "styles/**/*",
       "data/**/*",
-      "assets/**/*",
+      "assets/adhans/**/*",
+      "assets/icon.ico",
+      "assets/salahnest-mark.png",
       "fonts/**/*",
       "prayer-times.html",
       "adhan.html",

@@ -52,18 +52,39 @@
     };
   }
 
+  // Ramadan in the Umm al-Qura method is Maghrib + 120 minutes, versus the
+  // library's normal 90-minute interval. Use the location-local Gregorian
+  // date passed to computeDayInstant; the exact sunset boundary convention is
+  // not stated by the source and is intentionally not guessed here.
+  function isUmmAlQuraRamadanDate(y, m, d) {
+    if (![y, m, d].every(Number.isInteger) || typeof Intl === 'undefined') return false;
+    try {
+      const date = new Date(Date.UTC(y, m - 1, d, 12));
+      const parts = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura-nu-latn', {
+        timeZone: 'UTC', month: 'numeric',
+      }).formatToParts(date);
+      const month = parts.find((part) => part.type === 'month');
+      return !!month && Number(month.value) === 9;
+    } catch (e) { return false; }
+  }
+
   /**
    * Calculation parameters for a config — THE single params builder.
    * Universal madhab: the user's Asr school applies to ALL methods (desktop
    * scheduler, Android scheduler and web all behave identically).
    */
-  function paramsFor(cfg, deps) {
+  function paramsFor(cfg, deps, y, m, d) {
     const { CalculationMethod, Madhab } = deps;
-    const m = Number(cfg && cfg.method);
+    const methodId = Number(cfg && cfg.method);
     const map = makeMethodMap(CalculationMethod);
-    const factory = map[m] || map[3];
+    const factory = map[methodId] || map[3];
     const params = factory();
     params.madhab = (cfg && cfg.madhab === 'hanafi') ? Madhab.Hanafi : Madhab.Shafi;
+    // Saudi government-hosted technical guidance documents 90 min normally,
+    // 120 min in Ramadan; adhan-js likewise recommends a +30 min adjustment.
+    // Official 1448 calendar date: 1 Ramadan = 2027-02-08. This applies to the
+    // computed location date, not the device's date.
+    if (methodId === 4 && isUmmAlQuraRamadanDate(y, m, d)) params.adjustments.isha += 30;
     return params;
   }
 
@@ -80,7 +101,7 @@
     if (!Number.isFinite(y) || !Number.isFinite(m) || !Number.isFinite(d)) return null;
 
     const date = new Date(y, m - 1, d, 12); // local-noon input — see header
-    const params = paramsFor(cfg, deps);
+    const params = paramsFor(cfg, deps, y, m, d);
     const pt = new PrayerTimes(new Coordinates(lat, lon), date, params);
     const utc = (dt) => Date.UTC(dt.getUTCFullYear(), dt.getUTCMonth(), dt.getUTCDate(),
       dt.getUTCHours(), dt.getUTCMinutes(), dt.getUTCSeconds(), dt.getUTCMilliseconds());

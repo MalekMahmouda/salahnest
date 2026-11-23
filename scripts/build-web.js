@@ -253,7 +253,10 @@ fs.writeFileSync(path.join(DIST, 'sw.js'), `/* Prayer Times service worker — o
 const CACHE = '${CACHE}';
 const SHELL = ${JSON.stringify(SHELL)};
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()).catch((error) => {
+    console.error('SalahNest offline shell installation failed:', error);
+    throw error;
+  }));
 });
 self.addEventListener('activate', (e) => {
   e.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((k) => k.startsWith('pt-cache-') && k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim()));
@@ -286,7 +289,9 @@ fs.writeFileSync(path.join(DIST, 'sw-reg.js'), `/* PWA registration (web build o
 document.body.classList.add('web-mode');
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch(() => {});
+    navigator.serviceWorker.register('./sw.js').catch((error) => {
+      console.warn('SalahNest service worker registration failed; offline support is unavailable for this visit:', error);
+    });
   });
 }
 `);

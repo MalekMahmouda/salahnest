@@ -47,7 +47,7 @@ if (!fs.existsSync(listFile)) {
     'js/data.js', 'js/stats.js', 'js/platform.js', 'js/overlay.js', 'js/widget.js', 'js/compass.js',
     'js/extras.js',
     'styles/app.css', 'styles/motion.css',
-    'assets/icon.ico', 'assets/icon-256.png',
+    'assets/icon.ico',
     'data/quran.json',
   ];
   // Adhan audio (asarUnpacked): every bundled mp3 must be in the package.

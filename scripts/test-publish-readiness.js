@@ -186,4 +186,60 @@ test('GPS safeguards remain unchanged; arrival animation is added only on succes
   assert.equal(gpsRegion(app), expectedGps);
 });
 
+test('PWA reports service-worker registration and offline-shell installation failures', () => {
+  const buildWeb = read('scripts/build-web.js');
+  const readme = read('README.md'), readmeAr = read('README.ar.md');
+  assert.match(buildWeb, /console\.warn\('SalahNest service worker registration failed/);
+  assert.match(buildWeb, /console\.error\('SalahNest offline shell installation failed/);
+  assert.doesNotMatch(buildWeb, /serviceWorker\.register\('\.\/sw\.js'\)\.catch\(\(\) => \{\}\)/);
+  assert.match(readme, /work offline only after the service worker installs successfully/);
+  assert.match(readme, /Browser notifications depend on browser support/);
+  assert.match(readmeAr, /بعد نجاح تثبيت Service Worker فقط/);
+});
+
+test('renderer registers one consumer-close state listener', () => {
+  assert.equal((app.match(/PT\.onConsumerState\(/g) || []).length, 1);
+  assert.match(app, /for \(const key of \['widget', 'mini'\]\)/);
+});
+
+test('all location saves restart the location-aware midnight timer', () => {
+  const saveLoc = app.match(/^const saveLoc = \(\) => \{[\s\S]*?^\};/m);
+  assert.ok(saveLoc, 'shared saveLoc helper exists');
+  const calls = [];
+  const context = vm.createContext({
+    S: { lat: 35.6762, lon: 139.6503, city: 'Tokyo', country: 'Japan' },
+    localStorage: { getItem: () => null, setItem: () => {} },
+    roundKey: () => '35.68,139.65', pushCfg: () => calls.push('pushCfg'),
+    scheduleMidnight: () => calls.push('midnight'),
+  });
+  vm.runInContext(`${saveLoc[0]}\nsaveLoc();`, context);
+  assert.deepEqual(calls, ['pushCfg', 'midnight']);
+});
+
+test('editing the active saved location refreshes its timezone-dependent schedule and midnight timer', () => {
+  const editLocation = functionSource(pages3, 'editLocation');
+  const dialogs = [], calls = [];
+  const context = vm.createContext({
+    DB3: {
+      locations: [{ id: 'tokyo', latitude: 35.6762, longitude: 139.6503, city: 'Tokyo', country: 'Japan', name: 'Tokyo', timezone: 'Asia/Tokyo' }],
+      prefs: { activeLoc: 'tokyo' },
+    },
+    S: { lang: 'en' },
+    COMMON_TIMEZONES: ['UTC', 'Asia/Riyadh', 'Asia/Dubai', 'Asia/Qatar'],
+    openTextModal: (options) => dialogs.push(options),
+    isValidTimezone: (value) => value === 'America/New_York',
+    save3: () => calls.push('save3'), invalidateLocationRequests: () => calls.push('invalidate'),
+    saveLoc: () => { calls.push('saveLoc'); calls.push('midnight'); }, fetchTimes: (lat, lon) => calls.push(`fetchTimes:${lat},${lon}`),
+    refreshTodaySchedule: () => calls.push('refresh'), updateLocNames: () => calls.push('labels'),
+    scheduleMidnight: () => calls.push('midnight'), renderLocations: () => calls.push('render'),
+    showToast: () => calls.push('toast'),
+  });
+  vm.runInContext(`${editLocation}\nglobalThis.testEditLocation = editLocation;`, context);
+  context.testEditLocation('tokyo');
+  dialogs.shift().onOK('Tokyo');
+  dialogs.shift().onOK('America/New_York');
+  assert.equal(context.DB3.locations[0].timezone, 'America/New_York');
+  assert.deepEqual(calls, ['save3', 'invalidate', 'saveLoc', 'midnight', 'fetchTimes:35.6762,139.6503', 'refresh', 'labels', 'render']);
+});
+
 console.log(`${checks} publication-readiness regression groups passed.`);

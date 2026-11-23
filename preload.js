@@ -80,6 +80,8 @@ contextBridge.exposeInMainWorld('ptDesktop', {
   miniToggle: (wanted) => ipcRenderer.send('mini:toggle', !!wanted),
   /** Push of scheduler info to the main renderer (dashboard refresh). */
   onInfo: (cb) => ipcRenderer.on('pt:info', (e, payload) => cb(payload)),
+  /** Consumer windows can be closed independently; keep their settings in sync. */
+  onConsumerState: (cb) => ipcRenderer.on('pt:consumer-state', (e, payload) => cb(payload)),
 
   /** Fires a real notification after ~3 s so the user can preview alerts. */
   testAlert: () => ipcRenderer.send('pt:test-alert'),

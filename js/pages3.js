@@ -187,6 +187,7 @@ function activateLocation(id) {
 
 function editLocation(id) {
   const loc = DB3.locations.find((l) => l.id === id); if (!loc) return;
+  const wasActive = DB3.prefs.activeLoc === id;
   const L = S.lang === 'ar';
   openTextModal({
     title: L ? 'تعديل الموقع' : 'Edit location',
@@ -204,7 +205,14 @@ function editLocation(id) {
             loc.timezone = '';
             showToast((L ? 'منطقة زمنية غير صالحة — تم المسح' : 'Invalid timezone — cleared'));
           }
-          save3(); renderLocations();
+          save3();
+          if (wasActive) {
+            if (typeof invalidateLocationRequests === 'function') invalidateLocationRequests();
+            S.lat = loc.latitude; S.lon = loc.longitude; S.city = loc.city; S.country = loc.country;
+            saveLoc(); // pushes the new effective timezone to desktop/mobile schedulers
+            fetchTimes(S.lat, S.lon); refreshTodaySchedule(); updateLocNames();
+          }
+          renderLocations();
         },
       });
     },
@@ -387,19 +395,25 @@ window.renderDailyCard = function renderDailyCard(elId) {
 };
 
 /* ═══ RAMADAN (detection + card; Imsak = labeled estimate) ═══ */
-function hijriMonthDay(date) {
+function hijriMonthDay(date, timeZone) {
   try {
-    const parts = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura-nu-latn', { day: 'numeric', month: 'numeric', year: 'numeric' }).formatToParts(date);
+    const options = { day: 'numeric', month: 'numeric', year: 'numeric' };
+    if (timeZone) options.timeZone = timeZone;
+    const parts = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura-nu-latn', options).formatToParts(date);
     const get = (t) => parts.find((p) => p.type === t).value;
     return { day: +get('day'), month: +get('month'), year: +get('year') };
   } catch (e) { return null; }
 }
+function imsakOffsetMinutes(ramadanPrefs) {
+  const raw = ramadanPrefs && ramadanPrefs.imsakOffset;
+  return Number.isFinite(raw) ? Math.min(30, Math.max(0, raw)) : 10;
+}
 window.renderRamadan = function renderRamadan(elId) {
   const el = $(elId || 'ramadanCard'); if (!el) return;
-  const hj = hijriMonthDay(new Date());
+  const hj = hijriMonthDay(new Date(), resolveTz());
   if (!hj || hj.month !== 9) { el.style.display = 'none'; return; }
   el.style.display = 'block';
-  const imsakOff = (DB3.prefs.ramadan && DB3.prefs.ramadan.imsakOffset) || 10;
+  const imsakOff = imsakOffsetMinutes(DB3.prefs.ramadan);
   const timings = S.times || (S.todaySchedule && S.todaySchedule.timings);
   if (!timings) { el.innerHTML = ''; return; }
   const toMin = (s) => { const [h, m] = s.split(':').map(Number); return h * 60 + m; };
@@ -424,7 +438,7 @@ window.renderRamadan = function renderRamadan(elId) {
     <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap">
       <div style="flex:1;min-width:110px;background:rgba(255,255,255,.12);border-radius:12px;padding:10px;text-align:center">
         <div style="font-size:10.5px;color:rgba(255,255,255,.6)">${S.lang === 'ar' ? 'الإمساك (تقديري)' : 'Imsak (estimate)'}</div>
-        <div style="font-size:17px;font-weight:750">${imsakStr} −${imsakOff}m</div>
+        <div style="font-size:17px;font-weight:750">${imsakStr}${imsakOff ? ` −${imsakOff}m` : ''}</div>
         <div style="font-size:11px;color:var(--gold)">${S.lang === 'ar' ? 'بعد' : 'in'} ${cdTo(imsakMin)}</div>
       </div>
       <div style="flex:1;min-width:110px;background:rgba(255,255,255,.12);border-radius:12px;padding:10px;text-align:center">

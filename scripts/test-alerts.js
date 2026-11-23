@@ -108,6 +108,10 @@ function mobile({ denied = false, exact = 'granted', failBatch = 0 } = {}) {
   ok(h.state.audio.length === 0 && h.state.shown.length === 0, 'both switches off is genuinely silent');
   let m = mobile(); await m.configure();
   ok(m.calls.schedule.length > 60 && m.calls.schedule.length <= 150, 'native Android schedules the capped two-week horizon');
+  m = mobile(); await m.configure({ ...BASE, notifMin: 0, preMin: {} });
+  const zeroPrayer = m.calls.schedule.find((n) => n.extra.kind === 'adhan');
+  ok(zeroPrayer && m.calls.schedule.every((n) => n.extra.kind !== 'pre'),
+    'zero-minute Android setting relies on the single prayer-time alert, not a duplicate pre-alert');
   ok(m.calls.requested === 0, 'background native reschedule never prompts for permission');
   ok((await m.api.notifStatus()).exact === true, 'exact_alarm granted is read from the real Capacitor field');
   ok(m.calls.channels.every((c) => typeof c.visibility === 'number'), 'native channel visibility uses the required numeric type');

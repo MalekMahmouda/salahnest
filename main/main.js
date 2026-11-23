@@ -178,13 +178,13 @@ if (!isPrimary) {
     } catch (e) { azlog('audio probe failed', { error: e.message }); }
   }
 
-  function fireAdhanEvent({ prayer, time, lang, volume }) {
+  function fireAdhanEvent({ prayer, time, lang, volume, adhanType }) {
     // v1.3.2 P15 DECOUPLE: the azan AUDIO plays whenever the adhan event
     // fires. The overlay toggle only decides whether the fullscreen window
     // is VISIBLE — with it off, the same overlay page plays the audio
     // invisibly (identical src → load → play lifecycle, then auto-closes).
     // Disabling the overlay must never silently disable the azan.
-    const id = store.get('adhanType', 'alafasy');
+    const id = typeof adhanType === 'string' && adhanType ? adhanType : store.get('adhanType', 'alafasy');
     const resolved = resolveAdhanAudio(id);
     dlog(`Adhan audio: ${resolved.kind} → ${resolved.file || resolved.src}`);
     const overlayVisible = !!store.get('adhanOverlayEnabled', true);
@@ -421,6 +421,26 @@ if (!isPrimary) {
     sendInfo(widgetWin); sendInfo(miniWin); sendInfo(win);
   }
 
+  function notifyConsumerState(state) {
+    if (win && !win.isDestroyed()) win.webContents.send('pt:consumer-state', state);
+  }
+
+  function handleConsumerClosed(kind) {
+    if (kind === 'mini') {
+      miniWin = null;
+      if (!quitting) {
+        notifyConsumerState({ mini: false });
+        if (win && !win.isDestroyed() && !win.isVisible()) showMainWindow();
+      }
+      return;
+    }
+    widgetWin = null;
+    if (!quitting) {
+      store.set('widgetWanted', false);
+      notifyConsumerState({ widget: false });
+    }
+  }
+
   function createConsumerWindow(kind) {
     const isMini = kind === 'mini';
     const w = new BrowserWindow({
@@ -447,7 +467,7 @@ if (!isPrimary) {
       sendInfo(w);
     });
     w.setAlwaysOnTop(true, 'screen-saver');
-    w.on('closed', () => { if (isMini) miniWin = null; else widgetWin = null; });
+    w.on('closed', () => handleConsumerClosed(kind));
     return w;
   }
 

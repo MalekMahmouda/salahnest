@@ -25,6 +25,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const vm = require('vm');
 const Engine = require(path.join(__dirname, '..', 'shared', 'pt-engine.js'));
 const adhan = require('adhan');
 const { createScheduler } = require(path.join(__dirname, '..', 'main', 'scheduler.js'));
@@ -1156,6 +1157,40 @@ function runArtifactChecks() {
     'the mobile home hero + strip repaint when data arrives, not only on the 30th tick');
   ok(/if \(name === 'mhome'\) \{ renderMHome\(\); renderMHomeCards\(\); \}/.test(appSrc16),
     'navigating to the mobile home repaints it');
+
+  /* ── 17. Electron widget and Mini Mode close lifecycle ───────────────── */
+  section('17. Electron consumer-window close lifecycle');
+  const mainSrc17 = read('main/main.js');
+  const closeHandler = mainSrc17.match(/^  function handleConsumerClosed\(kind\) \{[\s\S]*?^  \}/m);
+  ok(!!closeHandler, 'main process centralizes consumer-window close handling');
+  ok(/function notifyConsumerState\(state\) \{\s*if \(win && !win\.isDestroyed\(\)\) win\.webContents\.send\('pt:consumer-state', state\);\s*\}/.test(mainSrc17),
+    'consumer close state is sent only to a live main window');
+  if (closeHandler) {
+    const runClose = (kind, quitting = false) => {
+      const events = [], storeCalls = [];
+      const context = {
+        miniWin: kind === 'mini' ? {} : null,
+        widgetWin: kind === 'widget' ? {} : null,
+        win: { isDestroyed: () => false, isVisible: () => false }, quitting,
+        notifyConsumerState: (state) => events.push(state),
+        showMainWindow: () => events.push('main-shown'),
+        store: { set: (...args) => storeCalls.push(args) },
+      };
+      vm.runInNewContext(`${closeHandler[0]}\nhandleConsumerClosed(${JSON.stringify(kind)});`, context);
+      return { context, events, storeCalls };
+    };
+    const mini = runClose('mini');
+    ok(mini.context.miniWin === null && mini.events.includes('main-shown')
+      && mini.events.some((x) => x && x.mini === false),
+    'closing Mini Mode restores the hidden main window and resets its setting');
+    const widget = runClose('widget');
+    ok(widget.context.widgetWin === null && widget.storeCalls.some((x) => x[0] === 'widgetWanted' && x[1] === false)
+      && widget.events.some((x) => x && x.widget === false),
+    'closing the widget clears its saved enabled state and synchronizes the renderer');
+    const quitting = runClose('mini', true);
+    ok(!quitting.events.includes('main-shown') && quitting.events.length === 0,
+      'application shutdown does not reopen Mini Mode or emit settings changes');
+  }
 
   finish();
 }

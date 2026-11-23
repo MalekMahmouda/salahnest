@@ -94,19 +94,18 @@ section('1. Five prayers fire exactly once');
   ok(app.events.every((e) => e.dayKey && /^\d{4}-\d{2}-\d{2}$/.test(e.dayKey)), 'events carry YYYY-MM-DD dedup day keys');
 }
 
-/* ── 2. notifMin = 0 → pre-alert AT prayer time ────────────────────────── */
+/* ── 2. notifMin = 0 → regular prayer-time alert is the only alert ─────── */
 section('2. notifMin = 0');
 {
   const app = makeApp({ notifMin: 0 });
   const [fajr, dhuhr] = prayerDates(BASE_CFG, NOON);
   app.now = fajr.getTime() - 60 * 1000; app.tick();
-  ok(app.count('pre-alert') === 0, 'no pre-alert one minute before (0 means 0, not 10)');
+  ok(app.count('pre-alert') === 0, 'no pre-alert before prayer (0 means zero, not the default 10)');
   app.now = fajr.getTime() + 5 * 1000; app.tick();
-  const pre = app.events.find((e) => e.ev === 'pre-alert');
-  ok(app.count('pre-alert') === 1 && pre && pre.minutes === 0, 'pre-alert fires at T−0 with minutes=0');
-  ok(app.count('prayer-time', 'Fajr') === 1 && app.count('adhan', 'Fajr') === 1, 'prayer-time + adhan unaffected by pre-alert tracking');
+  ok(app.count('pre-alert') === 0, 'zero-minute pre-alert is coalesced with the prayer-time notification');
+  ok(app.count('prayer-time', 'Fajr') === 1 && app.count('adhan', 'Fajr') === 1, 'prayer-time + adhan each fire once at zero minutes');
   app.now = dhuhr.getTime() - 5 * 60 * 1000; app.tick();
-  ok(app.count('pre-alert') === 1, 'Dhuhr pre-alert (T−0) does not fire early at T−5min');
+  ok(app.count('pre-alert') === 0, 'zero-minute Dhuhr pre-alert is never scheduled early');
 }
 
 /* ── 3. Sleep/resume gap recovery ──────────────────────────────────────── */
@@ -208,14 +207,16 @@ section('6. Hanafi Asr (display == scheduler)');
 /* ── 7. Volume resolution ──────────────────────────────────────────────── */
 section('7. Adhan volume resolution');
 {
-  const app = makeApp({ adhanVol: 0.5, adhanProfiles: { Maghrib: { vol: 0.3 } } });
+  const app = makeApp({ adhanVol: 0.5, adhanProfiles: { Maghrib: { vol: 0.3, reciter: 'classic' } } });
   const dates = prayerDates(BASE_CFG, NOON);
   app.now = dates[3].getTime() + 5 * 1000; app.tick(); // Maghrib
   const maghrib = app.events.find((e) => e.ev === 'adhan' && e.prayer === 'Maghrib');
   ok(maghrib && Math.abs(maghrib.volume - 0.3) < 1e-9, 'per-prayer profile volume wins (0.3)');
+  ok(maghrib && maghrib.adhanType === 'classic', 'automatic adhan event carries the selected per-prayer reciter');
   app.now = dates[4].getTime() + 5 * 1000; app.tick(); // Isha
   const isha = app.events.find((e) => e.ev === 'adhan' && e.prayer === 'Isha');
   ok(isha && isha.volume === 0.5, 'global volume used when no profile (0.5)');
+  ok(isha && isha.adhanType === BASE_CFG.adhanType, 'global reciter remains the fallback when no per-prayer reciter is set');
 
   const app2 = makeApp({ adhanVol: 7 });
   app2.now = prayerDates(BASE_CFG, NOON)[0].getTime() + 5 * 1000; app2.tick();
@@ -393,6 +394,30 @@ section('11. v1.4.0: advance next, location-tz payloads, 15-min recovery cap');
     ok(beyond.notif === 1, 'beyond the cap the prayer-time notification STILL fires');
     ok(!!beyond.skip, 'beyond the cap the skip is logged with reason=missed-too-long');
     ok(beyond.skip && beyond.skip.d && beyond.skip.d.azanOn === true, 'the skip log carries azanOn=true (not a settings skip)');
+  }
+}
+
+/* ── 12. Official Umm al-Qura Ramadan Isha interval in live scheduler ────── */
+section('12. Umm al-Qura: live scheduler uses 120 min in Ramadan, 90 otherwise');
+{
+  const cases = [
+    { iso: '2027-02-07', minutes: 90 },
+    { iso: '2027-02-08', minutes: 120 },
+    { iso: '2027-03-08', minutes: 120 },
+    { iso: '2027-03-09', minutes: 90 },
+  ];
+  for (const { iso, minutes } of cases) {
+    const [y, m, d] = iso.split('-').map(Number);
+    const cfg = { ...BASE_CFG, tz: 'Asia/Riyadh' };
+    const s = createScheduler();
+    s._setClock(() => Date.parse(`${iso}T00:10:00+03:00`));
+    s.updateConfig(cfg);
+    const scheduled = s.getInfo().times.find((x) => x.prayer === 'Isha').time;
+    const reference = EngineRef.computeDayInstant(cfg, y, m, d, { Coordinates, CalculationMethod, PrayerTimes, Madhab }).instants;
+    const fmt = (ms) => new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Riyadh', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(ms));
+    ok((reference.Isha - reference.Maghrib) / MIN === minutes,
+      `${iso}: shared engine uses the verified ${minutes}-minute Maghrib-to-Isha interval`);
+    ok(scheduled === fmt(reference.Isha), `${iso}: live scheduler Isha matches shared-engine result (${scheduled})`);
   }
 }
 

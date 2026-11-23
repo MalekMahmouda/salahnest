@@ -48,8 +48,8 @@ const RECOVERY_MAX_MS = 15 * 60 * 1000;
 
 // Method/madhab resolution lives in the shared contract (single copy for
 // desktop, Android and web — universal madhab included).
-function paramsFor(cfg) {
-  return Engine.paramsFor(cfg, { CalculationMethod, Madhab });
+function paramsFor(cfg, day) {
+  return Engine.paramsFor(cfg, { CalculationMethod, Madhab }, day && day.y, day && day.m, day && day.d);
 }
 
 function createScheduler(opts = {}) {
@@ -165,7 +165,7 @@ function createScheduler(opts = {}) {
     // the shared contract's local-noon convention (shared/pt-engine.js).
     const day = zonedDay(cfg);
     const date = new Date(day.y, day.m - 1, day.d, 12);
-    const pt = new PrayerTimes(coords, date, paramsFor(cfg));
+    const pt = new PrayerTimes(coords, date, paramsFor(cfg, day));
 
     state.cfg = cfg;
     state.pt = pt;
@@ -196,7 +196,7 @@ function createScheduler(opts = {}) {
       // Tomorrow on the LOCATION's calendar: +24 h then re-derive the
       // location-local date (correct across zone/DST edges).
       const day2 = zonedDay(cfg, now + 86400000);
-      const pt2 = new PrayerTimes(new Coordinates(cfg.lat, cfg.lon), new Date(day2.y, day2.m - 1, day2.d, 12), paramsFor(cfg));
+      const pt2 = new PrayerTimes(new Coordinates(cfg.lat, cfg.lon), new Date(day2.y, day2.m - 1, day2.d, 12), paramsFor(cfg, day2));
       const fajrOff = (cfg.offsets && cfg.offsets.Fajr) || 0;
       const at = new Date(pt2.timeForPrayer(Prayer.Fajr).getTime() + fajrOff * 60000);
       next = { prayer: 'Fajr', at, hhmm: fmtT(at), ms: at.getTime() };
@@ -244,6 +244,13 @@ function createScheduler(opts = {}) {
     return clampVolume(raw, 1);
   }
 
+  function resolveAdhanType(prayer) {
+    const cfg = state.cfg || {};
+    const profile = cfg.adhanProfiles && cfg.adhanProfiles[prayer];
+    return (profile && typeof profile.reciter === 'string' && profile.reciter)
+      || (typeof cfg.adhanType === 'string' && cfg.adhanType) || 'alafasy';
+  }
+
   function tick() {
     const cfg = state.cfg;
     if (!cfg || state.pt == null) return;
@@ -283,9 +290,9 @@ function createScheduler(opts = {}) {
       const preAt = atMs - preMin * 60000;
       // Eligible if its moment falls inside this tick's window. A stale
       // pre-alert (prayer already passed during a sleep gap) is skipped —
-      // the prayer-time notification covers it — EXCEPT notifMin=0, whose
-      // alert lives exactly at the prayer instant.
-      const preEligible = preAt >= windowStart && preAt <= now && (preMin === 0 || atMs > now);
+      // the prayer-time notification covers it. At zero minutes the normal
+      // prayer-time notification is the sole alert, avoiding a same-time dupe.
+      const preEligible = preMin > 0 && preAt >= windowStart && preAt <= now && atMs > now;
       if (cfg.notif && preEligible) {
         const preKey = `${dayKey}:${prayer}:prealert`;
         if (!state.firedPrayerKeys.has(preKey)) {
@@ -333,7 +340,10 @@ function createScheduler(opts = {}) {
             dlog(`Adhan: triggered (volume ${Math.round(vol * 100)}%)${recovered ? ' — recovered after gap' : ''}`);
             // Boundary: scheduler → main handoff (main logs 'adhan event' next).
             log('adhan event emitted', { prayer, time: hhmm(at), volume: vol, recovered, dayKey });
-            bus.emit('adhan', { prayer, time: fmtInTz(at, cfg.tz), lang: cfg.lang || 'en', volume: vol, dayKey });
+            bus.emit('adhan', {
+              prayer, time: fmtInTz(at, cfg.tz), lang: cfg.lang || 'en', volume: vol,
+              adhanType: resolveAdhanType(prayer), dayKey,
+            });
           }
         } else {
           // Boundary: WHY nothing fired — the #1 "why no azan?" answer.

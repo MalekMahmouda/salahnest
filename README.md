@@ -5,7 +5,7 @@
 A native Windows desktop & Android Islamic companion built with Electron — prayer times, Quran, Dhikr, Qibla, and more, with a fully offline-first core.
 
 > 🇸🇦 العربية: [README.ar.md](README.ar.md)
-🌐 **Web app:** https://malekmahmouda.github.io/salahnest/ — installable PWA, works fully offline after the first visit.
+🌐 **Web app:** https://malekmahmouda.github.io/salahnest/ — installable PWA; its cached app shell is available offline after a successful service-worker install. Network-backed features such as city search and Quran audio still need internet.
 📥 **Downloads:** the production-signed Android APK and Windows installer are published in [GitHub Releases](https://github.com/MalekMahmouda/salahnest/releases). The Windows installer is not Authenticode-signed.
 **Versions:** desktop `1.6.8`; Android `1.6.8` (version code `16`); web/PWA has no separate product version. See [version sources](docs/VERSIONS.md).
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Android%20%7C%20Web-blue) ![Electron](https://img.shields.io/badge/Electron-45-47848F) ![Desktop](https://img.shields.io/badge/desktop-1.6.8-green) ![Android](https://img.shields.io/badge/Android-1.6.8-green)
@@ -98,10 +98,10 @@ Prayer times are computed **locally on your machine** (the same engine powers th
 
 - **City search** — geocoding via `api.aladhan.com` (coordinates only; times are then computed locally)
 - **Quran audio** — streamed from `cdn.islamic.network`
-- **Adhan audio** — bundled locally in the app; an online copy (`cdn.aladhan.com`) is only an optional fallback if the local file is missing
+- **Adhan audio** — bundled locally. Desktop has a CDN fallback only if a bundled file is missing; browser playback uses bundled recordings only and does not fetch a remote replacement.
 - **GPS location** (browser and Android; on Windows it depends on system location services) and **reverse geocoding** via `nominatim.openstreetmap.org` to label your city
 
-With no internet: prayer times, notifications, adhan (bundled audio), Quran text/search, Dhikr, Qibla, calendar, and stats all keep working.
+Desktop and Android keep local prayer calculations, scheduled alerts, bundled adhan and Quran text available offline. In the web/PWA build, the cached shell, local calculations, bundled adhan and text work offline only after the service worker installs successfully; city lookup and streamed Quran audio need internet. Browser notifications depend on browser support, permission, and background behavior.
 
 ## License
 
