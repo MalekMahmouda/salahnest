@@ -46,6 +46,7 @@ const S = {
 /* ═══ DESKTOP BRIDGE ═══ */
 const PT = window.ptDesktop || null;
 const IS_DESKTOP = !!PT;
+let locationMidnightTimer = null;
 
 /* v1.3.2 P9: dedup identical config pushes. init(), saveCfg() and saveLoc()
    can all fire within seconds; main only needs CHANGED configs. A real
@@ -97,12 +98,12 @@ function pushCfg() {
 function activeLocTz() {
   const prefs = (typeof DB3 !== 'undefined' && DB3 && DB3.prefs) ? DB3.prefs : null;
   const actLoc = prefs ? DB3.locations.find((l) => l.id === prefs.activeLoc) : null;
-  if (!actLoc || S.lat == null || S.lon == null) return '';
+  if (!actLoc || S.lat == null || S.lon == null) return null;
   const lat = Number(actLoc.latitude), lon = Number(actLoc.longitude);
   if (!Number.isFinite(lat) || !Number.isFinite(lon)
     || lat.toFixed(4) !== Number(S.lat).toFixed(4)
-    || lon.toFixed(4) !== Number(S.lon).toFixed(4)) return '';
-  return actLoc.timezone || '';
+    || lon.toFixed(4) !== Number(S.lon).toFixed(4)) return null;
+  return typeof actLoc.timezone === 'string' ? actLoc.timezone : '';
 }
 
 /* Resolve the IANA timezone for the current location:
@@ -112,7 +113,14 @@ function activeLocTz() {
    3. '' → device timezone (last resort; only for locations without a zone) */
 function resolveTz() {
   const stored = activeLocTz();
-  if (stored && typeof isValidTimezone === 'function' && isValidTimezone(stored)) return stored;
+  if (stored !== null) {
+    if (stored && typeof isValidTimezone === 'function' && isValidTimezone(stored)) return stored;
+    // A saved location with an intentionally blank zone means "use this
+    // device's system zone" (as the editor says), not a coordinate lookup.
+    if (stored === '') {
+      try { return Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) { return ''; }
+    }
+  }
   if (S.lat == null || S.lon == null) return '';
   try {
     const rk = S.lat.toFixed(2) + ',' + S.lon.toFixed(2);
@@ -413,6 +421,18 @@ function renderMHomeCards() {
 
 if (PT) {
   PT.onNavigate((page) => gotoPage(page === 'prayers' && document.body.classList.contains('m-mode') ? 'mhome' : page));
+  if (typeof PT.onConsumerState === 'function') PT.onConsumerState((state) => {
+    if (!state || typeof state !== 'object') return;
+    let changed = false;
+    for (const key of ['widget', 'mini']) {
+      if (typeof state[key] === 'boolean' && S.cfg[key] !== state[key]) {
+        S.cfg[key] = state[key]; changed = true;
+      }
+    }
+    if (!changed) return;
+    try { localStorage.setItem('pts', JSON.stringify(S.cfg)); } catch (e) { /* keep UI usable */ }
+    if (typeof renderSettings === 'function') renderSettings();
+  });
   // Scheduler push (same data the widget/mini get): keeps the hero prayer time
   // correct when the active saved location uses a non-system timezone.
   PT.onInfo((info) => {
@@ -521,6 +541,7 @@ const saveLoc = () => {
     }
   } catch (e) { /* ignore */ }
   pushCfg();
+  if (typeof scheduleMidnight === 'function') scheduleMidnight();
 };
 const saveTimes = () => localStorage.setItem('ptt', JSON.stringify({ times: S.times, hijri: S.hijri }));
 
@@ -1719,8 +1740,13 @@ function scheduleMidnight() {
   // offset+setHours(24) math set DEVICE-wall midnight on a location-shifted
   // date and fired 7–30 h off; msToNextLocationMidnight scans the monotone
   // location day key instead — exact and DST-safe by construction.
+  if (locationMidnightTimer != null) clearTimeout(locationMidnightTimer);
   const ms = msToNextLocationMidnight(resolveTz(), new Date());
-  setTimeout(() => { if (S.lat != null) fetchTimes(S.lat, S.lon); refreshTodaySchedule(); scheduleMidnight(); }, Math.max(1000, ms));
+  locationMidnightTimer = setTimeout(() => {
+    locationMidnightTimer = null;
+    if (S.lat != null) fetchTimes(S.lat, S.lon);
+    refreshTodaySchedule(); scheduleMidnight();
+  }, Math.max(1000, ms));
 }
 
 init();
