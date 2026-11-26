@@ -10,6 +10,16 @@ A native Windows desktop & Android Islamic companion built with Electron — pra
 **Versions:** desktop `1.6.8`; Android `1.6.8` (version code `16`); web/PWA has no separate product version. See [version sources](docs/VERSIONS.md).
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Android%20%7C%20Web-blue) ![Electron](https://img.shields.io/badge/Electron-45-47848F) ![Desktop](https://img.shields.io/badge/desktop-1.6.8-green) ![Android](https://img.shields.io/badge/Android-1.6.8-green)
 
+## Why SalahNest?
+
+- **Private by design.** No account, no ads, no analytics. Prayer times are computed on your device.
+- **Works offline.** The prayer engine, Qibla, adhkar and the Quran text with search do not need internet.
+- **Windows, Android and web.** One codebase: Electron, Capacitor and an installable PWA.
+- **Arabic and English**, with full right-to-left layout.
+- **Free and open source.** Read the code, report bugs, send fixes.
+
+Feedback is welcome: [open an issue](https://github.com/MalekMahmouda/salahnest/issues) or star the repo if SalahNest is useful to you.
+
 ## Features
 
 **Prayer engine (offline, no account, no telemetry)**
