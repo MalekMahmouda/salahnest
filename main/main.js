@@ -304,9 +304,11 @@ if (!isPrimary) {
   }
 
   // ───────────────────────── IPC ──────────────────────────────
+  // Privacy: the persistent diagnostic log keeps only ~11 km precision.
+  const coarse = (v) => (Number.isFinite(Number(v)) && v !== null && v !== '' ? Math.round(Number(v) * 10) / 10 : v);
   ipcMain.handle('pt:update-config', (e, cfg) => {
     azlog('config update from renderer', {
-      lat: cfg && cfg.lat, lon: cfg && cfg.lon, method: cfg && cfg.method, madhab: cfg && cfg.madhab,
+      lat: coarse(cfg && cfg.lat), lon: coarse(cfg && cfg.lon), method: cfg && cfg.method, madhab: cfg && cfg.madhab,
       tz: cfg && cfg.tz, notif: cfg && cfg.notif, notifMin: cfg && cfg.notifMin,
       adhan: cfg && cfg.adhan, adhanType: cfg && cfg.adhanType, adhanVol: cfg && cfg.adhanVol,
     });
