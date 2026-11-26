@@ -16,6 +16,7 @@ class JsonStore {
     this._defaults = { ...defaults };
     this._data = { ...this._defaults };
     this._loaded = false;
+    this.lastError = null;
   }
 
   get file() {
@@ -28,7 +29,14 @@ class JsonStore {
     try {
       const raw = fs.readFileSync(this.file, 'utf8');
       this._data = { ...this._defaults, ...JSON.parse(raw) };
-    } catch (e) { /* first run or unreadable — keep defaults */ }
+    } catch (e) {
+      if (e && e.code === 'ENOENT') return; // first run: keep defaults
+      // Unreadable or corrupt file: keep a copy so the data is not lost when
+      // the next save overwrites it, and remember the error for diagnostics.
+      this.lastError = e;
+      try { console.error(`[JsonStore] cannot read ${this.file}: ${e && e.message}`); } catch (e2) { /* ignore */ }
+      try { fs.copyFileSync(this.file, `${this.file}.corrupt-${Date.now()}`); } catch (e3) { /* ignore */ }
+    }
   }
 
   _save() {
@@ -40,7 +48,12 @@ class JsonStore {
       const tmp = `${this.file}.tmp`;
       fs.writeFileSync(tmp, JSON.stringify(this._data, null, 2), 'utf8');
       fs.renameSync(tmp, this.file);
-    } catch (e) { /* best-effort persistence */ }
+    } catch (e) {
+      // Persistence stays best-effort (never throws into the app), but the
+      // failure is recorded and logged instead of being swallowed silently.
+      this.lastError = e;
+      try { console.error(`[JsonStore] cannot save ${this.file}: ${e && e.message}`); } catch (e2) { /* ignore */ }
+    }
   }
 
   get(key, defaultValue) {
