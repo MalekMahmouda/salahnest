@@ -1,0 +1,66 @@
+name: Android release build
+
+# Manual only. Builds a signed release APK on GitHub's servers.
+# The signing keystore and its password live in repository secrets and are
+# never committed or printed. Secrets used:
+#   ANDROID_KEYSTORE_BASE64    base64 of the PKCS12 keystore file
+#   ANDROID_KEYSTORE_PASSWORD  store password (also the key password unless
+#                              ANDROID_KEY_PASSWORD is set)
+#   ANDROID_KEY_PASSWORD       optional, only if the key password differs
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    env:
+      KEY_ALIAS: malek-release
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+          cache: npm
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: npm ci
+      - name: Write keystore and signing properties
+        env:
+          KS_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_PASS: ${{ secrets.ANDROID_KEY_PASSWORD || secrets.ANDROID_KEYSTORE_PASSWORD }}
+        run: |
+          set +x
+          mkdir -p keystore
+          printf '%s' "$KS_B64" | base64 -d > keystore/release.p12
+          {
+            echo "storeFile=$GITHUB_WORKSPACE/keystore/release.p12"
+            echo "storePassword=$KS_PASS"
+            echo "keyAlias=$KEY_ALIAS"
+            echo "keyPassword=$KEY_PASS"
+          } > keystore/prayertimes.properties
+      - name: Build signed APK
+        run: npm run apk
+      - name: Verify signature
+        run: |
+          APK=$(ls android/app/build/outputs/apk/release/*.apk | head -n 1)
+          echo "APK: $APK"
+          "$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -n 1)/apksigner" verify --verbose --print-certs "$APK" | grep -E "Verifies|Signer #1 certificate (DN|SHA-256)|v2|v3"
+          sha256sum "$APK" | tee "$APK.sha256"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: SalahNest-Android-signed
+          path: |
+            android/app/build/outputs/apk/release/*.apk
+            android/app/build/outputs/apk/release/*.sha256
+          if-no-files-found: error
+          retention-days: 14
+      - name: Remove keystore
+        if: always()
+        run: rm -rf keystore
