@@ -7,8 +7,8 @@ A native Windows desktop & Android Islamic companion built with Electron — pra
 > 🇸🇦 العربية: [README.ar.md](README.ar.md)
 🌐 **Web app:** https://malekmahmouda.github.io/salahnest/ — installable PWA; its cached app shell is available offline after a successful service-worker install. Network-backed features such as city search and Quran audio still need internet.
 📥 **Downloads:** the production-signed Android APK and Windows installer are published in [GitHub Releases](https://github.com/MalekMahmouda/salahnest/releases). The Windows installer is not Authenticode-signed.
-**Versions:** desktop `1.6.8`; Android `1.6.8` (version code `16`); web/PWA has no separate product version. See [version sources](docs/VERSIONS.md).
-![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Android%20%7C%20Web-blue) ![Electron](https://img.shields.io/badge/Electron-45-47848F) ![Desktop](https://img.shields.io/badge/desktop-1.6.8-green) ![Android](https://img.shields.io/badge/Android-1.6.8-green)
+**Versions:** desktop `1.6.8`; Android `1.6.9` (version code `17`); web/PWA has no separate product version. See [version sources](docs/VERSIONS.md).
+![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Android%20%7C%20Web-blue) ![Electron](https://img.shields.io/badge/Electron-45-47848F) ![Desktop](https://img.shields.io/badge/desktop-1.6.8-green) ![Android](https://img.shields.io/badge/Android-1.6.9-green)
 
 ## Why SalahNest?
 
