@@ -10,9 +10,14 @@ name: Android release build
 
 on:
   workflow_dispatch:
+    inputs:
+      publish:
+        description: "Publish the APK as a public pre-release (tag v<versionName>)"
+        type: boolean
+        default: false
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   apk:
@@ -51,8 +56,13 @@ jobs:
         run: |
           APK=$(ls android/app/build/outputs/apk/release/*.apk | head -n 1)
           echo "APK: $APK"
-          "$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -n 1)/apksigner" verify --verbose --print-certs "$APK" | grep -E "Verifies|Signer #1 certificate (DN|SHA-256)|v2|v3"
-          sha256sum "$APK" | tee "$APK.sha256"
+          "$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -n 1)/apksigner" verify --verbose --print-certs "$APK" | grep -iE "Verifies|certificate (DN|SHA-256)|scheme \(APK Signature Scheme v2\)"
+          VERSION=$(grep -oP 'versionName "\K[^"]+' android/app/build.gradle)
+          NAME="SalahNest-Android-${VERSION}-production-signed.apk"
+          cp "$APK" "android/app/build/outputs/apk/release/$NAME"
+          rm "$APK"
+          (cd android/app/build/outputs/apk/release && sha256sum "$NAME" | tee "$NAME.sha256")
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: SalahNest-Android-signed
@@ -61,6 +71,16 @@ jobs:
             android/app/build/outputs/apk/release/*.sha256
           if-no-files-found: error
           retention-days: 14
+      - name: Publish pre-release
+        if: ${{ inputs.publish }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd android/app/build/outputs/apk/release
+          gh release create "v${VERSION}" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --prerelease \
+            --title "SalahNest Android ${VERSION}" \
+            --notes "Android ${VERSION} (version code 17), package com.malek.prayertimes. Sideload APK, not on Google Play. Signed with the existing SalahNest release key, built from main by GitHub Actions. Verify the download with the SHA-256 file." \
+            ./*.apk ./*.sha256
       - name: Remove keystore
         if: always()
         run: rm -rf keystore
