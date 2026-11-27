@@ -10,15 +10,15 @@
  */
 
 /* ── The release the download cards point at ──────────────────────────────
-   Verified against the v1.6.8 production-signed artifact:
-     54.86 MB decimal · minSdk 24 = Android 7.0
+   Verified against the v1.6.9 production-signed artifact:
+     54.87 MB decimal · minSdk 24 = Android 7.0
    WHEN SHIPPING A RELEASE bump version + apk + mb here — the version text, the
    "Latest:" chip and the APK href all read from this object, so nothing else
    needs editing and no card can drift onto a file that does not exist. */
 const PT_RELEASE = {
-  version: '1.6.8',
-  apk: 'SalahNest-Android-1.6.8-production-signed.apk',
-  mb: '54.86',
+  version: '1.6.9',
+  apk: 'SalahNest-Android-1.6.9-production-signed.apk',
+  mb: '54.87',
   available: true,
 };
 const PT_REPO = 'https://github.com/MalekMahmouda/salahnest';
