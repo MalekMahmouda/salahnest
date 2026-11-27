@@ -1,11 +1,11 @@
 # SalahNest version sources
 
-Desktop and Android are released together for v1.6.8; later releases may choose to version them independently.
+Desktop and Android were released together for v1.6.8. Android 1.6.9 is a separate pre-release; desktop stays at 1.6.8.
 
 | Build | Current source value | Source of truth | Notes |
 | --- | --- | --- | --- |
 | Windows desktop | `1.6.8` | `package.json` (`version`) | x64 NSIS installer; not Authenticode-signed. |
-| Android | `1.6.8` / version code `16` | `android/app/build.gradle` (`versionName` / `versionCode`) | Production-signed sideload APK; not submitted to Google Play. |
+| Android | `1.6.9` / version code `17` | `android/app/build.gradle` (`versionName` / `versionCode`) | Production-signed sideload APK; not submitted to Google Play. |
 | Web / PWA | No separate product version | Built from the web sources by `npm run web` | Published from the separate `gh-pages` branch; the site retains the `/salahnest/` path. |
 | Desktop runtime | Electron `45.2.3` | `package.json` (`devDependencies.electron`) | Node.js `22.12.0` or newer is required for development and packaging; CI uses Node.js 24. |
 
